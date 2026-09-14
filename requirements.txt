@@ -1,4 +1,12 @@
-instagrapi>=2.1.3
+# Core
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+
+# Scraping
+ddgs>=9.0.0
+httpx>=0.27.0
+
+# Existing
 pandas>=2.2.0
 python-dotenv>=1.0.1
 typing-extensions>=4.12.0
