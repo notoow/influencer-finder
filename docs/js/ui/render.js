@@ -1,10 +1,22 @@
 /**
- * Notoow Influencer Finder - UI Rendering Module (SSOT)
+ * Notoow Influencer Finder - UI Rendering Module (SSOT & Hardened)
  * 
  * Generates Feed, Profile, Table view cards & Skeleton loading overlay.
+ * Hardened with HTML escaping for XSS prevention and noopener/noreferrer for link safety.
  */
 
 import { store } from '../store.js';
+
+// XSS Prevention: Sanitizes user strings before rendering inside innerHTML
+export function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 export function refreshLucideIcons() {
   setTimeout(() => {
@@ -73,31 +85,38 @@ export function renderResults() {
     container.className = 'influencer-grid feed-mode';
     container.innerHTML = list.map(item => {
       const isBookmarked = store.isBookmarked(item.id);
+      const safeName = escapeHTML(item.name);
+      const safeHandle = escapeHTML(item.handle);
+      const safeBio = escapeHTML(item.bio);
+      const safeCover = escapeHTML(item.cover);
+      const safeAvatar = escapeHTML(item.avatar);
+      const safeUrl = escapeHTML(item.profileUrl);
+
       return `
-        <article class="whotag-card" data-id="${item.id}">
+        <article class="whotag-card" data-id="${escapeHTML(item.id)}">
           <div class="card-media-wrapper">
-            <img class="card-media-img" src="${item.cover}" alt="${item.name}" />
+            <img class="card-media-img" src="${safeCover}" alt="${safeName}" />
             <div class="media-top-badge">
               <span>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</span>
             </div>
             <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
-                    data-bookmark-id="${item.id}" title="북마크 토글">
+                    data-bookmark-id="${escapeHTML(item.id)}" title="북마크 토글">
               <i data-lucide="bookmark" style="width: 14px; height: 14px; fill: ${isBookmarked ? 'currentColor' : 'none'};"></i>
             </button>
             <div class="media-bottom-stats">
               <span><i data-lucide="user" style="width: 12px; height: 12px;"></i> ${(item.followers / 1000).toFixed(1)}K</span>
               <span>•</span>
-              <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${item.engagement}%</span>
+              <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${Number(item.engagement)}%</span>
             </div>
           </div>
           <div class="card-body">
             <div class="card-user-row">
-              <img class="card-avatar" src="${item.avatar}" alt="${item.name}" />
-              <a href="${item.profileUrl}" class="card-handle" target="_blank" onclick="event.stopPropagation()">@${item.handle}</a>
+              <img class="card-avatar" src="${safeAvatar}" alt="${safeName}" />
+              <a href="${safeUrl}" class="card-handle" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">@${safeHandle}</a>
             </div>
-            <p class="card-bio-text">${item.bio}</p>
+            <p class="card-bio-text">${safeBio}</p>
             <div class="card-metrics-row">
-              <span class="metric-pill">Score: <strong>${item.score}</strong></span>
+              <span class="metric-pill">Score: <strong>${Number(item.score)}</strong></span>
               <span class="metric-pill" style="color: var(--brand-dark);">상세보기 <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i></span>
             </div>
           </div>
@@ -108,24 +127,29 @@ export function renderResults() {
     container.className = 'influencer-grid profile-mode';
     container.innerHTML = list.map(item => {
       const isBookmarked = store.isBookmarked(item.id);
+      const safeName = escapeHTML(item.name);
+      const safeHandle = escapeHTML(item.handle);
+      const safeBio = escapeHTML(item.bio);
+      const safeAvatar = escapeHTML(item.avatar);
       const tags = Array.isArray(item.tags) ? item.tags : [];
+
       return `
-        <article class="profile-card-full" data-id="${item.id}">
+        <article class="profile-card-full" data-id="${escapeHTML(item.id)}">
           <div class="profile-header-row">
-            <img class="profile-avatar-lg" src="${item.avatar}" alt="${item.name}" />
+            <img class="profile-avatar-lg" src="${safeAvatar}" alt="${safeName}" />
             <div class="profile-title-area">
-              <h4>${item.name}</h4>
-              <p>@${item.handle}</p>
+              <h4>${safeName}</h4>
+              <p>@${safeHandle}</p>
             </div>
             <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                     style="position: static; margin-left: auto;"
-                    data-bookmark-id="${item.id}">
+                    data-bookmark-id="${escapeHTML(item.id)}">
               <i data-lucide="bookmark" style="width: 14px; height: 14px; fill: ${isBookmarked ? 'currentColor' : 'none'};"></i>
             </button>
           </div>
-          <p class="card-bio-text" style="height: auto; -webkit-line-clamp: 3;">${item.bio}</p>
+          <p class="card-bio-text" style="height: auto; -webkit-line-clamp: 3;">${safeBio}</p>
           <div class="tags-wrap">
-            ${tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
+            ${tags.map(t => `<span class="mini-tag">#${escapeHTML(t)}</span>`).join('')}
           </div>
           <div class="metrics-grid-3">
             <div class="metric-item-col">
@@ -134,11 +158,11 @@ export function renderResults() {
             </div>
             <div class="metric-item-col">
               <span>참여율</span>
-              <strong>${item.engagement}%</strong>
+              <strong>${Number(item.engagement)}%</strong>
             </div>
             <div class="metric-item-col">
               <span>Notoow 스코어</span>
-              <strong style="color: var(--brand-dark);">${item.score}</strong>
+              <strong style="color: var(--brand-dark);">${Number(item.score)}</strong>
             </div>
           </div>
         </article>
@@ -164,30 +188,34 @@ export function renderResults() {
           <tbody>
             ${list.map(item => {
               const isBookmarked = store.isBookmarked(item.id);
+              const safeName = escapeHTML(item.name);
+              const safeHandle = escapeHTML(item.handle);
+              const safeAvatar = escapeHTML(item.avatar);
               const tags = Array.isArray(item.tags) ? item.tags : [];
+
               return `
-                <tr data-id="${item.id}" style="cursor: pointer;">
+                <tr data-id="${escapeHTML(item.id)}" style="cursor: pointer;">
                   <td onclick="event.stopPropagation()">
                     <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                             style="position: static; width: 28px; height: 28px;"
-                            data-bookmark-id="${item.id}">
+                            data-bookmark-id="${escapeHTML(item.id)}">
                       <i data-lucide="bookmark" style="width: 13px; height: 13px; fill: ${isBookmarked ? 'currentColor' : 'none'};"></i>
                     </button>
                   </td>
                   <td>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                      <img src="${item.avatar}" style="width: 32px; height: 32px; border-radius: 50%;" />
+                      <img src="${safeAvatar}" style="width: 32px; height: 32px; border-radius: 50%;" />
                       <div>
-                        <strong>${item.name}</strong><br />
-                        <small style="color: var(--brand-dark);">@${item.handle}</small>
+                        <strong>${safeName}</strong><br />
+                        <small style="color: var(--brand-dark);">@${safeHandle}</small>
                       </div>
                     </div>
                   </td>
                   <td>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</td>
                   <td><strong>${new Intl.NumberFormat('ko-KR').format(item.followers)}</strong>명</td>
-                  <td>${item.engagement}%</td>
-                  <td>${tags.map(t => `#${t}`).join(' ')}</td>
-                  <td><strong style="color: var(--brand-dark);">${item.score}</strong></td>
+                  <td>${Number(item.engagement)}%</td>
+                  <td>${tags.map(t => `#${escapeHTML(t)}`).join(' ')}</td>
+                  <td><strong style="color: var(--brand-dark);">${Number(item.score)}</strong></td>
                   <td><button class="action-btn-outline" style="font-size: 11px; padding: 4px 10px;">열기 <i data-lucide="arrow-right" style="width: 11px; height: 11px;"></i></button></td>
                 </tr>
               `;
