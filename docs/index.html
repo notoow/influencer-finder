@@ -25,9 +25,14 @@
         <a href="https://github.com/notoow/influencer-finder/blob/main/README.md">README</a>
         <span class="badge">페이지 기반 운영</span>
       </div>
+      <div class="view-nav" role="tablist" aria-label="보드 뷰 전환">
+        <button type="button" class="tab active" data-tab="filters" role="tab" aria-selected="true">탐색 조건</button>
+        <button type="button" class="tab" data-tab="data" role="tab" aria-selected="false">데이터 연동</button>
+        <button type="button" class="tab" data-tab="board" role="tab" aria-selected="false">결과 보드</button>
+      </div>
     </header>
 
-    <section class="card controls">
+    <section class="card controls panel" data-tab="filters">
       <div class="control-head">
         <h2>탐색 조건</h2>
         <p>팔로워·키워드·비공개 포함 여부를 기준으로 후보군을 즉시 조정합니다.</p>
@@ -80,7 +85,7 @@
       </div>
     </section>
 
-    <section class="card source">
+    <section class="card source panel" data-tab="data">
       <h2>데이터 연동(자동화)</h2>
       <p>
         로컬 CSV를 붙여넣으면 GitHub Actions 결과와 바로 연결됩니다.
@@ -100,7 +105,7 @@
       <small>샘플 자동화: GH Actions에서 생성한 outputs/couple_candidates.csv를 퍼블릭 raw로 공개하고 URL로 붙이면 됩니다.</small>
     </section>
 
-    <section class="card result-card">
+    <section class="card result-card panel" data-tab="board">
       <div class="result-head">
         <div>
           <h2>후보 보드</h2>
@@ -346,6 +351,31 @@
       csvUrl: document.getElementById('csvUrl'),
       loadUrlBtn: document.getElementById('loadUrlBtn')
     };
+
+    const tabButtons = Array.from(document.querySelectorAll('.view-nav .tab'));
+    const panels = Array.from(document.querySelectorAll('.panel'));
+
+    function applyTab(tabName) {
+      tabButtons.forEach((btn) => {
+        const isActive = btn.dataset.tab === tabName;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      panels.forEach((panel) => {
+        panel.classList.toggle('active', panel.dataset.tab === tabName);
+      });
+      if (tabName === 'board') {
+        render();
+      }
+    }
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        applyTab(btn.dataset.tab);
+      });
+    });
+
+    applyTab('filters');
 
     function formatNum(v) {
       return `${new Intl.NumberFormat('ko-KR').format(v)}명`;

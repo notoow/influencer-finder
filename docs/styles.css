@@ -86,6 +86,33 @@ h1 {
   flex-wrap: wrap;
 }
 
+.view-nav {
+  margin-top: 12px;
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f4f6fb;
+}
+
+.view-nav .tab {
+  border: none;
+  border-radius: 0;
+  height: 36px;
+  padding: 0 15px;
+  background: transparent;
+  color: #4d5970;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.view-nav .tab.active {
+  background: #ffffff;
+  color: #1c2f57;
+  font-weight: 700;
+}
+
 .hero-actions a,
 .badge {
   font-size: 12px;
@@ -304,6 +331,14 @@ button:hover {
 .result-content {
   display: grid;
   gap: 12px;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
 }
 
 .result-content.profile {
