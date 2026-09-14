@@ -235,9 +235,9 @@ export const MOCK_INFLUENCERS = [
     bio: '매일 아침 시그니처 에스프레소 레시피 & 감성 홈카페',
     tags: ['홈카페', '에스프레소', '커피레시피', '감성'],
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 4890, comments: 310, caption: '아침을 깨우는 바닐라 크림 라떼 레시피 ☕' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop&q=80', likes: 4890, comments: 310, caption: '아침을 깨우는 바닐라 크림 라떼 레시피 ☕' }]
   },
   {
     id: 'u24', name: 'Plant Parent Daniel', handle: 'daniel_plants', country: 'US', countryName: 'United States',
@@ -245,9 +245,9 @@ export const MOCK_INFLUENCERS = [
     bio: 'Urban jungle bedroom & rare monstera indoor gardening guide',
     tags: ['식집사', '몬스테라', '플랜테리어', '원예'],
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 2340, comments: 98, caption: 'Monstera Albo propagation setup & watering secret' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800&auto=format&fit=crop&q=80', likes: 2340, comments: 98, caption: 'Monstera Albo propagation setup & watering secret' }]
   },
   {
     id: 'u25', name: '비건 테이스트 서현', handle: 'seohyun_table', country: 'KR', countryName: 'Korea',
@@ -265,9 +265,9 @@ export const MOCK_INFLUENCERS = [
     bio: 'Specialty coffee pour-over techniques & coffee bean roaster reviews',
     tags: ['스페셜티', '드립커피', '원두', '바리스타'],
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 4120, comments: 175, caption: 'Best hand drippers compared: V60 vs Kalita Wave' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80', likes: 4120, comments: 175, caption: 'Best hand drippers compared: V60 vs Kalita Wave' }]
   },
   {
     id: 'u27', name: '도쿄 로컬 브이로그 수빈', handle: 'subin_tokyo', country: 'KR', countryName: 'Korea',
@@ -275,9 +275,9 @@ export const MOCK_INFLUENCERS = [
     bio: '도쿄 재주 3년차 현지 맛집 & 카페 투어 감성 릴스',
     tags: ['도쿄맛집', '일본여행', '카페투어', '브이로그'],
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 5920, comments: 280, caption: '도쿄 나카메구로 숨은 로컬 드립 커피숍 ☕' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80', likes: 5920, comments: 280, caption: '도쿄 나카메구로 숨은 로컬 드립 커피숍 ☕' }]
   },
   {
     id: 'u28', name: 'Solo Travel Hannah', handle: 'hannah_wander', country: 'US', countryName: 'United States',
@@ -285,9 +285,9 @@ export const MOCK_INFLUENCERS = [
     bio: 'Budget luxury travel guide for female solo wanderers across Europe',
     tags: ['혼자여행', '유럽여행', '가성비럭셔리', '세계여행'],
     avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 9810, comments: 490, caption: 'Solo girl travel guide in Florence Italy 🇮🇹' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&auto=format&fit=crop&q=80', likes: 9810, comments: 490, caption: 'Solo girl travel guide in Florence Italy 🇮🇹' }]
   },
   {
     id: 'u29', name: '제주 감성 숙소 유나', handle: 'yuna_jeju', country: 'KR', countryName: 'Korea',
@@ -295,9 +295,9 @@ export const MOCK_INFLUENCERS = [
     bio: '제주 촌집 리모델링 스테이 & 감성 숙소 큐레이션',
     tags: ['제주숙소', '감성스테이', '제주여행', '감성'],
     avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 3120, comments: 140, caption: '제주 구좌읍 돌담 감성독채 스테이 1박 후기' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80', likes: 3120, comments: 140, caption: '제주 구좌읍 돌담 감성독채 스테이 1박 후기' }]
   },
   {
     id: 'u30', name: 'Backpack Chris', handle: 'chris_hike', country: 'US', countryName: 'United States',
@@ -305,9 +305,9 @@ export const MOCK_INFLUENCERS = [
     bio: 'Ultralight backpacking tips, gear reviews & Pacific Crest Trail vlog',
     tags: ['백패킹', '하이킹', '캠핑', '아웃도어'],
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 7420, comments: 310, caption: 'Top 5 ultralight backpacks under 2 lbs' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&auto=format&fit=crop&q=80', likes: 7420, comments: 310, caption: 'Top 5 ultralight backpacks under 2 lbs' }]
   },
   {
     id: 'u31', name: '캠퍼 태호', handle: 'taeho_camping', country: 'KR', countryName: 'Korea',
@@ -315,9 +315,9 @@ export const MOCK_INFLUENCERS = [
     bio: '차박 & 우중 캠핑 감성 세팅 꿀팁 공유',
     tags: ['차박', '우중캠핑', '캠핑장비', '힐링'],
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 2980, comments: 135, caption: '빗소리 들으며 즐기는 가평 오토 캠핑 텐트 세팅' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop&q=80', likes: 2980, comments: 135, caption: '빗소리 들으며 즐기는 가평 오토 캠핑 텐트 세팅' }]
   },
   {
     id: 'u32', name: 'Island Hopping Alex', handle: 'alex_tropics', country: 'US', countryName: 'United States',
@@ -325,9 +325,9 @@ export const MOCK_INFLUENCERS = [
     bio: 'Tropical island hidden gems & drone photography guide',
     tags: ['휴양지', '드론촬영', '해외여행', '스노쿨링'],
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 11200, comments: 520, caption: 'Clear turquoise water of Maldives from above 🚁' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80', likes: 11200, comments: 520, caption: 'Clear turquoise water of Maldives from above 🚁' }]
   },
   {
     id: 'u33', name: '필라테스 준', handle: 'june_pilates', country: 'KR', countryName: 'Korea',
@@ -405,8 +405,8 @@ export const MOCK_INFLUENCERS = [
     bio: 'Cottagecore & soft aesthetic lifestyle. Slow living & journaling',
     tags: ['감성', '코티지코어', '저널링', '라이프스타일'],
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=320&auto=format&fit=crop&q=80',
-    cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
+    cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&auto=format&fit=crop&q=80',
     profileUrl: 'https://www.instagram.com/',
-    feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 3450, comments: 128, caption: 'Slow morning routine in my countryside cottage 🌿' }]
+    feed: [{ image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&auto=format&fit=crop&q=80', likes: 3450, comments: 128, caption: 'Slow morning routine in my countryside cottage 🌿' }]
   }
 ];
