@@ -12,8 +12,8 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
--- 1. DROP EXISTING TABLES IF NEEDED
-DROP FUNCTION IF EXISTS search_influencers;
+-- 1. DROP EXISTING TABLES & FUNCTIONS IF NEEDED
+DROP FUNCTION IF EXISTS search_influencers CASCADE;
 DROP TABLE IF EXISTS influencer_media CASCADE;
 DROP TABLE IF EXISTS influencer_tags CASCADE;
 DROP TABLE IF EXISTS bookmarks CASCADE;
@@ -297,32 +297,32 @@ INSERT INTO influencer_media (influencer_id, image, likes, comments, caption) VA
 ('u04', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', 1450, 40, '밤마다 틀어두는 감성 무드등과 아로마 디퓨저'),
 ('u05', 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80', 1670, 53, '청소가 편해지는 주방 살림꿀템 TOP 5'),
 ('u06', 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', 1980, 76, '육아 식단 어쩌지?! 급하게 만드는 연어 덮밥'),
-('u07', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', 2840, 132, 'My daily morning skin barrier routine for glass skin ✨'),
+('u07', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', 2840, 132, 'My daily morning skin barrier routine for glass skin'),
 ('u08', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', 1210, 39, '딸기우유 붓고 눌렀더니 확화채 완성!'),
 ('u09', 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&auto=format&fit=crop&q=80', 4890, 210, 'Glass skin secrets: Why double cleansing changed my texture'),
 ('u10', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', 5620, 312, '수분 광채 세럼 TOP 3 꼼꼼 성분 비교 분석'),
 ('u11', 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80', 2140, 88, '백탁 없는 무기자차 선크림 5종 8시간 지속력 테스트'),
 ('u12', 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', 12400, 540, 'Retinol vs Bakuchiol: What every skin type needs to know'),
 ('u13', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', 1850, 72, '민감성 피부를 위한 100% 비건 수분 크림 내돈내산 3달 후기'),
-('u14', 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&auto=format&fit=crop&q=80', 3910, 145, '3-step calming routine after sun exposure 🌿'),
+('u14', 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&auto=format&fit=crop&q=80', 3910, 145, '3-step calming routine after sun exposure'),
 ('u15', 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', 8920, 412, '10 essential capsule wardrobe pieces for effortless fall elegance'),
 ('u16', 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&auto=format&fit=crop&q=80', 3410, 189, '성수동 팝업스토어 탐방 & 금주 시티보이 착장'),
 ('u17', 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', 6780, 290, 'Styling oversized blazer for Manhattan coffee runs'),
 ('u18', 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&auto=format&fit=crop&q=80', 2190, 94, '다리 길어보이는 와이드 슬랙스 핏 가이드'),
-('u19', 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&auto=format&fit=crop&q=80', 4520, 210, 'Thrifting 90s vintage Levi’s in Brooklyn 👖'),
+('u19', 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&auto=format&fit=crop&q=80', 4520, 210, 'Thrifting 90s vintage Levis in Brooklyn'),
 ('u20', 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&auto=format&fit=crop&q=80', 2890, 115, '가을 레이어드 코디 꿀팁 3가지'),
 ('u21', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', 2940, 142, '신혼집 거실 모듈 소파 위치 바꾸기 서라운드 뷰'),
 ('u22', 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', 5810, 230, 'Cozy minimalist apartment tour in Copenhagen style'),
-('u23', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 4890, 310, '아침을 깨우는 바닐라 크림 라떼 레시피 ☕'),
+('u23', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 4890, 310, '아침을 깨우는 바닐라 크림 라떼 레시피'),
 ('u24', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 2340, 98, 'Monstera Albo propagation setup & watering secret'),
 ('u25', 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', 1890, 82, '15분 완성 알리오 올리오 비건 파스타'),
 ('u26', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 4120, 175, 'Best hand drippers compared: V60 vs Kalita Wave'),
-('u27', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 5920, 280, '도쿄 나카메구로 숨은 로컬 드립 커피숍 ☕'),
-('u28', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 9810, 490, 'Solo girl travel guide in Florence Italy 🇮🇹'),
+('u27', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 5920, 280, '도쿄 나카메구로 숨은 로컬 드립 커피숍'),
+('u28', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 9810, 490, 'Solo girl travel guide in Florence Italy'),
 ('u29', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 3120, 140, '제주 구좌읍 돌담 감성독채 스테이 1박 후기'),
 ('u30', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 7420, 310, 'Top 5 ultralight backpacks under 2 lbs'),
 ('u31', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 2980, 135, '빗소리 들으며 즐기는 가평 오토 캠핑 텐트 세팅'),
-('u32', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 11200, 520, 'Clear turquoise water of Maldives from above 🚁'),
+('u32', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 11200, 520, 'Clear turquoise water of Maldives from above'),
 ('u33', 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80', 2410, 92, '굽은 어깨 바로 펴주는 5분 필라테스 스트레칭'),
 ('u34', 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80', 8420, 380, 'Full day of eating for muscle growth: 3,000 kcal meal plan'),
 ('u35', 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80', 2140, 85, '러너 필수템! 발볼 넓은 사람을 위한 쿠션 러닝화'),
@@ -330,5 +330,4 @@ INSERT INTO influencer_media (influencer_id, image, likes, comments, caption) VA
 ('u37', 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80', 3150, 120, '일주일 내내 안 질리는 리코타 아보카도 샐러드'),
 ('u38', 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&auto=format&fit=crop&q=80', 8920, 412, '레티놀 처음 쓰는 사람이 꼭 알아야 할 5가지 ⚠️'),
 ('u39', 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80', 1120, 45, '재택근무 1년차 데스크 셋업 & 생산성 도구 추천 💻'),
-('u40', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 3450, 128, 'Slow morning routine in my countryside cottage 🌿');
-
+('u40', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', 3450, 128, 'Slow morning routine in my countryside cottage');
