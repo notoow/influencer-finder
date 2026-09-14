@@ -93,3 +93,31 @@ export async function syncBookmarkToSupabase(sessionId, influencerId, isBookmark
     console.warn('[SupabaseService] Bookmark sync error:', err);
   }
 }
+
+export async function upsertLiveInfluencers(liveItems = []) {
+  if (!supabaseClient || !Array.isArray(liveItems) || liveItems.length === 0) return;
+
+  try {
+    const formattedRows = liveItems.map(item => ({
+      id: item.id,
+      name: item.name,
+      handle: item.handle,
+      country: item.country || 'KR',
+      country_name: item.country_name || 'Korea',
+      followers: item.followers || 10000,
+      private: false,
+      engagement: item.engagement || 4.5,
+      score: item.score || 95,
+      bio: item.bio || '',
+      avatar: item.avatar,
+      cover: item.cover,
+      profile_url: item.profile_url
+    }));
+
+    await supabaseClient.from('influencers').upsert(formattedRows, { onConflict: 'id' });
+    console.log(`[SupabaseService] Successfully auto-cached ${formattedRows.length} live Instagram creators into Supabase DB.`);
+  } catch (err) {
+    console.warn('[SupabaseService] Auto-cache to Supabase failed:', err);
+  }
+}
+

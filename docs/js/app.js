@@ -4,7 +4,8 @@
  * Binds DOM events, initializes services, and orchestrates state and UI.
  */
 
-import { initSupabase, searchInfluencersFromSupabase, syncBookmarkToSupabase } from './services/supabaseService.js';
+import { initSupabase, searchInfluencersFromSupabase, syncBookmarkToSupabase, upsertLiveInfluencers } from './services/supabaseService.js';
+import { searchLiveInstagram } from './services/liveInstagramService.js';
 import { parseNaturalLanguageQuery } from './services/aiSearchService.js';
 import { store } from './store.js';
 import { renderResults, renderLoadingSkeleton, refreshLucideIcons } from './ui/render.js';
@@ -129,17 +130,37 @@ export async function executeSearch() {
   switchMainTab('board');
   renderLoadingSkeleton();
 
-  // Try Supabase RPC search
-  const remoteResults = await searchInfluencersFromSupabase({ 
-    prompt: intent.query || promptRaw, 
-    country, 
-    minF, 
-    maxF, 
-    sorter 
-  });
+  // Try Supabase RPC search & Live Instagram search concurrently
+  const [remoteResults, liveResults] = await Promise.all([
+    searchInfluencersFromSupabase({ 
+      prompt: intent.query || promptRaw, 
+      country, 
+      minF, 
+      maxF, 
+      sorter 
+    }),
+    promptRaw ? searchLiveInstagram(promptRaw, country) : Promise.resolve([])
+  ]);
 
-  if (remoteResults) {
-    store.setData(remoteResults);
+  let combinedResults = [];
+  if (Array.isArray(liveResults) && liveResults.length > 0) {
+    combinedResults.push(...liveResults);
+    // Auto-cache newly discovered live Instagram profiles to Supabase DB
+    upsertLiveInfluencers(liveResults);
+  }
+
+  if (Array.isArray(remoteResults) && remoteResults.length > 0) {
+    // Avoid duplicate handles
+    const existingHandles = new Set(combinedResults.map(r => r.handle.toLowerCase()));
+    remoteResults.forEach(r => {
+      if (!existingHandles.has(r.handle.toLowerCase())) {
+        combinedResults.push(r);
+      }
+    });
+  }
+
+  if (combinedResults.length > 0) {
+    store.setData(combinedResults);
   } else {
     // Local filtering fallback
     store.resetDataToMock();

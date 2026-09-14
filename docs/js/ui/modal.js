@@ -62,22 +62,37 @@ export function openModal(id) {
       </div>
     </div>
 
-    <h4 style="color: var(--brand-dark); margin: 0 0 12px; display: flex; align-items: center; gap: 6px;">
-      <i data-lucide="image" style="width: 16px; height: 16px;"></i> 최근 피드 포스트 피드백
+    <h4 style="color: var(--brand-dark); margin: 0 0 12px; display: flex; align-items: center; justify-content: space-between;">
+      <span><i data-lucide="video" style="width: 16px; height: 16px;"></i> 최근 릴스 & 피드 미디어</span>
+      ${item.is_live ? '<span class="mini-tag" style="background: var(--brand-gradient); color: #FFF;">LIVE REAL-TIME</span>' : ''}
     </h4>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
-      ${feed.map(post => `
-        <div style="background: #FFFFFF; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #E2E8F0;">
-          <img src="${escapeHTML(post.image)}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;" />
+      ${feed.map(post => {
+        const reelLink = post.reel_url || safeProfileUrl;
+        return `
+        <div style="background: #FFFFFF; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #E2E8F0; position: relative;">
+          <a href="${escapeHTML(reelLink)}" target="_blank" rel="noopener noreferrer" style="display: block; position: relative;">
+            <img src="${escapeHTML(post.image)}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;" />
+            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0">
+              <span style="background: rgba(255,255,255,0.95); color: #1E293B; font-weight: 700; font-size: 12px; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 6px;">
+                <i data-lucide="play" style="width: 12px; height: 12px; fill: currentColor;"></i> 릴스 재생
+              </span>
+            </div>
+          </a>
           <div style="padding: 10px;">
-            <p style="font-size: 12px; margin: 0 0 6px; color: var(--text-secondary);">${escapeHTML(post.caption)}</p>
-            <div style="font-size: 11px; color: var(--text-muted); display: flex; gap: 8px;">
-              <span><i data-lucide="heart" style="width: 12px; height: 12px;"></i> ${(Number(post.likes) || 0).toLocaleString()}</span>
-              <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${(Number(post.comments) || 0).toLocaleString()}</span>
+            <p style="font-size: 12px; margin: 0 0 6px; color: var(--text-secondary); line-height: 1.4;">${escapeHTML(post.caption)}</p>
+            <div style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; gap: 8px;">
+                <span><i data-lucide="heart" style="width: 12px; height: 12px;"></i> ${(Number(post.likes) || 0).toLocaleString()}</span>
+                <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${(Number(post.comments) || 0).toLocaleString()}</span>
+              </div>
+              <a href="${escapeHTML(reelLink)}" target="_blank" rel="noopener noreferrer" style="color: var(--brand-dark); font-weight: 700; text-decoration: none;">
+                인스타그램 🔗
+              </a>
             </div>
           </div>
         </div>
-      `).join('')}
+      `}).join('')}
     </div>
   `;
 

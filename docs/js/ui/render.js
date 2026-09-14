@@ -98,6 +98,7 @@ export function renderResults() {
             <img class="card-media-img" src="${safeCover}" alt="${safeName}" />
             <div class="media-top-badge">
               <span>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</span>
+              ${item.is_live ? '<span style="background: var(--brand-gradient); color: #FFF; margin-left: 4px; font-weight: 800; font-size: 10px; padding: 2px 6px; border-radius: 10px;">LIVE REELS</span>' : ''}
             </div>
             <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                     data-bookmark-id="${escapeHTML(item.id)}" title="북마크 토글">
