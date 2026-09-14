@@ -3,40 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Influencer Board | VIP 후보 탐색</title>
+  <title>WHOTAG | 인플루언서 탐색 툴</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css" />
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="팔로워 8천~1만5천 신혼부부 인스타 후보를 필터링하고 결과를 바로 추출하는 보드형 대시보드" />
+  <meta name="description" content="자연어 프롬프트 기반 인플루언서 탐색 툴. 뷰티·패션·라이프스타일 후보를 빠르게 선별하고, 비교·선별·CSV 내보내기까지 제공합니다." />
 </head>
 <body>
   <div class="app-shell">
     <header class="top-bar">
-      <div>
-        <p class="brand-kicker">Influencer Discovery</p>
-        <h1>인플루언서 후보 보드</h1>
+      <div class="hero-copy">
+        <p class="brand-kicker">WHOTAG</p>
+        <h1>완벽한 인플루언서를 단 한 번의 프롬프트로 발견하세요.</h1>
+        <p class="top-subtitle">
+          자연어로 이상적인 인플루언서를 설명하세요. WHOTAG이 120개국 이상의 플랫폼·니치에서 뷰티·패션·라이프스타일 인플루언서를 찾아드립니다.
+        </p>
       </div>
-      <nav class="view-tabs" role="tablist" aria-label="보드 섹션">
-        <button type="button" class="tab-btn active" data-tab="filters" role="tab" aria-selected="true">필터 설정</button>
+      <nav class="view-tabs" role="tablist" aria-label="탐색 섹션">
+        <button type="button" class="tab-btn active" data-tab="filters" role="tab" aria-selected="true">탐색 설정</button>
         <button type="button" class="tab-btn" data-tab="data" role="tab" aria-selected="false">데이터 가져오기</button>
-        <button type="button" class="tab-btn" data-tab="board" role="tab" aria-selected="false">결과</button>
+        <button type="button" class="tab-btn" data-tab="board" role="tab" aria-selected="false">비교 보드</button>
       </nav>
     </header>
 
     <main class="workspace">
       <section class="panel card controls" data-tab="filters">
         <div class="panel-title-row">
-          <h2>탐색 기준</h2>
-          <p>팔로워 수와 키워드로 후보를 분류합니다.</p>
+          <h2>자연어 탐색</h2>
+          <p>조건을 조합해 후보를 즉시 비교할 수 있습니다.</p>
         </div>
 
         <div class="control-grid">
+          <label class="field prompt-field">
+            <span>프롬프트</span>
+            <textarea id="promptInput" rows="2" placeholder="예: 뷰티·패션 콘텐츠 중심의 인플루언서, 팔로워 8,000~15,000, 피부관리 루틴과 데일리 루틴 업로드가 꾸준한 계정"></textarea>
+          </label>
           <label class="field">
             <span>탐색 프리셋</span>
             <select id="presetSelect"></select>
           </label>
           <label class="field">
-            <span>추가 키워드</span>
-            <input id="keywordInput" placeholder="예: 브이로그, 커플일상, 신혼집" />
+            <span>보정 키워드</span>
+            <input id="keywordInput" placeholder="예: 뷰티, 메이크업, 패션, 루틴, 라이프스타일" />
           </label>
           <label class="field">
             <span>팔로워 최소</span>
@@ -58,7 +65,7 @@
           </label>
           <label class="field">
             <span>뷰 모드</span>
-            <div class="view-mode" role="group" aria-label="보드 뷰">
+            <div class="view-mode" role="group" aria-label="보드 뷰 모드">
               <button type="button" data-view="profile">프로필</button>
               <button type="button" class="active" data-view="feed">피드</button>
               <button type="button" data-view="list">리스트</button>
@@ -71,7 +78,7 @@
         </div>
 
         <div class="action-row">
-          <button id="applyBtn" class="primary">적용</button>
+          <button id="applyBtn" class="primary">탐색 실행</button>
           <button id="resetBtn" type="button">초기화</button>
           <button id="exportBtn" type="button">CSV 다운로드</button>
         </div>
@@ -80,7 +87,7 @@
       <section class="panel card source" data-tab="data">
         <div class="panel-title-row">
           <h2>데이터 가져오기</h2>
-          <p>CSV를 붙여넣거나 공개 URL로 즉시 반영합니다.</p>
+          <p>CSV 파일 업로드 또는 공개 URL로 실데이터를 연결하세요.</p>
         </div>
 
         <div class="source-grid">
@@ -90,11 +97,11 @@
           </label>
           <label class="field">
             <span>GitHub Raw URL</span>
-            <input id="csvUrl" type="url" placeholder="https://raw.githubusercontent.com/.../outputs/couple_candidates.csv" />
+            <input id="csvUrl" type="url" placeholder="https://raw.githubusercontent.com/.../influencers.csv" />
           </label>
         </div>
-        <button id="loadUrlBtn">URL로 불러오기</button>
-        <p class="micro-note">컬럼 지원: username, followers, bio, is_private, engagement_rate, keyword_hit, profile_url</p>
+        <button id="loadUrlBtn" type="button">URL로 불러오기</button>
+        <p class="micro-note">권장 컬럼: username, followers, bio, is_private, engagement_rate, keyword_hit, tags, profile_url</p>
       </section>
 
       <section class="panel card result-card active" data-tab="board">
@@ -105,7 +112,7 @@
           </div>
           <div class="result-stats" id="resultStats"></div>
         </div>
-        <p id="resultHint" class="result-hint">필터를 적용하면 결과가 자동으로 갱신됩니다.</p>
+        <p id="resultHint" class="result-hint">탐색 실행 버튼을 누르면 조건 반영 후 후보를 즉시 비교할 수 있습니다.</p>
         <div id="resultContainer" class="result-content"></div>
       </section>
     </main>
@@ -113,206 +120,206 @@
 
   <script>
     const PRESETS = {
-      newlywed: {
-        name: '신혼부부(기본)',
-        words: ['신혼부부', '신혼', '커플', '커플일상', '부부일상', '웨딩', '데이트', '부부브이로그'],
+      default: {
+        name: '뷰티/패션/라이프스타일',
+        words: ['뷰티', '패션', '라이프스타일', '브이로그', '리뷰', '데일리'],
         minFollowers: 8000,
-        maxFollowers: 12000,
-      },
-      daily: {
-        name: '커플일상 브이로그',
-        words: ['커플일상', '일상', '브이로그', '커플', '데이트', '생활'],
-        minFollowers: 9000,
-        maxFollowers: 13000,
-      },
-      parenting: {
-        name: '육아 전환형',
-        words: ['육아', '맘', '아기', '신생아', '아이', '가족'],
-        minFollowers: 7000,
         maxFollowers: 15000,
       },
-      custom: {
-        name: '커스텀',
-        words: ['신혼부부'],
-        minFollowers: 5000,
-        maxFollowers: 20000,
+      beauty: {
+        name: '뷰티 집중',
+        words: ['메이크업', '스킨케어', '뷰티루틴', '스킨', '향수', '헤어'],
+        minFollowers: 8000,
+        maxFollowers: 14000,
+      },
+      fashion: {
+        name: '패션 중심',
+        words: ['데일리룩', '스타일', '코디', '아웃핏', '셀프스타일링'],
+        minFollowers: 7000,
+        maxFollowers: 16000,
+      },
+      lifestyle: {
+        name: '라이프스타일',
+        words: ['브이로그', '주말', '식단', '홈카페', '커뮤니티', '브랜드'],
+        minFollowers: 8000,
+        maxFollowers: 15000,
       },
     };
 
     const DEMO_DATA = [
       {
-        id: 'p01',
-        name: '달빛여행 둘',
-        handle: 'dalbit_couple',
+        id: 'u01',
+        name: '로즈메이트',
+        handle: 'rosemate_daily',
         followers: 9640,
         private: false,
-        engagement: 3.8,
+        engagement: 4.2,
         score: 87,
-        bio: '신혼 1년차 커플, 하루 10분 브이로그',
-        tags: ['신혼부부', '커플일상', '브이로그', '데이트'],
-        avatar: 'https://picsum.photos/seed/dalbit/240/240',
+        bio: '뷰티·패션 루틴으로 일상을 만드는 크리에이터',
+        tags: ['뷰티', '메이크업', '패션', '루틴'],
+        avatar: 'https://picsum.photos/seed/rosemate/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/dalbit_feed_1/640/640', likes: 1280, comments: 54, caption: '첫 장거리 커피 데이트' },
-          { image: 'https://picsum.photos/seed/dalbit_feed_2/640/640', likes: 950, comments: 39, caption: '주말 집밥 데이' },
-          { image: 'https://picsum.photos/seed/dalbit_feed_3/640/640', likes: 1100, comments: 28, caption: '저녁 산책 브이로그' },
+          { image: 'https://picsum.photos/seed/rosemate_feed_1/640/640', likes: 1280, comments: 54, caption: '아침 피부 루틴을 정리한 30일 챌린지' },
+          { image: 'https://picsum.photos/seed/rosemate_feed_2/640/640', likes: 930, comments: 31, caption: '오늘의 데일리룩과 향수 노트' },
+          { image: 'https://picsum.photos/seed/rosemate_feed_3/640/640', likes: 1110, comments: 22, caption: '브런치 + 홈카페 조합' },
         ],
       },
       {
-        id: 'p02',
-        name: '허니문 리얼',
-        handle: 'honeymoon_real',
+        id: 'u02',
+        name: '패션바이블',
+        handle: 'fashionbible',
         followers: 10320,
         private: true,
-        engagement: 2.9,
+        engagement: 3.9,
         score: 76,
-        bio: '결혼 준비, 허니문 기록, 일상 공유',
-        tags: ['신혼', '결혼', '커플', '일상'],
-        avatar: 'https://picsum.photos/seed/honeymoon/240/240',
+        bio: '아웃핏 제안, 접근성 높은 코디, 라이프 루틴',
+        tags: ['패션', '코디', '아웃핏', '라이프'],
+        avatar: 'https://picsum.photos/seed/fashionbible/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/honeymoon_feed_1/640/640', likes: 830, comments: 31, caption: '주말 루틴 체크' },
-          { image: 'https://picsum.photos/seed/honeymoon_feed_2/640/640', likes: 910, comments: 20, caption: '신혼집 데코 코디' },
+          { image: 'https://picsum.photos/seed/fashionbible_feed_1/640/640', likes: 830, comments: 28, caption: '캠퍼스룩에서 오피스룩까지' },
+          { image: 'https://picsum.photos/seed/fashionbible_feed_2/640/640', likes: 920, comments: 16, caption: '주말 코디 체크포인트' },
         ],
       },
       {
-        id: 'p03',
-        name: '리틀러브',
-        handle: 'littlelove_couple',
+        id: 'u03',
+        name: '민트셀피',
+        handle: 'mintselfi',
         followers: 10980,
         private: false,
         engagement: 4.4,
         score: 91,
-        bio: '커플 건강루틴·체력관리',
-        tags: ['신혼부부', '운동', '커플', '건강'],
-        avatar: 'https://picsum.photos/seed/littlelove/240/240',
+        bio: '클린뷰티와 미니멀 라이프를 좋아합니다',
+        tags: ['클린뷰티', '스킨케어', '미니멀', '브이로그'],
+        avatar: 'https://picsum.photos/seed/mintselfi/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/littlelove_feed_1/640/640', likes: 1420, comments: 62, caption: '우산비데이' },
-          { image: 'https://picsum.photos/seed/littlelove_feed_2/640/640', likes: 1120, comments: 45, caption: '브런치 챌린지' },
-          { image: 'https://picsum.photos/seed/littlelove_feed_3/640/640', likes: 980, comments: 37, caption: '둘이 운동 3분전' },
+          { image: 'https://picsum.photos/seed/mintselfi_feed_1/640/640', likes: 1420, comments: 58, caption: '오늘의 수분 장벽 루틴' },
+          { image: 'https://picsum.photos/seed/mintselfi_feed_2/640/640', likes: 1140, comments: 49, caption: '데일리 아웃핏과 카탈로그 없는 화장' },
+          { image: 'https://picsum.photos/seed/mintselfi_feed_3/640/640', likes: 980, comments: 37, caption: '클린 패션 30일 실험' },
         ],
       },
       {
-        id: 'p04',
-        name: '함께라 좋아',
-        handle: 'togethergood',
+        id: 'u04',
+        name: '카멜레이블',
+        handle: 'camelelabel',
         followers: 9850,
         private: false,
-        engagement: 5.1,
-        score: 83,
-        bio: '주말 커플 데이트 + 신혼 브이로그',
-        tags: ['커플일상', '부부일상', '데이트', '브이로그'],
-        avatar: 'https://picsum.photos/seed/together/240/240',
+        engagement: 4.7,
+        score: 84,
+        bio: '패션과 라이프스타일을 편안하게 연결',
+        tags: ['패션', '스타일', '리뷰', '브랜딩'],
+        avatar: 'https://picsum.photos/seed/camelelabel/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/together_feed_1/640/640', likes: 1320, comments: 48, caption: '저녁 산책' },
-          { image: 'https://picsum.photos/seed/together_feed_2/640/640', likes: 1180, comments: 35, caption: '브이로그 한 컷' },
+          { image: 'https://picsum.photos/seed/camelelabel_feed_1/640/640', likes: 1320, comments: 48, caption: '스타일로 정리한 한 주간 루틴' },
+          { image: 'https://picsum.photos/seed/camelelabel_feed_2/640/640', likes: 1180, comments: 33, caption: '브랜드 협업 후 느낀 점' },
         ],
       },
       {
-        id: 'p05',
-        name: '한지붕 두사람',
-        handle: 'oneroom_couple',
+        id: 'u05',
+        name: '루틴스튜디오',
+        handle: 'rutin_studio',
         followers: 11800,
         private: false,
-        engagement: 4.0,
-        score: 79,
-        bio: '결혼식 준비, 신혼살림 초반 기록',
-        tags: ['웨딩', '신혼', '부부일상'],
-        avatar: 'https://picsum.photos/seed/oneroom/240/240',
+        engagement: 4.1,
+        score: 81,
+        bio: '루틴형 뷰티·라이프 콘텐츠를 꾸준히 업로드',
+        tags: ['루틴', '라이프스타일', '스킨케어', '메이크업'],
+        avatar: 'https://picsum.photos/seed/rutinstudio/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/oneroom_feed_1/640/640', likes: 1500, comments: 52, caption: '첫 주방 정리' },
-          { image: 'https://picsum.photos/seed/oneroom_feed_2/640/640', likes: 990, comments: 26, caption: '초반 가전 브이로그' },
-          { image: 'https://picsum.photos/seed/oneroom_feed_3/640/640', likes: 860, comments: 31, caption: '주말 집안일 루틴' },
+          { image: 'https://picsum.photos/seed/rutinstudio_feed_1/640/640', likes: 1500, comments: 52, caption: '월말 루틴 체크리스트' },
+          { image: 'https://picsum.photos/seed/rutinstudio_feed_2/640/640', likes: 980, comments: 24, caption: '브랜드 데일리 사용 후기' },
+          { image: 'https://picsum.photos/seed/rutinstudio_feed_3/640/640', likes: 860, comments: 31, caption: '한여름 메이크업 라이트 룩' },
         ],
       },
       {
-        id: 'p06',
-        name: '우정보다 사랑',
-        handle: 'friend2love',
+        id: 'u06',
+        name: '그린리듬',
+        handle: 'greenrhyme',
         followers: 10860,
         private: false,
         engagement: 3.6,
-        score: 84,
-        bio: '커플 건강식, 감성 브이로그',
-        tags: ['커플', '육아', '신혼부부', '브이로그'],
-        avatar: 'https://picsum.photos/seed/friend2love/240/240',
+        score: 78,
+        bio: '감성 라이프스타일, 패션, 피부관리 노트 정리',
+        tags: ['라이프스타일', '피부관리', '패션'],
+        avatar: 'https://picsum.photos/seed/greenrhyme/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/friend2love_feed_1/640/640', likes: 1140, comments: 44, caption: '저녁 요리' },
-          { image: 'https://picsum.photos/seed/friend2love_feed_2/640/640', likes: 1000, comments: 18, caption: '공원 산책' },
+          { image: 'https://picsum.photos/seed/greenrhyme_feed_1/640/640', likes: 1140, comments: 40, caption: '주말 루틴 메이커의 한 컷' },
+          { image: 'https://picsum.photos/seed/greenrhyme_feed_2/640/640', likes: 1000, comments: 18, caption: '공장형 필링 루틴 리뷰' },
         ],
       },
       {
-        id: 'p07',
-        name: '브리프커플',
-        handle: 'brief_couple',
+        id: 'u07',
+        name: '더블유뷰티',
+        handle: 'doublewbeauty',
         followers: 8900,
         private: false,
         engagement: 4.8,
         score: 88,
-        bio: '짧은 일상 기록, 커플 루틴',
-        tags: ['커플일상', '결혼', '부부', '데이트'],
-        avatar: 'https://picsum.photos/seed/briefcouple/240/240',
+        bio: '브랜드 콜라보 중심의 뷰티 크리에이터',
+        tags: ['브랜드', '협찬', '메이크업', '뷰티'],
+        avatar: 'https://picsum.photos/seed/doublewbeauty/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/brief_feed_1/640/640', likes: 870, comments: 28, caption: '한강 나들이' },
-          { image: 'https://picsum.photos/seed/brief_feed_2/640/640', likes: 920, comments: 33, caption: '우울하지 않은 일상' },
+          { image: 'https://picsum.photos/seed/doublewbeauty_feed_1/640/640', likes: 870, comments: 28, caption: '향수 데일리 사용 노트' },
+          { image: 'https://picsum.photos/seed/doublewbeauty_feed_2/640/640', likes: 920, comments: 33, caption: '메이크업 라이트웨이브' },
         ],
       },
       {
-        id: 'p08',
-        name: '맑은 하루',
-        handle: 'myeonghae_daily',
-        followers: 9500,
+        id: 'u08',
+        name: '하루한컷',
+        handle: 'onecutaday',
+        followers: 9510,
         private: false,
-        engagement: 4.6,
+        engagement: 4.3,
         score: 90,
-        bio: '커플 라이프 스타일, 소소한 데일리',
-        tags: ['신혼부부', '커플', '일상', '홈라이프'],
-        avatar: 'https://picsum.photos/seed/myeonghae/240/240',
+        bio: '매일 한 장면, 한 번의 변화',
+        tags: ['데일리', '브이로그', '스타일', '트랜드'],
+        avatar: 'https://picsum.photos/seed/onecutaday/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/myeonghae_feed_1/640/640', likes: 1285, comments: 53, caption: '홈 카페' },
-          { image: 'https://picsum.photos/seed/myeonghae_feed_2/640/640', likes: 1135, comments: 41, caption: '주말 브런치' },
-          { image: 'https://picsum.photos/seed/myeonghae_feed_3/640/640', likes: 1002, comments: 21, caption: '야식 데이트' },
+          { image: 'https://picsum.photos/seed/onecutaday_feed_1/640/640', likes: 1285, comments: 53, caption: '오전 메이크업, 오후 코디 교체' },
+          { image: 'https://picsum.photos/seed/onecutaday_feed_2/640/640', likes: 1135, comments: 41, caption: '브랜딩 룩북 3컷' },
+          { image: 'https://picsum.photos/seed/onecutaday_feed_3/640/640', likes: 1002, comments: 21, caption: '집중력이 높은 루틴 공유' },
         ],
       },
       {
-        id: 'p09',
-        name: '오브젝트 커플',
-        handle: 'object_couple',
-        followers: 10120,
+        id: 'u09',
+        name: '브런치카페',
+        handle: 'brunchcafe',
+        followers: 10210,
         private: true,
         engagement: 3.4,
         score: 75,
-        bio: '소품 리뷰 + 집꾸미기',
-        tags: ['커플', '브이로그', '리빙', '신혼'],
-        avatar: 'https://picsum.photos/seed/objectcouple/240/240',
+        bio: '카페 중심 라이프스타일과 패션 피스 테스트',
+        tags: ['카페', '패션', '라이프스타일', '브이로그'],
+        avatar: 'https://picsum.photos/seed/brunchcafe/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/object_feed_1/640/640', likes: 770, comments: 23, caption: '조명 바꿨다' },
-          { image: 'https://picsum.photos/seed/object_feed_2/640/640', likes: 900, comments: 17, caption: '주말 청소' },
+          { image: 'https://picsum.photos/seed/brunchcafe_feed_1/640/640', likes: 770, comments: 23, caption: '금요일 저녁 스타일 체크' },
+          { image: 'https://picsum.photos/seed/brunchcafe_feed_2/640/640', likes: 900, comments: 17, caption: '브랜드 루틴 촬영 스케줄' },
         ],
       },
       {
-        id: 'p10',
-        name: '한강 데이트로그',
-        handle: 'hangang_dates',
+        id: 'u10',
+        name: '로컬룩북',
+        handle: 'locallookbook',
         followers: 10950,
         private: false,
         engagement: 4.1,
         score: 86,
-        bio: '부부 데일리 + 주간 루틴',
-        tags: ['데이트', '신혼부부', '일상', '커플일상'],
-        avatar: 'https://picsum.photos/seed/hangang/240/240',
+        bio: '동네 라이프와 뷰티 트렌드를 한 번에',
+        tags: ['로컬', '뷰티', '패션', '데이트'],
+        avatar: 'https://picsum.photos/seed/locallookbook/320/320',
         profileUrl: '#',
         feed: [
-          { image: 'https://picsum.photos/seed/hangang_feed_1/640/640', likes: 1230, comments: 42, caption: '한강 산책' },
-          { image: 'https://picsum.photos/seed/hangang_feed_2/640/640', likes: 910, comments: 30, caption: '수다 브이로그' },
-          { image: 'https://picsum.photos/seed/hangang_feed_3/640/640', likes: 1042, comments: 19, caption: '저녁 데이트' },
+          { image: 'https://picsum.photos/seed/locallookbook_feed_1/640/640', likes: 1230, comments: 42, caption: '로컬 브이로그 + 데일리 메이크업' },
+          { image: 'https://picsum.photos/seed/locallookbook_feed_2/640/640', likes: 910, comments: 30, caption: '주말 코디 리포트' },
+          { image: 'https://picsum.photos/seed/locallookbook_feed_3/640/640', likes: 1042, comments: 19, caption: '제품 사용기 간단 리뷰' },
         ],
       },
     ];
@@ -321,6 +328,7 @@
     let currentView = 'feed';
 
     const els = {
+      promptInput: document.getElementById('promptInput'),
       presetSelect: document.getElementById('presetSelect'),
       keywordInput: document.getElementById('keywordInput'),
       minFollowers: document.getElementById('minFollowers'),
@@ -343,6 +351,32 @@
     const viewModeButtons = Array.from(document.querySelectorAll('.view-mode button'));
     const panels = Array.from(document.querySelectorAll('.panel'));
 
+    const PROMPT_STOPWORDS = new Set([
+      '인플루언서',
+      '콘텐츠',
+      '탐색',
+      '후보',
+      '추천',
+      '찾아줘',
+      '찾아',
+      '알려줘',
+      '기준',
+      '기반',
+      '중심',
+      '포함',
+      '팔로워',
+      '대상',
+      '계정',
+      '채널',
+      '이상',
+      '이하',
+      '대략',
+      '넘는',
+      '이상으로',
+      '내로',
+      '내외',
+    ]);
+
     function formatNum(v) {
       return `${new Intl.NumberFormat('ko-KR').format(v)}명`;
     }
@@ -351,19 +385,79 @@
       return `${(Number(v) || 0).toFixed(1)}%`;
     }
 
+    function normalizeNumberToken(token) {
+      const parsed = Number(String(token).replace(/,/g, ''));
+      if (!Number.isFinite(parsed)) return null;
+      return parsed;
+    }
+
+    function parseUnitizedNumber(numText, unit) {
+      const base = normalizeNumberToken(numText);
+      if (base === null) return null;
+      if (unit === '천' || unit === 'k' || unit === 'K') return base * 1000;
+      if (unit === '만') return base * 10000;
+      return base;
+    }
+
+    function parsePromptRange(text) {
+      const raw = (text || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      const spaced = raw.replace(/천|만/g, ' $& ');
+      const rangeMatch = spaced.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*(?:~|to|에서|사이|-)\s*(\d+(?:\.\d+)?)\s*(천|만|k|K)?/);
+      if (rangeMatch) {
+        const left = parseUnitizedNumber(rangeMatch[1], rangeMatch[2] || '');
+        const right = parseUnitizedNumber(rangeMatch[3], rangeMatch[4] || rangeMatch[2] || '');
+        if (left !== null && right !== null) {
+          return {
+            minFollowers: Math.min(left, right),
+            maxFollowers: Math.max(left, right),
+          };
+        }
+      }
+
+      const minMatch = raw.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*이상/);
+      const maxMatch = raw.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*이하/);
+      if (minMatch && !maxMatch) {
+        const minFollowers = parseUnitizedNumber(minMatch[1], minMatch[2] || '');
+        if (minFollowers !== null) return { minFollowers };
+      }
+      if (maxMatch && !minMatch) {
+        const maxFollowers = parseUnitizedNumber(maxMatch[1], maxMatch[2] || '');
+        if (maxFollowers !== null) return { maxFollowers };
+      }
+
+      return {};
+    }
+
+    function parsePromptKeywords(text) {
+      return (text || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9가-힣,\s]/g, ' ')
+        .split(',')
+        .flatMap((chunk) => chunk.split(/\s+/g))
+        .map((term) => term.trim())
+        .filter(Boolean)
+        .filter((term) => term.length > 1 && !PROMPT_STOPWORDS.has(term));
+    }
+
+    function parsePromptControls(text) {
+      return {
+        ...parsePromptRange(text),
+        includePrivate: /비공개\s*포함|비공개계정\s*포함/.test((text || '').toLowerCase()),
+        terms: parsePromptKeywords(text),
+      };
+    }
+
     function applyTab(tabName) {
       tabButtons.forEach((btn) => {
         const on = btn.dataset.tab === tabName;
         btn.classList.toggle('active', on);
         btn.setAttribute('aria-selected', on ? 'true' : 'false');
       });
-      panels.forEach((p) => {
-        p.classList.toggle('active', p.dataset.tab === tabName);
-      });
+      panels.forEach((p) => p.classList.toggle('active', p.dataset.tab === tabName));
       if (tabName === 'board') {
         render();
-+      } else if (tabName === 'data') {
-+        els.resultHint.textContent = '필터를 수정한 뒤 조건을 적용하면 결과 보드에서 바로 확인할 수 있습니다.';
+      } else if (tabName === 'data') {
+        els.resultHint.textContent = '데이터를 불러온 뒤 탐색 설정으로 가서 즉시 조건을 이어서 실행하세요.';
       }
     }
 
@@ -374,17 +468,22 @@
         option.textContent = PRESETS[key].name;
         els.presetSelect.appendChild(option);
       });
-      els.presetSelect.value = 'newlywed';
-      els.keywordInput.value = PRESETS.newlywed.words.join(', ');
-      els.minFollowers.value = PRESETS.newlywed.minFollowers;
-      els.maxFollowers.value = PRESETS.newlywed.maxFollowers;
+      setPreset('default');
+    }
+
+    function setPreset(name) {
+      const preset = PRESETS[name] || PRESETS.default;
+      els.presetSelect.value = name;
+      els.keywordInput.value = preset.words.join(', ');
+      els.minFollowers.value = preset.minFollowers;
+      els.maxFollowers.value = preset.maxFollowers;
     }
 
     function parseCsvRows(text) {
       const rows = [];
       let row = [];
       let value = '';
-      let isInQuotes = false;
+      let inQuotes = false;
 
       const pushValue = () => {
         row.push(value.trim());
@@ -402,13 +501,13 @@
         const ch = text[i];
         const next = text[i + 1];
 
-        if (isInQuotes) {
+        if (inQuotes) {
           if (ch === '"') {
             if (next === '"') {
               value += '"';
               i += 1;
             } else {
-              isInQuotes = false;
+              inQuotes = false;
             }
           } else {
             value += ch;
@@ -417,7 +516,7 @@
         }
 
         if (ch === '"') {
-          isInQuotes = true;
+          inQuotes = true;
         } else if (ch === ',') {
           pushValue();
         } else if (ch === '\n') {
@@ -448,33 +547,37 @@
       });
     }
 
-    function normalizeKeywords(raw) {
-      return raw
-        .split(',')
-        .map((x) => x.trim().toLowerCase())
-        .filter(Boolean);
-    }
-
     function matchesKeywordText(profile, terms) {
       const target = `${profile.name} ${profile.handle} ${profile.bio || ''} ${(profile.tags || []).join(' ')}`.toLowerCase();
-      return terms.some((t) => target.includes(t));
+      return terms.some((term) => target.includes(term));
     }
 
     function getFilteredData() {
-      const preset = PRESETS[els.presetSelect.value] || PRESETS.custom;
-      const inputTerms = normalizeKeywords(els.keywordInput.value);
-      const queryTerms = [...preset.words.map((x) => x.toLowerCase()), ...inputTerms];
-      const minFollowers = Number(els.minFollowers.value);
-      const maxFollowers = Number(els.maxFollowers.value);
-      const includePrivate = els.includePrivate.checked;
+      const preset = PRESETS[els.presetSelect.value] || PRESETS.default;
+      const inputTerms = els.keywordInput.value
+        .split(',')
+        .map((x) => x.trim().toLowerCase())
+        .filter(Boolean);
+
+      const prompt = parsePromptControls(els.promptInput.value || '');
+      const promptTerms = (prompt.terms || []).map((x) => x.toLowerCase());
+      const queryTerms = [...new Set([...preset.words, ...inputTerms, ...promptTerms])];
+
+      const minFollowers = Number.isFinite(Number(els.minFollowers.value)) ? Number(els.minFollowers.value) : NaN;
+      const maxFollowers = Number.isFinite(Number(els.maxFollowers.value)) ? Number(els.maxFollowers.value) : NaN;
+      const includePrivate = els.includePrivate.checked || prompt.includePrivate;
+      const parsedMin = Number.isFinite(prompt.minFollowers) ? prompt.minFollowers : NaN;
+      const parsedMax = Number.isFinite(prompt.maxFollowers) ? prompt.maxFollowers : NaN;
+      const activeMin = Number.isFinite(parsedMin) ? parsedMin : minFollowers;
+      const activeMax = Number.isFinite(parsedMax) ? parsedMax : maxFollowers;
 
       let list = currentData.filter((p) => {
         if (!includePrivate && p.private) return false;
-        if (Number.isFinite(minFollowers) && p.followers < minFollowers) return false;
-        if (Number.isFinite(maxFollowers) && p.followers > maxFollowers) return false;
+        if (Number.isFinite(activeMin) && p.followers < activeMin) return false;
+        if (Number.isFinite(activeMax) && p.followers > activeMax) return false;
         if (!queryTerms.length) return true;
         if (matchesKeywordText(p, queryTerms)) return true;
-        return (p.tags || []).some((t) => queryTerms.includes(t.toLowerCase()));
+        return (p.tags || []).some((tag) => queryTerms.includes(String(tag).toLowerCase()));
       });
 
       const sorter = els.sortSelect.value;
@@ -532,7 +635,7 @@
       });
 
       if (!tiles.length) {
-        return '<p class="empty">포스트 데이터가 없어 피드를 렌더링할 수 없습니다.</p>';
+        return '<p class="empty">포스트 데이터가 없어 피드를 표시할 수 없습니다.</p>';
       }
 
       return tiles
@@ -606,9 +709,9 @@
         <span>평균 스코어 ${avgScore.toFixed(1)}</span>
       `;
       if (list.length) {
-        els.resultHint.textContent = '필터 조건을 기준으로 정렬·요약한 실사용용 후보 리스트입니다.';
+        els.resultHint.textContent = '탐색 조건으로 선별된 후보를 카드/피드/리스트로 바로 비교하세요.';
       } else {
-        els.resultHint.textContent = '조건에 맞는 후보가 없습니다. 키워드/팔로워 범위를 넓혀보세요.';
+        els.resultHint.textContent = '조건에 맞는 후보가 없습니다. 팔로워 범위 또는 키워드를 넓혀주세요.';
       }
 
       if (currentView === 'profile') {
@@ -626,20 +729,20 @@
     function csvToProfiles(rows) {
       return rows
         .map((r) => {
-          const handle = r.username || r.handle || r.id || '';
+          const handle = (r.username || r.handle || r.id || '').replace(/^@/, '').trim();
           const followers = Number((r.followers || r.follower_count || r.follow_count || '0').replace(/,/g, '')) || 0;
           const engagement = Number(r.engagement_rate || r.engagement || 0);
           const score = Number(r.keyword_hit || r.score || 0);
           const tags = r.tags
             ? r.tags
-                .split(',')
+                .split(/[,|]/)
                 .map((x) => x.trim())
                 .filter(Boolean)
-            : [r.keyword_hit || '신혼부부'];
+            : ['뷰티', '패션', '라이프스타일'];
 
           return {
             id: handle || Math.random().toString(36).slice(2),
-            name: r.full_name || handle || 'Unknown',
+            name: r.full_name || r.display_name || handle || 'Unknown',
             handle,
             followers,
             private: String(r.is_private).toLowerCase() === 'true',
@@ -647,8 +750,8 @@
             score: score || 0,
             bio: r.bio || '',
             tags,
-            profileUrl: r.profile_url || `https://www.instagram.com/${handle.replace(/^@/, '')}`,
-            avatar: r.avatar_url || `https://i.pravatar.cc/240?u=${encodeURIComponent(handle)}`,
+            profileUrl: r.profile_url || `https://www.instagram.com/${handle}`,
+            avatar: r.avatar_url || `https://i.pravatar.cc/320?u=${encodeURIComponent(handle)}`,
             feed: [],
           };
         })
@@ -656,11 +759,10 @@
     }
 
     function updatePresetInputs() {
-      const preset = PRESETS[els.presetSelect.value] || PRESETS.custom;
+      const preset = PRESETS[els.presetSelect.value] || PRESETS.default;
       if (!els.keywordInput.value.trim()) els.keywordInput.value = preset.words.join(', ');
       if (!els.minFollowers.value) els.minFollowers.value = preset.minFollowers;
       if (!els.maxFollowers.value) els.maxFollowers.value = preset.maxFollowers;
-      render();
     }
 
     function downloadCSV() {
@@ -699,9 +801,9 @@
         return;
       }
       currentData = profiles;
-      els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어씀`; 
-      render();
+      els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어썼습니다.`;
       applyTab('board');
+      render();
     }
 
     async function loadCsvFromUrl() {
@@ -713,9 +815,7 @@
 
       try {
         const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('응답 오류');
-        }
+        if (!response.ok) throw new Error('응답 오류');
         const text = await response.text();
         const rows = rowsToObjects(text);
         const profiles = csvToProfiles(rows);
@@ -724,20 +824,17 @@
           return;
         }
         currentData = profiles;
-        els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어씀`;
-        render();
+        els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어썼습니다.`;
         applyTab('board');
+        render();
       } catch (err) {
         alert('URL에서 CSV를 불러오지 못했습니다. 접근 권한/CORS/URL을 확인해 주세요.');
       }
     }
 
     function resetFilters() {
-      els.presetSelect.value = 'newlywed';
-      updatePresetInputs();
-      els.keywordInput.value = PRESETS.newlywed.words.join(', ');
-      els.minFollowers.value = PRESETS.newlywed.minFollowers;
-      els.maxFollowers.value = PRESETS.newlywed.maxFollowers;
+      els.promptInput.value = '';
+      setPreset('default');
       els.includePrivate.checked = false;
       els.sortSelect.value = 'followers_desc';
       render();
@@ -760,7 +857,10 @@
       btn.addEventListener('click', () => setViewMode(btn.dataset.view));
     });
 
-    els.applyBtn.addEventListener('click', render);
+    els.applyBtn.addEventListener('click', () => {
+      render();
+      applyTab('board');
+    });
     els.resetBtn.addEventListener('click', resetFilters);
     els.exportBtn.addEventListener('click', downloadCSV);
     els.presetSelect.addEventListener('change', updatePresetInputs);
