@@ -1,0 +1,100 @@
+name: Run influencer-finder
+
+on:
+  workflow_dispatch:
+    inputs:
+      hashtags:
+        description: "해시태그 목록 (쉼표 구분)"
+        required: true
+        default: "신혼부부,커플일상,부부일상"
+      keywords:
+        description: "키워드 목록 (쉼표 구분)"
+        required: false
+        default: "신혼부부,신혼,부부,커플,커플일상,부부일상,웨딩"
+      min_followers:
+        description: "최소 팔로워"
+        required: false
+        default: "8000"
+      max_followers:
+        description: "최대 팔로워"
+        required: false
+        default: "15000"
+      posts_per_tag:
+        description: "해시태그당 수집 게시물 수"
+        required: false
+        default: "40"
+      posts_per_account:
+        description: "참여율 산정을 위한 계정당 게시물 수"
+        required: false
+        default: "8"
+      score_threshold:
+        description: "키워드 점수 임계값"
+        required: false
+        default: "1"
+      top_k:
+        description: "최대 출력 개수"
+        required: false
+        default: "200"
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  run-finder:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      - name: Run influencer finder
+        shell: bash
+        env:
+          IG_USER: ${{ secrets.IG_USER }}
+          IG_PASS: ${{ secrets.IG_PASS }}
+          HASHTAGS: ${{ github.event.inputs.hashtags }}
+          KEYWORDS: ${{ github.event.inputs.keywords }}
+          MIN_FOLLOWERS: ${{ github.event.inputs.min_followers }}
+          MAX_FOLLOWERS: ${{ github.event.inputs.max_followers }}
+          POSTS_PER_TAG: ${{ github.event.inputs.posts_per_tag }}
+          POSTS_PER_ACCOUNT: ${{ github.event.inputs.posts_per_account }}
+          SCORE_THRESHOLD: ${{ github.event.inputs.score_threshold }}
+          TOP_K: ${{ github.event.inputs.top_k }}
+        run: |
+          hashtags="${HASHTAGS:-신혼부부,커플일상,부부일상}"
+          keywords="${KEYWORDS:-신혼부부,신혼,부부,커플,커플일상,부부일상,웨딩}"
+          min_followers="${MIN_FOLLOWERS:-8000}"
+          max_followers="${MAX_FOLLOWERS:-15000}"
+          posts_per_tag="${POSTS_PER_TAG:-40}"
+          posts_per_account="${POSTS_PER_ACCOUNT:-8}"
+          score_threshold="${SCORE_THRESHOLD:-1}"
+          top_k="${TOP_K:-200}"
+
+          influencer-finder \
+            --hashtags "$hashtags" \
+            --keywords "$keywords" \
+            --min-followers "$min_followers" \
+            --max-followers "$max_followers" \
+            --posts-per-tag "$posts_per_tag" \
+            --posts-per-account "$posts_per_account" \
+            --score-threshold "$score_threshold" \
+            --top-k "$top_k" \
+            --out outputs/couple_candidates.csv
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: influencer-finder-result
+          path: outputs/couple_candidates.csv

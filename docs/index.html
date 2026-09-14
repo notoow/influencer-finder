@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Influencer Finder | 신혼부부 인스타 후보 보드</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="팔로워 1만명 내외 신혼부부 인스타그램 인플루언서 자동 후보 보드" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero card">
+      <p class="eyebrow">HIPA</p>
+      <h1>VIP 부부 마케팅 대시보드</h1>
+      <p class="sub">
+        팔로워 1만명 내외 신혼부부 인스타 후보를 <strong>뷰티/브이로그 느낌의 피드</strong>로 탐색하세요.
+        기본 세팅은 신혼부부로 고정하고, 원하는 경우 키워드·팔로워 범위를 바로 커스텀할 수 있습니다.
+      </p>
+      <div class="hero-actions">
+        <a href="https://github.com/notoow/influencer-finder">GitHub 저장소</a>
+        <a href="https://github.com/notoow/influencer-finder/blob/main/README.md">README</a>
+        <span class="badge">GitHub Pages Ready</span>
+      </div>
+    </header>
+
+    <section class="card controls">
+      <div class="control-head">
+        <h2>탐색 조건</h2>
+        <p>필수 필터만 최소 세팅하면 바로 실행 가능합니다.</p>
+      </div>
+
+      <div class="control-grid">
+        <label class="field">
+          <span>탐색 타겟(기본값)</span>
+          <select id="presetSelect"></select>
+        </label>
+        <label class="field">
+          <span>추가 키워드(쉼표 구분)</span>
+          <input id="keywordInput" placeholder="ex) 브이로그,커플일상,허니문" />
+        </label>
+        <label class="field">
+          <span>팔로워 최소</span>
+          <input id="minFollowers" type="number" />
+        </label>
+        <label class="field">
+          <span>팔로워 최대</span>
+          <input id="maxFollowers" type="number" />
+        </label>
+        <label class="field">
+          <span>정렬</span>
+          <select id="sortSelect">
+            <option value="followers_desc">팔로워 많은 순</option>
+            <option value="followers_asc">팔로워 적은 순</option>
+            <option value="score_desc">키워드 스코어 높은 순</option>
+            <option value="engagement_desc">참여율 높은 순</option>
+            <option value="name_asc">이름 오름차순</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>뷰모드</span>
+          <div class="toggle">
+            <button type="button" class="active" data-view="profile">프로필</button>
+            <button type="button" data-view="feed">피드</button>
+            <button type="button" data-view="list">리스트</button>
+          </div>
+        </label>
+        <label class="field checkbox">
+          <input id="includePrivate" type="checkbox" />
+          <span>비공개 계정 포함</span>
+        </label>
+      </div>
+
+      <div class="control-actions">
+        <button id="applyBtn" class="primary">조건 적용</button>
+        <button id="exportBtn" type="button">결과 CSV 다운로드</button>
+      </div>
+    </section>
+
+    <section class="card source">
+      <h2>데이터 연동(자동화)</h2>
+      <p>
+        로컬 CSV를 붙여넣으면 GitHub Actions 결과와 바로 연결됩니다.
+        (컬럼은 username, followers, bio, is_private, engagement_rate, keyword_hit, profile_url 등을 지원)
+      </p>
+      <div class="source-grid">
+        <label class="file-field">
+          <span>CSV 업로드</span>
+          <input id="csvFile" type="file" accept=".csv" />
+        </label>
+        <label class="url-field">
+          <span>GitHub Raw CSV URL</span>
+          <input id="csvUrl" type="url" placeholder="https://raw.githubusercontent.com/.../outputs/couple_candidates.csv" />
+        </label>
+        <button id="loadUrlBtn">URL로 불러오기</button>
+      </div>
+      <small>샘플 자동화: GH Actions에서 생성한 outputs/couple_candidates.csv를 퍼블릭 raw로 공개하고 URL로 붙이면 됩니다.</small>
+    </section>
+
+    <section class="card result-card">
+      <div class="result-head">
+        <div>
+          <h2>후보 보드</h2>
+          <p id="resultSummary">0개</p>
+        </div>
+        <div class="result-stats" id="resultStats"></div>
+      </div>
+      <div id="resultContainer" class="result-content"></div>
+    </section>
+  </main>
+
+  <script>
+    const PRESETS = {
+      newlywed: {
+        name: '신혼부부(기본)',
+        words: ['신혼부부', '신혼', '커플', '커플일상', '부부일상', '웨딩', '데이트', '부부브이로그'],
+        minFollowers: 8000,
+        maxFollowers: 12000
+      },
+      daily: {
+        name: '커플일상 브이로그',
+        words: ['커플일상', '일상', '브이로그', '커플', '데이트', '생활'],
+        minFollowers: 9000,
+        maxFollowers: 13000
+      },
+      parenting: {
+        name: '육아 전환형',
+        words: ['육아', '맘', '아기', '신생아', '아이', '가족'],
+        minFollowers: 7000,
+        maxFollowers: 15000
+      },
+      custom: {
+        name: '커스텀',
+        words: ['신혼부부'],
+        minFollowers: 5000,
+        maxFollowers: 20000
+      }
+    };
+
+    const DEMO_DATA = [
+      {
+        id: 'p01',
+        name: '달빛여행 둘',
+        handle: 'dalbit_couple',
+        followers: 9640,
+        private: false,
+        engagement: 3.8,
+        score: 87,
+        bio: '신혼 1년차 커플, 하루 10분 브이로그',
+        tags: ['신혼부부', '커플일상', '브이로그', '데이트'],
+        location: '서울',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/dalbit/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/dalbit_feed_1/640/640', likes: 1280, comments: 54, caption: '첫 장거리 커피 데이트' },
+          { image: 'https://picsum.photos/seed/dalbit_feed_2/640/640', likes: 950, comments: 39, caption: '주말 집밥 데이' },
+          { image: 'https://picsum.photos/seed/dalbit_feed_3/640/640', likes: 1100, comments: 28, caption: '저녁 산책 브이로그' }
+        ]
+      },
+      {
+        id: 'p02',
+        name: '허니문 리얼',
+        handle: 'honeymoon_real',
+        followers: 10320,
+        private: true,
+        engagement: 2.9,
+        score: 76,
+        bio: '결혼 준비, 허니문 기록, 일상 공유',
+        tags: ['신혼', '결혼', '커플', '일상'],
+        location: '부산',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/honeymoon/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/honeymoon_feed_1/640/640', likes: 830, comments: 31, caption: '주말 루틴 체크' },
+          { image: 'https://picsum.photos/seed/honeymoon_feed_2/640/640', likes: 910, comments: 20, caption: '신혼집 데코 코디' }
+        ]
+      },
+      {
+        id: 'p03',
+        name: '리틀러브',
+        handle: 'littlelove_couple',
+        followers: 10980,
+        private: false,
+        engagement: 4.4,
+        score: 91,
+        bio: '커플 건강루틴·체력관리',
+        tags: ['신혼부부', '운동', '커플', '건강'],
+        location: '대전',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/littlelove/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/littlelove_feed_1/640/640', likes: 1420, comments: 62, caption: '우산비데이' },
+          { image: 'https://picsum.photos/seed/littlelove_feed_2/640/640', likes: 1120, comments: 45, caption: '브런치 챌린지' },
+          { image: 'https://picsum.photos/seed/littlelove_feed_3/640/640', likes: 980, comments: 37, caption: '둘이 운동 3분전' }
+        ]
+      },
+      {
+        id: 'p04',
+        name: '함께라 좋아',
+        handle: 'togethergood',
+        followers: 9850,
+        private: false,
+        engagement: 5.1,
+        score: 83,
+        bio: '주말 커플 데이트 + 신혼 브이로그',
+        tags: ['커플일상', '부부일상', '데이트', '브이로그'],
+        location: '인천',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/together/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/together_feed_1/640/640', likes: 1320, comments: 48, caption: '저녁 산책' },
+          { image: 'https://picsum.photos/seed/together_feed_2/640/640', likes: 1180, comments: 35, caption: '브이로그 한 컷' }
+        ]
+      },
+      {
+        id: 'p05',
+        name: '한지붕 두사람',
+        handle: 'oneroom_couple',
+        followers: 11800,
+        private: false,
+        engagement: 4.0,
+        score: 79,
+        bio: '결혼식 준비, 신혼살림 초반 기록',
+        tags: ['웨딩', '신혼', '부부일상'],
+        location: '강남',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/oneroom/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/oneroom_feed_1/640/640', likes: 1500, comments: 52, caption: '첫 주방 정리' },
+          { image: 'https://picsum.photos/seed/oneroom_feed_2/640/640', likes: 990, comments: 26, caption: '초반 가전 브이로그' },
+          { image: 'https://picsum.photos/seed/oneroom_feed_3/640/640', likes: 860, comments: 31, caption: '주말 집안일 루틴' }
+        ]
+      },
+      {
+        id: 'p06',
+        name: '우정보다 사랑',
+        handle: 'friend2love',
+        followers: 10860,
+        private: false,
+        engagement: 3.6,
+        score: 84,
+        bio: '커플 건강식, 감성 브이로그',
+        tags: ['커플', '육아', '신혼부부', '브이로그'],
+        location: '대구',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/friend2love/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/friend2love_feed_1/640/640', likes: 1140, comments: 44, caption: '저녁 요리' },
+          { image: 'https://picsum.photos/seed/friend2love_feed_2/640/640', likes: 1000, comments: 18, caption: '공원 산책' }
+        ]
+      },
+      {
+        id: 'p07',
+        name: '브리프커플',
+        handle: 'brief_couple',
+        followers: 8900,
+        private: false,
+        engagement: 4.8,
+        score: 88,
+        bio: '짧은 일상 기록, 커플 루틴',
+        tags: ['커플일상', '결혼', '부부', '데이트'],
+        location: '서울',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/briefcouple/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/brief_feed_1/640/640', likes: 870, comments: 28, caption: '한강 나들이' },
+          { image: 'https://picsum.photos/seed/brief_feed_2/640/640', likes: 920, comments: 33, caption: '우울하지 않은 일상' }
+        ]
+      },
+      {
+        id: 'p08',
+        name: '맑은 하루',
+        handle: 'myeonghae_daily',
+        followers: 9500,
+        private: false,
+        engagement: 4.6,
+        score: 90,
+        bio: '커플 라이프 스타일, 소소한 데일리',
+        tags: ['신혼부부', '커플', '일상', '홈라이프'],
+        location: '경기',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/myeonghae/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/myeonghae_feed_1/640/640', likes: 1285, comments: 53, caption: '홈 카페' },
+          { image: 'https://picsum.photos/seed/myeonghae_feed_2/640/640', likes: 1135, comments: 41, caption: '주말 브런치' },
+          { image: 'https://picsum.photos/seed/myeonghae_feed_3/640/640', likes: 1002, comments: 21, caption: '야식 데이트' }
+        ]
+      },
+      {
+        id: 'p09',
+        name: '오브젝트 커플',
+        handle: 'object_couple',
+        followers: 10120,
+        private: true,
+        engagement: 3.4,
+        score: 75,
+        bio: '소품 리뷰 + 집꾸미기',
+        tags: ['커플', '브이로그', '리빙', '신혼'],
+        location: '서울',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/objectcouple/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/object_feed_1/640/640', likes: 770, comments: 23, caption: '조명 바꿨다' },
+          { image: 'https://picsum.photos/seed/object_feed_2/640/640', likes: 900, comments: 17, caption: '주말 청소' }
+        ]
+      },
+      {
+        id: 'p10',
+        name: '한강 데이트로그',
+        handle: 'hangang_dates',
+        followers: 10950,
+        private: false,
+        engagement: 4.1,
+        score: 86,
+        bio: '부부 데일리 + 주간 루틴',
+        tags: ['데이트', '신혼부부', '일상', '커플일상'],
+        location: '서울',
+        profileUrl: '#',
+        avatar: 'https://picsum.photos/seed/hangang/240/240',
+        feed: [
+          { image: 'https://picsum.photos/seed/hangang_feed_1/640/640', likes: 1230, comments: 42, caption: '한강 산책' },
+          { image: 'https://picsum.photos/seed/hangang_feed_2/640/640', likes: 910, comments: 30, caption: '수다 브이로그' },
+          { image: 'https://picsum.photos/seed/hangang_feed_3/640/640', likes: 1042, comments: 19, caption: '저녁 데이트' }
+        ]
+      }
+    ];
+
+    let currentData = [...DEMO_DATA];
+    let currentView = 'feed';
+
+    const els = {
+      presetSelect: document.getElementById('presetSelect'),
+      keywordInput: document.getElementById('keywordInput'),
+      minFollowers: document.getElementById('minFollowers'),
+      maxFollowers: document.getElementById('maxFollowers'),
+      sortSelect: document.getElementById('sortSelect'),
+      includePrivate: document.getElementById('includePrivate'),
+      resultSummary: document.getElementById('resultSummary'),
+      resultStats: document.getElementById('resultStats'),
+      resultContainer: document.getElementById('resultContainer'),
+      csvFile: document.getElementById('csvFile'),
+      csvUrl: document.getElementById('csvUrl'),
+      loadUrlBtn: document.getElementById('loadUrlBtn')
+    };
+
+    function formatNum(v) {
+      return `${new Intl.NumberFormat('ko-KR').format(v)}명`;
+    }
+    function formatRate(v) {
+      return `${(Number(v) || 0).toFixed(1)}%`;
+    }
+    function applyPresetOptions() {
+      Object.keys(PRESETS).forEach((key) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = PRESETS[key].name;
+        els.presetSelect.appendChild(option);
+      });
+      els.presetSelect.value = 'newlywed';
+      els.keywordInput.value = PRESETS.newlywed.words.join(', ');
+      els.minFollowers.value = PRESETS.newlywed.minFollowers;
+      els.maxFollowers.value = PRESETS.newlywed.maxFollowers;
+    }
+
+    function parseCsvRows(text) {
+      const rows = [];
+      let row = [];
+      let value = '';
+      let isInQuotes = false;
+      const pushValue = () => {
+        row.push(value.trim());
+        value = '';
+      };
+      const pushRow = () => {
+        if (row.length && row.some((x) => x !== '')) rows.push(row);
+        row = [];
+      };
+      for (let i = 0; i < text.length; i += 1) {
+        const ch = text[i];
+        const next = text[i + 1];
+        if (isInQuotes) {
+          if (ch === '"') {
+            if (next === '"') {
+              value += '"';
+              i++;
+            } else {
+              isInQuotes = false;
+            }
+          } else {
+            value += ch;
+          }
+        } else {
+          if (ch === '"') {
+            isInQuotes = true;
+          } else if (ch === ',') {
+            pushValue();
+          } else if (ch === '\n') {
+            pushValue();
+            pushRow();
+          } else if (ch === '\r') {
+            continue;
+          } else {
+            value += ch;
+          }
+        }
+      }
+      pushValue();
+      if (row.length && row.some((x) => x !== '')) rows.push(row);
+      return rows;
+    }
+
+    function rowsToObjects(text) {
+      const rows = parseCsvRows(text);
+      if (!rows.length) return [];
+      const header = rows[0].map((x) => x.trim().toLowerCase());
+      return rows.slice(1).map((r) => {
+        const obj = {};
+        header.forEach((h, idx) => {
+          obj[h] = (r[idx] || '').trim();
+        });
+        return obj;
+      });
+    }
+
+    function normalizeKeywords(raw) {
+      return raw
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean)
+        .map((x) => x.toLowerCase());
+    }
+
+    function matchesKeywordText(profile, terms) {
+      const target = `${profile.name} ${profile.handle} ${profile.bio || ''} ${(profile.tags || []).join(' ')}`.toLowerCase();
+      return terms.some((t) => target.includes(t));
+    }
+
+    function getFilteredData() {
+      const preset = PRESETS[els.presetSelect.value] || PRESETS.custom;
+      const termInputs = normalizeKeywords(els.keywordInput.value);
+      const queryTerms = [...preset.words.map((x) => x.toLowerCase()), ...termInputs];
+      const minFollowers = Number(els.minFollowers.value);
+      const maxFollowers = Number(els.maxFollowers.value);
+      const includePrivate = els.includePrivate.checked;
+
+      let list = currentData.filter((p) => {
+        if (!includePrivate && p.private) return false;
+        if (Number.isFinite(minFollowers) && p.followers < minFollowers) return false;
+        if (Number.isFinite(maxFollowers) && p.followers > maxFollowers) return false;
+        if (!queryTerms.length) return true;
+        if (matchesKeywordText(p, queryTerms)) return true;
+        return p.tags.some((t) => queryTerms.includes(t.toLowerCase()));
+      });
+
+      const sorter = els.sortSelect.value;
+      if (sorter === 'followers_desc') {
+        list.sort((a, b) => b.followers - a.followers);
+      } else if (sorter === 'followers_asc') {
+        list.sort((a, b) => a.followers - b.followers);
+      } else if (sorter === 'score_desc') {
+        list.sort((a, b) => b.score - a.score);
+      } else if (sorter === 'engagement_desc') {
+        list.sort((a, b) => b.engagement - a.engagement);
+      } else if (sorter === 'name_asc') {
+        list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+      }
+      return list;
+    }
+
+    function renderProfileCards(list) {
+      if (!list.length) {
+        return '<p class="empty">조건에 맞는 후보가 없습니다.</p>';
+      }
+      return list
+        .map(
+          (p) => `
+          <article class="profile-card">
+            <div class="profile-top">
+              <img class="avatar" src="${p.avatar}" alt="${p.name}" />
+              <div>
+                <h3>${p.name}</h3>
+                <p>${p.handle}</p>
+                <span class="${p.private ? 'pill negative' : 'pill positive'}">${p.private ? '비공개' : '공개'}</span>
+              </div>
+            </div>
+            <p class="bio">${p.bio}</p>
+            <div class="tagline">${(p.tags || []).map((t) => `<span>${t}</span>`).join('')}</div>
+            <div class="metrics">
+              <div><strong>${formatNum(p.followers)}</strong><small>팔로워</small></div>
+              <div><strong>${formatRate(p.engagement)}</strong><small>참여율</small></div>
+              <div><strong>${p.score}</strong><small>스코어</small></div>
+            </div>
+            <a class="link-btn" href="${p.profileUrl}" target="_blank" rel="noreferrer">프로필 열기</a>
+          </article>
+        `
+        )
+        .join('');
+    }
+
+    function renderFeed(list) {
+      const tiles = [];
+      list.forEach((p) => {
+        const posts = p.feed || [];
+        posts.slice(0, 2).forEach((f) => {
+          tiles.push({
+            user: p,
+            post: f
+          });
+        });
+      });
+      if (!tiles.length) return '<p class="empty">포스트 데이터가 없어 피드 렌더링할 수 없습니다.</p>';
+      return tiles
+        .map(
+          ({ user, post }) => `
+            <article class="feed-card">
+              <div class="feed-head">
+                <img src="${user.avatar}" alt="${user.name}" />
+                <div>
+                  <strong>${user.name}</strong>
+                  <span>${user.handle}</span>
+                </div>
+              </div>
+              <img class="feed-img" src="${post.image}" alt="feed" />
+              <p class="feed-caption">${post.caption}</p>
+              <div class="feed-meta">좋아요 ${post.likes} / 댓글 ${post.comments}</div>
+            </article>
+          `
+        )
+        .join('');
+    }
+
+    function renderList(list) {
+      if (!list.length) return '<p class="empty">조건에 맞는 후보가 없습니다.</p>';
+      return `
+        <div class="table-wrap">
+          <table class="list-table">
+            <thead>
+              <tr>
+                <th>프로필</th><th>팔로워</th><th>참여율</th><th>태그</th><th>스코어</th><th>상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list
+                .map(
+                  (p) => `
+                    <tr>
+                      <td>
+                        <a href="${p.profileUrl}" target="_blank" rel="noreferrer">
+                          ${p.name} (${p.handle})
+                        </a>
+                      </td>
+                      <td>${formatNum(p.followers)}</td>
+                      <td>${formatRate(p.engagement)}</td>
+                      <td>${(p.tags || []).join(', ')}</td>
+                      <td>${p.score}</td>
+                      <td>${p.private ? '비공개' : '공개'}</td>
+                    </tr>
+                  `
+                )
+                .join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function render() {
+      const list = getFilteredData();
+      els.resultSummary.textContent = `${list.length}개 후보`;
+      const avgFollowers = list.length ? list.reduce((acc, cur) => acc + cur.followers, 0) / list.length : 0;
+      const avgEngagement = list.length ? list.reduce((acc, cur) => acc + cur.engagement, 0) / list.length : 0;
+      const avgScore = list.length ? list.reduce((acc, cur) => acc + cur.score, 0) / list.length : 0;
+      els.resultStats.innerHTML = `
+        <span>평균 팔로워 ${formatNum(Math.round(avgFollowers))}</span>
+        <span>평균 참여율 ${formatRate(avgEngagement)}</span>
+        <span>평균 스코어 ${avgScore.toFixed(1)}</span>
+      `;
+
+      if (currentView === 'profile') {
+        els.resultContainer.className = 'result-content profile';
+        els.resultContainer.innerHTML = renderProfileCards(list);
+      } else if (currentView === 'list') {
+        els.resultContainer.className = 'result-content list';
+        els.resultContainer.innerHTML = renderList(list);
+      } else {
+        els.resultContainer.className = 'result-content feed';
+        els.resultContainer.innerHTML = renderFeed(list);
+      }
+    }
+
+    function csvToProfiles(rows) {
+      return rows
+        .map((r) => {
+          const handle = r.username || r.handle || r.id || '';
+          const followers = Number((r.followers || r.follower_count || r.follow_count || '0').replace(/,/g, '')) || 0;
+          const engagement = Number(r.engagement_rate || r.engagement || 0);
+          const score = Number(r.keyword_hit || r.score || 0);
+          const tags = r.tags
+            ? r.tags.split(',').map((x) => x.trim()).filter(Boolean)
+            : (r.keyword_hit ? [r.keyword_hit] : ['신혼부부']);
+          return {
+            id: handle || Math.random().toString(36).slice(2),
+            name: r.full_name || handle || 'Unknown',
+            handle,
+            followers,
+            private: String(r.is_private).toLowerCase() === 'true',
+            engagement,
+            score: score || 0,
+            bio: r.bio || '',
+            tags: tags,
+            location: r.location || '',
+            profileUrl: r.profile_url || 'https://www.instagram.com/' + handle.replace(/^@/, ''),
+            avatar: r.avatar_url || `https://i.pravatar.cc/240?u=${encodeURIComponent(handle)}`,
+            feed: []
+          };
+        })
+        .filter((x) => x.handle);
+    }
+
+    function updatePresetInputs() {
+      const preset = PRESETS[els.presetSelect.value] || PRESETS.custom;
+      if (els.keywordInput.value.trim() === '') {
+        els.keywordInput.value = preset.words.join(', ');
+      }
+      if (!els.minFollowers.value) {
+        els.minFollowers.value = preset.minFollowers;
+      }
+      if (!els.maxFollowers.value) {
+        els.maxFollowers.value = preset.maxFollowers;
+      }
+      render();
+    }
+
+    function downloadCSV() {
+      const data = getFilteredData();
+      if (!data.length) {
+        alert('내보낼 데이터가 없습니다.');
+        return;
+      }
+      const headers = ['username', 'followers', 'engagement_rate', 'keyword_hit', 'is_private', 'bio', 'tags', 'profile_url'];
+      const rows = data.map((p) => [
+        p.handle,
+        p.followers,
+        p.engagement,
+        p.score,
+        p.private ? 'TRUE' : 'FALSE',
+        `"${String(p.bio).replaceAll('"', '""')}"`,
+        `"${(p.tags || []).join('|').replaceAll('"', '""')}"`,
+        p.profileUrl
+      ]);
+      const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'filtered_influencers.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function loadCsvFromFile(file) {
+      const text = await file.text();
+      const rows = rowsToObjects(text);
+      const profiles = csvToProfiles(rows);
+      if (!profiles.length) {
+        alert('CSV 파싱 결과가 없습니다.');
+        return;
+      }
+      currentData = profiles;
+      render();
+      els.resultSummary.textContent = `${currentData.length}개 후보 불러옴`;
+    }
+
+    async function loadCsvFromUrl() {
+      const url = els.csvUrl.value.trim();
+      if (!url) return;
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+        if (!text) {
+          alert('CSV 응답이 비어 있습니다.');
+          return;
+        }
+        const rows = rowsToObjects(text);
+        const profiles = csvToProfiles(rows);
+        if (!profiles.length) {
+          alert('CSV 파싱 실패 혹은 지원되지 않는 헤더 형식입니다.');
+          return;
+        }
+        currentData = profiles;
+        render();
+      } catch (err) {
+        alert('URL에서 CSV를 불러오지 못했습니다. CORS/주소를 확인해 주세요.');
+      }
+    }
+
+    document.querySelectorAll('.toggle button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentView = btn.dataset.view;
+        document.querySelectorAll('.toggle button').forEach((b) => b.classList.toggle('active', b === btn));
+        render();
+      });
+    });
+    document.getElementById('applyBtn').addEventListener('click', render);
+    document.getElementById('exportBtn').addEventListener('click', downloadCSV);
+    els.presetSelect.addEventListener('change', updatePresetInputs);
+    els.loadUrlBtn.addEventListener('click', loadCsvFromUrl);
+    els.csvFile.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) loadCsvFromFile(file);
+    });
+
+    // 초깃값 적용
+    applyPresetOptions();
+    render();
+  </script>
+</body>
+</html>
