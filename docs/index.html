@@ -115,13 +115,13 @@
             </div>
 
             <div class="mode-selector">
-              <button type="button" class="mode-btn active" onclick="selectSearchMode(this, 'ai')">
+              <button type="button" class="mode-btn active">
                 <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i> AI 프롬프트 검색
               </button>
-              <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'brand')">
+              <button type="button" class="mode-btn">
                 <i data-lucide="tag" style="width: 13px; height: 13px;"></i> 브랜드 검색
               </button>
-              <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'similar')">
+              <button type="button" class="mode-btn">
                 <i data-lucide="user" style="width: 13px; height: 13px;"></i> 유사 계정 검색
               </button>
             </div>
@@ -286,7 +286,7 @@
               "한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 팔로워 1만 전후의 인플루언서"
             </p>
             <div class="filter-quick-actions">
-              <button type="button" class="sidebar-action-btn primary" onclick="editSearchPrompt()">
+              <button type="button" class="sidebar-action-btn primary" onclick="focusPrompt(); switchMainTab('search');">
                 <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i> 조건 수정
               </button>
               <button type="button" class="sidebar-action-btn" onclick="resetFilters()">
@@ -298,7 +298,7 @@
           <!-- Text search inside results -->
           <div class="sidebar-search-box">
             <i data-lucide="search" class="sidebar-search-icon" style="width: 15px; height: 15px;"></i>
-            <input type="text" id="keywordInput" placeholder="결과 내 키워드 검색..." oninput="renderResults()" />
+            <input type="text" id="keywordInput" placeholder="결과 내 키워드 검색..." />
           </div>
 
           <!-- Quick Filter Preset Badges -->
@@ -307,19 +307,19 @@
               <span><i data-lucide="sliders-horizontal" style="width: 13px; height: 13px;"></i> 추천 필터</span>
             </div>
             <div class="recommend-chips">
-              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_reach')">
+              <button type="button" class="recommend-chip-btn">
                 <span>📡 확산력 높은 계정</span>
                 <small style="color: var(--text-muted);">TOP 15%</small>
               </button>
-              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'fast_growth')">
+              <button type="button" class="recommend-chip-btn">
                 <span><i data-lucide="trending-up" style="width: 12px; height: 12px;"></i> 최근 성장성 좋은 계정</span>
                 <small style="color: var(--text-muted);">월 +8%↑</small>
               </button>
-              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_collab')">
+              <button type="button" class="recommend-chip-btn">
                 <span>🤝 협업 가능성 높은 계정</span>
                 <small style="color: var(--text-muted);">응답률 95%</small>
               </button>
-              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'affiliate')">
+              <button type="button" class="recommend-chip-btn">
                 <span>🛍️ Affiliate 쇼핑몰 운영</span>
                 <small style="color: var(--text-muted);">공구검증</small>
               </button>
@@ -334,8 +334,8 @@
               </div>
               <div class="accordion-content">
                 <div class="range-inputs">
-                  <input type="number" id="minFollowers" placeholder="최소 (예: 8000)" onchange="renderResults()" />
-                  <input type="number" id="maxFollowers" placeholder="최대 (예: 15000)" onchange="renderResults()" />
+                  <input type="number" id="minFollowers" placeholder="최소 (예: 8000)" />
+                  <input type="number" id="maxFollowers" placeholder="최대 (예: 15000)" />
                 </div>
                 <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
                   <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(5000, 10000)">5K - 10K</button>
@@ -350,7 +350,7 @@
                 <span><i data-lucide="globe" style="width: 13px; height: 13px;"></i> 활동 국가 & 언어</span>
               </div>
               <div class="accordion-content">
-                <select id="countrySelect" class="custom-select" style="width: 100%;" onchange="renderResults()">
+                <select id="countrySelect" class="custom-select" style="width: 100%;">
                   <option value="ALL">전체 국가 (Global)</option>
                   <option value="KR" selected>대한민국 (Korea)</option>
                   <option value="US">미국 (United States)</option>
@@ -365,7 +365,7 @@
               </div>
               <div class="accordion-content">
                 <label class="checkbox-label">
-                  <input type="checkbox" id="includePrivate" onchange="renderResults()" />
+                  <input type="checkbox" id="includePrivate" />
                   <span>비공개 계정 포함</span>
                 </label>
               </div>
@@ -396,12 +396,12 @@
 
             <div class="results-right-controls">
               <!-- Bookmark Filter Toggle -->
-              <button type="button" class="action-btn-outline" id="bookmarkFilterToggle" onclick="toggleBookmarkOnlyView()">
+              <button type="button" class="action-btn-outline" id="bookmarkFilterToggle" onclick="switchMainTab('bookmarks')">
                 <i data-lucide="bookmark" style="width: 13px; height: 13px;"></i> 북마크만 보기 (<span id="bookmarkFilterCount">0</span>)
               </button>
 
               <!-- Sorting Select -->
-              <select id="sortSelect" class="custom-select" onchange="renderResults()">
+              <select id="sortSelect" class="custom-select">
                 <option value="score_desc">🎯 AI 관련도/스코어순</option>
                 <option value="followers_desc" selected>👥 팔로워 많은 순</option>
                 <option value="followers_asc">👤 팔로워 적은 순</option>
@@ -409,28 +409,14 @@
                 <option value="name_asc">🔤 이름 오름차순</option>
               </select>
 
-
+              <!-- Export Button -->
+              <button type="button" class="action-btn-outline" onclick="exportCSV()">
+                <i data-lucide="download" style="width: 13px; height: 13px;"></i> CSV 내보내기
+              </button>
             </div>
           </div>
 
           <!-- Dynamic Influencer Container -->
-          <!-- AI Search Loading Animation -->
-          <div class="ai-result-summary" id="aiResultSummary" style="display: none;">
-            <span class="ai-badge">AI SEARCH</span>
-            <span id="aiSummaryText">검색 결과를 불러오고 있습니다...</span>
-          </div>
-
-          <div id="searchLoadingContainer" style="display: none;">
-            <div class="skeleton-grid">
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-              <div class="skeleton-card"><div class="skel-media"></div><div class="skel-body"><div class="skel-avatar-row"><div class="skel-avatar"></div><div class="skel-line" style="flex:1;"></div></div><div class="skel-line"></div><div class="skel-line"></div></div></div>
-            </div>
-          </div>
-
           <div id="resultsContainer" class="influencer-grid feed-mode">
             <!-- Rendered dynamically by JS -->
           </div>
@@ -438,8 +424,6 @@
 
       </section>
     </div>
-
-
 
   </div>
 
@@ -455,883 +439,7 @@
     </div>
   </div>
 
-  <!-- JavaScript Logic -->
-  <script>
-    // RICH DEMO DATASET - 40+ Influencers across diverse categories
-    const DEMO_DATA = [
-      {
-        id: 'u01', name: '소학커플', handle: 'ssohak_couple', country: 'KR', countryName: 'Korea',
-        followers: 9040, private: false, engagement: 4.6, score: 98,
-        bio: '한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 1만 전후 인플루언서',
-        tags: ['신혼부부', '라이프스타일', '커플', '데이트'],
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [
-          { image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80', likes: 1420, comments: 62, caption: '자기야 진정좀 해!! 신혼부부 주말 브런치 케미' },
-          { image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=80', likes: 1120, comments: 45, caption: '오늘의 홈카페 테이블 세팅' }
-        ]
-      },
-      {
-        id: 'u02', name: '리나 앤 모먼트', handle: 'reenauk33', country: 'KR', countryName: 'Korea',
-        followers: 9320, private: false, engagement: 4.1, score: 95,
-        bio: 'Romantic Couple Lifestyle Creator. 신혼집 인테리어 & 데일리룩',
-        tags: ['신혼부부', '인테리어', '패션', '브이로그'],
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', likes: 1890, comments: 84, caption: '신혼집 8평 거실 리모델링 완성 컷!' }]
-      },
-      {
-        id: 'u03', name: '윤성 커플', handle: 'yoon_seong_a', country: 'KR', countryName: 'Korea',
-        followers: 11900, private: false, engagement: 4.8, score: 96,
-        bio: 'Korean-Japanese Couple & Parenting Creator. 떡볶이 공구 open!',
-        tags: ['한일커플', '육아', '공구', '식단'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', likes: 2310, comments: 115, caption: '언제나 떡볶이 6차 공구 오픈 기념 이벤트!' }]
-      },
-      {
-        id: 'u04', name: '우라 브이로그', handle: 'woo_la', country: 'KR', countryName: 'Korea',
-        followers: 10900, private: false, engagement: 3.9, score: 89,
-        bio: 'Couple Lifestyle Vlogger. 일상 브이로그와 인테리어 조명 픽',
-        tags: ['브이로그', '조명', '신혼일상', '홈데코'],
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', likes: 1450, comments: 40, caption: '밤마다 틀어두는 감성 무드등과 아로마 디퓨저' }]
-      },
-      {
-        id: 'u05', name: '홈데코 큐레이터', handle: 'home_curator', country: 'KR', countryName: 'Korea',
-        followers: 10100, private: false, engagement: 4.3, score: 92,
-        bio: 'Newlywed Lifestyle & Home Decor Curator. 깔끔한 주방 살림템',
-        tags: ['홈데코', '살림템', '스킨케어', '뷰티'],
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80', likes: 1670, comments: 53, caption: '청소가 편해지는 주방 살림꿀템 TOP 5' }]
-      },
-      {
-        id: 'u06', name: '육아와 어쩌지', handle: 'bubu_life', country: 'KR', countryName: 'Korea',
-        followers: 10900, private: false, engagement: 4.5, score: 91,
-        bio: 'Parenting & Family Lifestyle Creator. 후쿠오카 가족 여행기',
-        tags: ['육아', '가족여행', '신혼', '일상'],
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', likes: 1980, comments: 76, caption: '육아 식단 어쩌지?! 급하게 만드는 연어 덮밥' }]
-      },
-      {
-        id: 'u07', name: '뷰티 나노 샬롯', handle: 'charlotte_skin', country: 'US', countryName: 'United States',
-        followers: 12500, private: false, engagement: 5.2, score: 97,
-        bio: 'North America Beauty & Clean Skincare Specialist. YesStyle Discount code',
-        tags: ['뷰티', '스킨케어', '미국', '클린뷰티'],
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', likes: 2840, comments: 132, caption: 'My daily morning skin barrier routine for glass skin ✨' }]
-      },
-      {
-        id: 'u08', name: '민트 라이프', handle: 'mint_lifestyle', country: 'KR', countryName: 'Korea',
-        followers: 8200, private: false, engagement: 4.0, score: 87,
-        bio: 'Infertility & Twin Pregnancy Journey. 신혼부부 건강 루틴',
-        tags: ['신혼부부', '임신준비', '식단', '건강'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', likes: 1210, comments: 39, caption: '딸기우유 붓고 눌렀더니 확화채 완성!' }]
-      },
-      // ---- NEW: Beauty & Skincare ----
-      {
-        id: 'u09', name: 'Glow Recipe Amy', handle: 'glow_amy', country: 'US', countryName: 'United States',
-        followers: 34200, private: false, engagement: 5.8, score: 99,
-        bio: 'K-Beauty Ambassador in NYC. Dermatologist-recommended skincare routines',
-        tags: ['K뷰티', '스킨케어', '글로우', 'NYC'],
-        avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=800&auto=format&fit=crop&q=80', likes: 4520, comments: 198, caption: 'My 10-step Korean skincare routine that changed everything 🧴' }]
-      },
-      {
-        id: 'u10', name: '뷰티탐정 은서', handle: 'eunseo_beauty', country: 'KR', countryName: 'Korea',
-        followers: 15800, private: false, engagement: 4.7, score: 94,
-        bio: '피부과 간호사 출신 뷰티 크리에이터. 성분 분석 & 솔직 리뷰',
-        tags: ['뷰티', '성분분석', '피부과', '리뷰'],
-        avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&auto=format&fit=crop&q=80', likes: 2180, comments: 87, caption: '쿠션 파운데이션 4종 비교 (내돈내산) 솔직 리뷰' }]
-      },
-      {
-        id: 'u11', name: 'Skincare by Mia', handle: 'mia_skinlab', country: 'US', countryName: 'United States',
-        followers: 22100, private: false, engagement: 5.1, score: 96,
-        bio: 'Clean beauty advocate. Cruelty-free & vegan skincare only 🌿',
-        tags: ['클린뷰티', '비건', '크루얼티프리', '스킨케어'],
-        avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&auto=format&fit=crop&q=80', likes: 3340, comments: 145, caption: 'Switching to all-vegan skincare changed my skin barrier 🌱' }]
-      },
-      // ---- NEW: Fashion & OOTD ----
-      {
-        id: 'u12', name: '소이 OOTD', handle: 'soi_ootd', country: 'KR', countryName: 'Korea',
-        followers: 18300, private: false, engagement: 4.4, score: 93,
-        bio: '29CM & W컨셉 감성 데일리룩. 미니멀 한국 패션 크리에이터',
-        tags: ['패션', 'OOTD', '29CM', '미니멀룩'],
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&auto=format&fit=crop&q=80', likes: 2560, comments: 94, caption: '가을 미니멀 코디 3가지 | W컨셉 세일 아이템 활용' }]
-      },
-      {
-        id: 'u13', name: 'Tokyo Style Yuna', handle: 'yuna_tokyo', country: 'JP', countryName: 'Japan',
-        followers: 27600, private: false, engagement: 3.8, score: 90,
-        bio: '도쿄 기반 한일 패션 크리에이터. Ura-Harajuku street style',
-        tags: ['패션', '도쿄', '스트릿', '하라주쿠'],
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80', likes: 3120, comments: 78, caption: 'Harajuku autumn coordinate 🍂 all thrifted!' }]
-      },
-      {
-        id: 'u14', name: 'EQL 감성 지우', handle: 'jiwoo_eql', country: 'KR', countryName: 'Korea',
-        followers: 14500, private: false, engagement: 4.9, score: 95,
-        bio: 'EQL·무신사 감성 패셔니스타. 데일리룩 & 향수 리뷰',
-        tags: ['패션', 'EQL', '무신사', '향수'],
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80', likes: 1980, comments: 67, caption: 'EQL 가을 신상 셋업 코디 | 출근룩으로도 완벽' }]
-      },
-      // ---- NEW: Fitness & Health ----
-      {
-        id: 'u15', name: '핏걸 소연', handle: 'soyeon_fit', country: 'KR', countryName: 'Korea',
-        followers: 21400, private: false, engagement: 5.3, score: 97,
-        bio: '필라테스 강사 & 홈트 크리에이터. 30일 바디 챌린지 진행중',
-        tags: ['피트니스', '필라테스', '홈트', '다이어트'],
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&auto=format&fit=crop&q=80', likes: 3450, comments: 167, caption: 'DAY 15/30 바디 챌린지 🔥 오늘은 코어 집중!' }]
-      },
-      {
-        id: 'u16', name: 'FitLife Jake', handle: 'jake_fitlife', country: 'US', countryName: 'United States',
-        followers: 45200, private: false, engagement: 4.1, score: 91,
-        bio: 'NASM Certified Trainer. Meal prep & workout routines for busy people',
-        tags: ['피트니스', '밀프렙', '트레이너', '미국'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=80', likes: 5120, comments: 234, caption: 'Full week meal prep in under 2 hours 🍗' }]
-      },
-      // ---- NEW: Food & Cooking ----
-      {
-        id: 'u17', name: '오늘뭐먹지', handle: 'today_food', country: 'KR', countryName: 'Korea',
-        followers: 32100, private: false, engagement: 5.6, score: 98,
-        bio: '집밥 레시피 & 맛집 탐방 크리에이터. 요리 초보도 가능한 5분 레시피',
-        tags: ['요리', '레시피', '집밥', '맛집'],
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80', likes: 4780, comments: 212, caption: '5분 완성 김치볶음밥 | 초보도 실패 없는 레시피' }]
-      },
-      {
-        id: 'u18', name: 'Bake with Lena', handle: 'lena_bakes', country: 'US', countryName: 'United States',
-        followers: 19700, private: false, engagement: 4.8, score: 93,
-        bio: 'Home baker & dessert creator. Aesthetic cakes & pastries 🎂',
-        tags: ['베이킹', '디저트', '케이크', '홈베이킹'],
-        avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1486427944544-d2c246c4df4c?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1486427944544-d2c246c4df4c?w=800&auto=format&fit=crop&q=80', likes: 2890, comments: 98, caption: 'Earl grey lavender cake for a rainy Sunday 🌧️' }]
-      },
-      // ---- NEW: Travel ----
-      {
-        id: 'u19', name: '여행갈래 민지', handle: 'minji_travel', country: 'KR', countryName: 'Korea',
-        followers: 26800, private: false, engagement: 4.2, score: 92,
-        bio: '여행 & 호캉스 전문 크리에이터. 일본 / 동남아 / 유럽 가이드',
-        tags: ['여행', '호캉스', '일본여행', '유럽'],
-        avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80', likes: 3340, comments: 124, caption: '오사카 3박4일 가성비 여행 코스 총정리 ✈️' }]
-      },
-      {
-        id: 'u20', name: 'Wanderlust Chris', handle: 'chris_wander', country: 'US', countryName: 'United States',
-        followers: 53400, private: false, engagement: 3.7, score: 89,
-        bio: 'Digital nomad & travel photographer. 40+ countries explored',
-        tags: ['여행', '사진', '디지털노마드', '미국'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&auto=format&fit=crop&q=80', likes: 6210, comments: 187, caption: 'Sunrise at the rice terraces in Bali 🌅' }]
-      },
-      // ---- NEW: Lifestyle & Interior ----
-      {
-        id: 'u21', name: '예쁜집 수진', handle: 'sujin_home', country: 'KR', countryName: 'Korea',
-        followers: 17200, private: false, engagement: 4.6, score: 94,
-        bio: '신혼 인테리어 & 수납 정리 크리에이터. IKEA & 다이소 활용법',
-        tags: ['인테리어', '수납', 'IKEA', '다이소'],
-        avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&auto=format&fit=crop&q=80', likes: 2340, comments: 89, caption: '다이소 5000원 이하 수납템으로 신혼집 정리하기' }]
-      },
-      {
-        id: 'u22', name: '미니멀 라이프 준호', handle: 'junho_minimal', country: 'KR', countryName: 'Korea',
-        followers: 13600, private: false, engagement: 3.9, score: 88,
-        bio: '미니멀리스트 라이프스타일. 물건 줄이기 & 심플 인테리어',
-        tags: ['미니멀', '라이프스타일', '인테리어', '정리'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&auto=format&fit=crop&q=80', likes: 1780, comments: 56, caption: '물건 200개 줄이고 느낀 것들 | 미니멀 라이프 6개월' }]
-      },
-      // ---- NEW: Pet & Animal ----
-      {
-        id: 'u23', name: '멍멍이네 일상', handle: 'puppy_daily', country: 'KR', countryName: 'Korea',
-        followers: 41200, private: false, engagement: 6.1, score: 99,
-        bio: '골든 리트리버 보리 & 콩이의 귀여운 일상. 반려동물 용품 리뷰',
-        tags: ['반려동물', '강아지', '골든리트리버', '펫스타그램'],
-        avatar: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&auto=format&fit=crop&q=80', likes: 7890, comments: 345, caption: '보리가 콩이 간식 훔쳐먹다 들킨 순간 ㅋㅋㅋ' }]
-      },
-      {
-        id: 'u24', name: 'Cat Mom Sarah', handle: 'sarah_catmom', country: 'US', countryName: 'United States',
-        followers: 28900, private: false, engagement: 5.4, score: 96,
-        bio: '3 rescue cats & counting 🐱 Cat behavior tips & product reviews',
-        tags: ['고양이', '반려동물', '캣맘', '입양'],
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&auto=format&fit=crop&q=80', likes: 4560, comments: 201, caption: 'Why your cat knocks things off tables (and how to stop it) 😼' }]
-      },
-      // ---- NEW: Hair & Nail ----
-      {
-        id: 'u25', name: '헤어요정 하나', handle: 'hana_hair', country: 'KR', countryName: 'Korea',
-        followers: 19800, private: false, engagement: 4.5, score: 93,
-        bio: '프리랜서 헤어 디자이너. 셀프 헤어 & 염색 튜토리얼 전문',
-        tags: ['헤어', '염색', '셀프헤어', '뷰티'],
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1522337094846-8a83859283f6?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1522337094846-8a83859283f6?w=800&auto=format&fit=crop&q=80', likes: 2670, comments: 108, caption: '집에서 블루블랙 셀프 염색하기 🖤💙 부시시해도 예쁜 헤어' }]
-      },
-      {
-        id: 'u26', name: 'Nails by Jess', handle: 'jess_nailart', country: 'US', countryName: 'United States',
-        followers: 16300, private: false, engagement: 5.0, score: 94,
-        bio: 'Nail artist & gel extension specialist. Trending nail designs weekly',
-        tags: ['네일', '네일아트', '젤네일', '뷰티'],
-        avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&auto=format&fit=crop&q=80', likes: 2340, comments: 87, caption: 'Fall marble nails tutorial 🍂 step by step' }]
-      },
-      // ---- NEW: More Korea lifestyle ----
-      {
-        id: 'u27', name: '카페 탐험가 지아', handle: 'jia_cafe', country: 'KR', countryName: 'Korea',
-        followers: 23500, private: false, engagement: 4.3, score: 92,
-        bio: '서울 / 경기 감성 카페 탐방. 숨은 카페 발굴 전문',
-        tags: ['카페', '맛집', '서울카페', '감성'],
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80', likes: 3120, comments: 134, caption: '성수동 새로 생긴 루프탑 카페 ☕ 뷰 미쳤다' }]
-      },
-      {
-        id: 'u28', name: '데일리 하영', handle: 'hayoung_daily', country: 'KR', countryName: 'Korea',
-        followers: 11200, private: false, engagement: 4.7, score: 93,
-        bio: '20대 직장인 데일리 라이프. 출근룩 & 퇴근 후 자취 요리',
-        tags: ['직장인', '데일리', '출근룩', '자취요리'],
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1541167760496-9af0ab49ab7f?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1541167760496-9af0ab49ab7f?w=800&auto=format&fit=crop&q=80', likes: 1560, comments: 64, caption: '월급 200으로 서울 자취 생존기 💰 이번 달 가계부' }]
-      },
-      {
-        id: 'u29', name: '다이어트 챌린저 유나', handle: 'yuna_diet', country: 'KR', countryName: 'Korea',
-        followers: 16700, private: false, engagement: 4.9, score: 95,
-        bio: '-15kg 다이어트 성공! 건강한 식단 & 운동 루틴 공유',
-        tags: ['다이어트', '식단', '운동', '건강'],
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&auto=format&fit=crop&q=80', likes: 2890, comments: 143, caption: '일주일 식단 밀프렙 🥗 다이어트 중에도 맛있게!' }]
-      },
-      {
-        id: 'u30', name: '책읽는 서준', handle: 'seojun_reads', country: 'KR', countryName: 'Korea',
-        followers: 8900, private: false, engagement: 3.8, score: 86,
-        bio: '북스타그래머 & 독서 크리에이터. 월 10권 독서 챌린지',
-        tags: ['독서', '북스타그램', '자기계발', '에세이'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&auto=format&fit=crop&q=80', likes: 980, comments: 42, caption: '9월 읽은 책 10권 솔직 리뷰 📚' }]
-      },
-      // ---- NEW: Japan & Global ----
-      {
-        id: 'u31', name: 'Sakura Lifestyle', handle: 'sakura_life_jp', country: 'JP', countryName: 'Japan',
-        followers: 31500, private: false, engagement: 4.0, score: 91,
-        bio: '東京ライフスタイル & ビューティー. 日韓ハーフクリエイター',
-        tags: ['일본', '도쿄', '뷰티', '라이프스타일'],
-        avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&auto=format&fit=crop&q=80', likes: 3670, comments: 156, caption: '도쿄 벚꽃 시즌 베스트 스팟 TOP 5 🌸' }]
-      },
-      {
-        id: 'u32', name: '웨딩 플래너 은비', handle: 'eunbi_wedding', country: 'KR', countryName: 'Korea',
-        followers: 14200, private: false, engagement: 4.4, score: 91,
-        bio: '웨딩 준비 A-Z. 스드메 비교, 예식장 투어, 혼수 리스트',
-        tags: ['웨딩', '결혼준비', '스드메', '혼수'],
-        avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop&q=80', likes: 1890, comments: 72, caption: '웨딩 촬영 스드메 200만원대 비교 후기 💍' }]
-      },
-      {
-        id: 'u33', name: '남자 그루밍 태민', handle: 'taemin_groom', country: 'KR', countryName: 'Korea',
-        followers: 12300, private: false, engagement: 4.1, score: 89,
-        bio: '남자 스킨케어 & 그루밍 전문. 면도기·향수·헤어스타일링 리뷰',
-        tags: ['그루밍', '남성뷰티', '향수', '스킨케어'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1517832606299-7ae9b720a186?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1517832606299-7ae9b720a186?w=800&auto=format&fit=crop&q=80', likes: 1450, comments: 58, caption: '가성비 향수 TOP 5 | 데이트 향수 추천 🧴' }]
-      },
-      {
-        id: 'u34', name: 'Yoga with Mei', handle: 'mei_yoga', country: 'JP', countryName: 'Japan',
-        followers: 19800, private: false, engagement: 4.6, score: 93,
-        bio: 'Certified yoga instructor in Osaka. Morning flow & meditation',
-        tags: ['요가', '명상', '일본', '웰니스'],
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&auto=format&fit=crop&q=80', likes: 2560, comments: 94, caption: '10-minute morning yoga flow for beginners 🧘‍♀️' }]
-      },
-      {
-        id: 'u35', name: '맛집 사냥꾼 도현', handle: 'dohyun_food', country: 'KR', countryName: 'Korea',
-        followers: 37800, private: false, engagement: 5.1, score: 97,
-        bio: '서울 맛집 리뷰 전문. 리얼 솔직 후기 & 웨이팅 없는 숨은 맛집',
-        tags: ['맛집', '서울맛집', '먹스타그램', '리뷰'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&auto=format&fit=crop&q=80', likes: 5670, comments: 267, caption: '을지로 웨이팅 제로 숨은 맛집 3곳 🍜' }]
-      },
-      {
-        id: 'u36', name: '감성 캠핑러 민수', handle: 'minsu_camp', country: 'KR', countryName: 'Korea',
-        followers: 15600, private: false, engagement: 4.3, score: 91,
-        bio: '차박 & 캠핑 크리에이터. 감성 장비 리뷰 & 캠핑 요리',
-        tags: ['캠핑', '차박', '아웃도어', '캠핑요리'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop&q=80', likes: 2120, comments: 78, caption: '가을 차박 캠핑 필수 장비 체크리스트 ⛺' }]
-      },
-      {
-        id: 'u37', name: '스타일 코치 예린', handle: 'yerin_style', country: 'KR', countryName: 'Korea',
-        followers: 20100, private: false, engagement: 4.5, score: 94,
-        bio: '퍼스널 컬러 진단 & 체형별 코디. 패션 컨설턴트 크리에이터',
-        tags: ['패션', '퍼스널컬러', '코디', '스타일링'],
-        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&auto=format&fit=crop&q=80', likes: 2890, comments: 112, caption: '가을 웜톤 vs 쿨톤 코디 비교 🍁' }]
-      },
-      {
-        id: 'u38', name: 'Skincare Derm Dr.K', handle: 'dr_k_skin', country: 'KR', countryName: 'Korea',
-        followers: 48700, private: false, engagement: 5.5, score: 99,
-        bio: '피부과 전문의. 과학적 스킨케어 & 시술 정보. 광고 NO, 팩트 YES',
-        tags: ['피부과', '스킨케어', '의사', '과학'],
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&auto=format&fit=crop&q=80', likes: 8920, comments: 412, caption: '레티놀 처음 쓰는 사람이 꼭 알아야 할 5가지 ⚠️' }]
-      },
-      {
-        id: 'u39', name: '프리랜서 다은', handle: 'daeun_freelance', country: 'KR', countryName: 'Korea',
-        followers: 9800, private: false, engagement: 4.0, score: 87,
-        bio: 'IT 프리랜서 & 디지털 노마드. 재택근무 생산성 & 장비 리뷰',
-        tags: ['프리랜서', '재택근무', '생산성', '장비리뷰'],
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80', likes: 1120, comments: 45, caption: '재택근무 1년차 데스크 셋업 & 생산성 도구 추천 💻' }]
-      },
-      {
-        id: 'u40', name: 'Aesthetic Emma', handle: 'emma_aesthetic', country: 'US', countryName: 'United States',
-        followers: 25600, private: false, engagement: 4.8, score: 95,
-        bio: 'Cottagecore & soft aesthetic lifestyle. Slow living & journaling',
-        tags: ['감성', '코티지코어', '저널링', '라이프스타일'],
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=320&auto=format&fit=crop&q=80',
-        cover: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80',
-        profileUrl: 'https://www.instagram.com/',
-        feed: [{ image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&auto=format&fit=crop&q=80', likes: 3450, comments: 128, caption: 'Slow morning routine in my countryside cottage 🌿' }]
-      }
-    ];
-
-    // State Variables
-    let currentData = [...DEMO_DATA];
-    let bookmarkedIds = new Set();
-    let currentViewMode = 'feed'; // 'profile' | 'feed' | 'list'
-    let isBookmarkOnly = false;
-    let selectedPlatform = 'instagram';
-
-    // Supabase Setup (Project: wqymwtvktdhofzegjawn)
-    const SUPABASE_URL = 'https://wqymwtvktdhofzegjawn.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-    let supabaseClient = null;
-
-    if (window.supabase && window.supabase.createClient && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')) {
-      try {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('Supabase client connected successfully!');
-      } catch (e) {
-        console.warn('Supabase client init failed, using local fallback:', e);
-      }
-    }
-
-    // UI Initialization
-    document.addEventListener('DOMContentLoaded', () => {
-      renderResults();
-      if (window.lucide) lucide.createIcons();
-    });
-
-    function refreshLucideIcons() {
-      setTimeout(() => {
-        if (window.lucide) lucide.createIcons();
-      }, 10);
-    }
-
-    function focusPrompt() {
-      document.getElementById('promptInput').focus();
-    }
-
-    function fillPrompt(text) {
-      const input = document.getElementById('promptInput');
-      input.value = text;
-    }
-
-    function selectPlatform(btn) {
-      document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedPlatform = btn.dataset.platform;
-    }
-
-    function selectSearchMode(btn, mode) {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    function switchViewMode(mode) {
-      currentViewMode = mode;
-      document.querySelectorAll('.view-mode-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.view === mode);
-      });
-      const container = document.getElementById('resultsContainer');
-      container.className = `influencer-grid ${mode}-mode`;
-      renderResults();
-    }
-
-    function switchMainTab(tab) {
-      document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tab);
-      });
-      
-      document.querySelectorAll('.page-view').forEach(view => {
-        view.classList.remove('active');
-      });
-
-      if (tab === 'search') {
-        document.getElementById('pageViewSearch').classList.add('active');
-      } else if (tab === 'board') {
-        document.getElementById('pageViewBoard').classList.add('active');
-        isBookmarkOnly = false;
-        renderResults();
-      } else if (tab === 'bookmarks') {
-        document.getElementById('pageViewBoard').classList.add('active');
-        isBookmarkOnly = true;
-        document.getElementById('bookmarkFilterToggle').classList.add('action-btn-brand');
-        renderResults();
-      } else if (tab === 'pipeline') {
-        document.getElementById('pageViewPipeline').classList.add('active');
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      refreshLucideIcons();
-    }
-
-    function executeSearchFromHome() {
-      const promptVal = document.getElementById('promptInput').value.trim();
-      if (promptVal) {
-        document.getElementById('resultSubtitle').textContent = `"${promptVal}"`;
-      }
-      switchMainTab('board');
-    }
-
-    function editSearchPrompt() {
-      switchMainTab('search');
-      focusPrompt();
-    }
-
-    function toggleBookmarkOnlyView() {
-      isBookmarkOnly = !isBookmarkOnly;
-      const btn = document.getElementById('bookmarkFilterToggle');
-      if (isBookmarkOnly) {
-        btn.style.borderColor = 'var(--brand-primary)';
-        btn.style.color = 'var(--brand-dark)';
-      } else {
-        btn.style.borderColor = '#CBD5E1';
-        btn.style.color = 'var(--text-primary)';
-      }
-      renderResults();
-    }
-
-    function toggleBookmark(id, event) {
-      if (event) event.stopPropagation();
-      if (bookmarkedIds.has(id)) {
-        bookmarkedIds.delete(id);
-      } else {
-        bookmarkedIds.add(id);
-      }
-      document.getElementById('bookmarkCountNav').textContent = bookmarkedIds.size;
-      document.getElementById('bookmarkFilterCount').textContent = bookmarkedIds.size;
-      renderResults();
-    }
-
-    function applyCuration(type) {
-      const promptInput = document.getElementById('promptInput');
-      if (type === 'beauty_us') {
-        promptInput.value = '북미 빠르게 성장 중인 뷰티 인플루언서 스킨케어 코스메틱';
-        document.getElementById('countrySelect').value = 'US';
-      } else if (type === 'skincare') {
-        promptInput.value = 'YesStyle 할인코드 제공 스킨케어 나노 크리에이터';
-      } else if (type === 'haircare') {
-        promptInput.value = '부시시한 헤어 관리팁 헤어 케어 인플루언서';
-      } else if (type === 'cleanbeauty') {
-        promptInput.value = '비건 뷰티 클린 뷰티 친환경 스킨케어';
-      } else if (type === 'kfashion') {
-        promptInput.value = '29CM W컨셉 EQL 트렌디 K-패션 스타일 코디';
-        document.getElementById('countrySelect').value = 'KR';
-      }
-      executeSearchFromHome();
-    }
-
-    function setFollowerRange(min, max) {
-      document.getElementById('minFollowers').value = min;
-      document.getElementById('maxFollowers').value = max;
-      renderResults();
-    }
-
-    function toggleQuickFilter(btn, type) {
-      btn.classList.toggle('active');
-      renderResults();
-    }
-
-    function resetFilters() {
-      document.getElementById('promptInput').value = '';
-      document.getElementById('keywordInput').value = '';
-      document.getElementById('minFollowers').value = '';
-      document.getElementById('maxFollowers').value = '';
-      document.getElementById('countrySelect').value = 'ALL';
-      document.getElementById('includePrivate').checked = false;
-      document.querySelectorAll('.recommend-chip-btn').forEach(b => b.classList.remove('active'));
-      renderResults();
-    }
-
-    // FILTER & RENDER ENGINE
-    function getFilteredData() {
-      const prompt = (document.getElementById('promptInput').value || '').toLowerCase();
-      const keyword = (document.getElementById('keywordInput').value || '').toLowerCase();
-      const minF = parseInt(document.getElementById('minFollowers').value) || 0;
-      const maxF = parseInt(document.getElementById('maxFollowers').value) || Infinity;
-      const country = document.getElementById('countrySelect').value;
-      const includePrivate = document.getElementById('includePrivate').checked;
-      const sorter = document.getElementById('sortSelect').value;
-
-      let list = currentData.filter(item => {
-        if (isBookmarkOnly && !bookmarkedIds.has(item.id)) return false;
-        if (!includePrivate && item.private) return false;
-        if (item.followers < minF || item.followers > maxF) return false;
-        if (country !== 'ALL' && item.country !== country) return false;
-
-        const fullText = `${item.name} ${item.handle} ${item.bio} ${item.tags.join(' ')}`.toLowerCase();
-        if (prompt && !fullText.includes(prompt.slice(0, 3))) {
-          const terms = prompt.split(/\s+/).filter(t => t.length > 1);
-          if (terms.length > 0 && !terms.some(t => fullText.includes(t))) {
-            return false;
-          }
-        }
-        if (keyword && !fullText.includes(keyword)) return false;
-
-        return true;
-      });
-
-      // Sorting
-      if (sorter === 'followers_desc') list.sort((a, b) => b.followers - a.followers);
-      else if (sorter === 'followers_asc') list.sort((a, b) => a.followers - b.followers);
-      else if (sorter === 'engagement_desc') list.sort((a, b) => b.engagement - a.engagement);
-      else if (sorter === 'score_desc') list.sort((a, b) => b.score - a.score);
-      else if (sorter === 'name_asc') list.sort((a, b) => a.name.localeCompare(b.name));
-
-      return list;
-    }
-
-    function renderResults() {
-      const list = getFilteredData();
-      const container = document.getElementById('resultsContainer');
-      document.getElementById('resultTotalCount').textContent = new Intl.NumberFormat('ko-KR').format(list.length);
-
-      if (!list.length) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
-            <i data-lucide="search-x" style="width: 40px; height: 40px; margin-bottom: 12px; stroke-width: 1.5;"></i>
-            <h3 style="color: var(--text-primary); margin: 0 0 8px;">조건에 일치하는 인플루언서가 없습니다.</h3>
-            <p style="font-size: 13px; margin: 0;">팔로워 범위 또는 국가/키워드 조건을 조정해 보세요.</p>
-          </div>
-        `;
-        refreshLucideIcons();
-        return;
-      }
-
-      if (currentViewMode === 'feed') {
-        container.className = 'influencer-grid feed-mode';
-        container.innerHTML = list.map(item => `
-          <article class="whotag-card" onclick="openModal('${item.id}')">
-            <div class="card-media-wrapper">
-              <img class="card-media-img" src="${item.cover}" alt="${item.name}" />
-              <div class="media-top-badge">
-                <span>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</span>
-              </div>
-              <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
-                      onclick="toggleBookmark('${item.id}', event)" title="북마크 토글">
-                <i data-lucide="bookmark" style="width: 14px; height: 14px; fill: ${bookmarkedIds.has(item.id) ? 'currentColor' : 'none'};"></i>
-              </button>
-              <div class="media-bottom-stats">
-                <span><i data-lucide="user" style="width: 12px; height: 12px;"></i> ${(item.followers / 1000).toFixed(1)}K</span>
-                <span>•</span>
-                <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${item.engagement}%</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="card-user-row">
-                <img class="card-avatar" src="${item.avatar}" alt="${item.name}" />
-                <a href="${item.profileUrl}" class="card-handle" target="_blank" onclick="event.stopPropagation()">@${item.handle}</a>
-              </div>
-              <p class="card-bio-text">${item.bio}</p>
-              <div class="card-metrics-row">
-                <span class="metric-pill">Score: <strong>${item.score}</strong></span>
-                <span class="metric-pill" style="color: var(--brand-dark);">상세보기 <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i></span>
-              </div>
-            </div>
-          </article>
-        `).join('');
-      } else if (currentViewMode === 'profile') {
-        container.className = 'influencer-grid profile-mode';
-        container.innerHTML = list.map(item => `
-          <article class="profile-card-full" onclick="openModal('${item.id}')">
-            <div class="profile-header-row">
-              <img class="profile-avatar-lg" src="${item.avatar}" alt="${item.name}" />
-              <div class="profile-title-area">
-                <h4>${item.name}</h4>
-                <p>@${item.handle}</p>
-              </div>
-              <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
-                      style="position: static; margin-left: auto;"
-                      onclick="toggleBookmark('${item.id}', event)">
-                <i data-lucide="bookmark" style="width: 14px; height: 14px; fill: ${bookmarkedIds.has(item.id) ? 'currentColor' : 'none'};"></i>
-              </button>
-            </div>
-            <p class="card-bio-text" style="height: auto; -webkit-line-clamp: 3;">${item.bio}</p>
-            <div class="tags-wrap">
-              ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
-            </div>
-            <div class="metrics-grid-3">
-              <div class="metric-item-col">
-                <span>팔로워</span>
-                <strong>${(item.followers / 1000).toFixed(1)}K</strong>
-              </div>
-              <div class="metric-item-col">
-                <span>참여율</span>
-                <strong>${item.engagement}%</strong>
-              </div>
-              <div class="metric-item-col">
-                <span>Notoow 스코어</span>
-                <strong style="color: var(--brand-dark);">${item.score}</strong>
-              </div>
-            </div>
-          </article>
-        `).join('');
-      } else if (currentViewMode === 'list') {
-        container.className = 'influencer-grid list-mode';
-        container.innerHTML = `
-          <div class="list-table-container">
-            <table class="whotag-table">
-              <thead>
-                <tr>
-                  <th>북마크</th>
-                  <th>프로필 / 계정</th>
-                  <th>국가</th>
-                  <th>팔로워</th>
-                  <th>참여율</th>
-                  <th>태그</th>
-                  <th>AI 스코어</th>
-                  <th>상세</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${list.map(item => `
-                  <tr onclick="openModal('${item.id}')" style="cursor: pointer;">
-                    <td onclick="event.stopPropagation()">
-                      <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
-                              style="position: static; width: 28px; height: 28px;"
-                              onclick="toggleBookmark('${item.id}', event)">
-                        <i data-lucide="bookmark" style="width: 13px; height: 13px; fill: ${bookmarkedIds.has(item.id) ? 'currentColor' : 'none'};"></i>
-                      </button>
-                    </td>
-                    <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <img src="${item.avatar}" style="width: 32px; height: 32px; border-radius: 50%;" />
-                        <div>
-                          <strong>${item.name}</strong><br />
-                          <small style="color: var(--brand-dark);">@${item.handle}</small>
-                        </div>
-                      </div>
-                    </td>
-                    <td>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</td>
-                    <td><strong>${new Intl.NumberFormat('ko-KR').format(item.followers)}</strong>명</td>
-                    <td>${item.engagement}%</td>
-                    <td>${item.tags.map(t => `#${t}`).join(' ')}</td>
-                    <td><strong style="color: var(--brand-dark);">${item.score}</strong></td>
-                    <td><button class="action-btn-outline" style="font-size: 11px; padding: 4px 10px;">열기 <i data-lucide="arrow-right" style="width: 11px; height: 11px;"></i></button></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-      }
-      refreshLucideIcons();
-    }
-
-    // MODAL HANDLERS
-    function openModal(id) {
-      const item = DEMO_DATA.find(x => x.id === id);
-      if (!item) return;
-
-      const body = document.getElementById('modalBody');
-      body.innerHTML = `
-        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
-          <img src="${item.avatar}" style="width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--brand-primary);" />
-          <div>
-            <h2 style="margin: 0 0 4px; font-size: 22px; color: var(--text-primary);">${item.name}</h2>
-            <p style="margin: 0; color: var(--brand-dark); font-size: 14px;">@${item.handle} • ${item.countryName}</p>
-            <div style="margin-top: 6px; display: flex; gap: 6px;">
-              ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
-            </div>
-          </div>
-          <div style="margin-left: auto;">
-            <button class="action-btn-brand" onclick="window.open('${item.profileUrl}', '_blank')">
-              인스타그램 열기 <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-            </button>
-          </div>
-        </div>
-
-        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px; border-radius: var(--radius-md); margin-bottom: 20px;">
-          "${item.bio}"
-        </p>
-
-        <div class="metrics-grid-3" style="margin-bottom: 20px; padding: 14px;">
-          <div class="metric-item-col">
-            <span>총 팔로워</span>
-            <strong style="font-size: 16px;">${new Intl.NumberFormat('ko-KR').format(item.followers)}명</strong>
-          </div>
-          <div class="metric-item-col">
-            <span>평균 참여율</span>
-            <strong style="font-size: 16px;">${item.engagement}%</strong>
-          </div>
-          <div class="metric-item-col">
-            <span>Notoow 스코어</span>
-            <strong style="font-size: 16px; color: var(--brand-dark);">${item.score} / 100</strong>
-          </div>
-        </div>
-
-        <h4 style="color: var(--brand-dark); margin: 0 0 12px; display: flex; align-items: center; gap: 6px;">
-          <i data-lucide="image" style="width: 16px; height: 16px;"></i> 최근 피드 포스트 피드백
-        </h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
-          ${item.feed.map(post => `
-            <div style="background: #FFFFFF; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #E2E8F0;">
-              <img src="${post.image}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;" />
-              <div style="padding: 10px;">
-                <p style="font-size: 12px; margin: 0 0 6px; color: var(--text-secondary);">${post.caption}</p>
-                <div style="font-size: 11px; color: var(--text-muted); display: flex; gap: 8px;">
-                  <span><i data-lucide="heart" style="width: 12px; height: 12px;"></i> ${post.likes.toLocaleString()}</span>
-                  <span><i data-lucide="message-square" style="width: 12px; height: 12px;"></i> ${post.comments.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-
-      document.getElementById('detailModal').classList.add('active');
-      refreshLucideIcons();
-    }
-
-    function closeModal() {
-      document.getElementById('detailModal').classList.remove('active');
-    }
-
-    // CSV IMPORT & EXPORT
-    function exportCSV() {
-      const list = getFilteredData();
-      if (!list.length) {
-        alert('내보낼 데이터가 없습니다.');
-        return;
-      }
-
-      const headers = ['username', 'followers', 'engagement_rate', 'score', 'is_private', 'bio', 'tags', 'profile_url'];
-      const rows = list.map(p => [
-        p.handle,
-        p.followers,
-        p.engagement,
-        p.score,
-        p.private ? 'TRUE' : 'FALSE',
-        `"${String(p.bio).replaceAll('"', '""')}"`,
-        `"${(p.tags || []).join('|').replaceAll('"', '""')}"`,
-        p.profileUrl
-      ]);
-      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Notoow_influencers_export.csv';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    async function handleCsvFile(input) {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      alert('CSV 파일에서 인플루언서 데이터를 성공적으로 추출했습니다!');
-      switchMainTab('board');
-    }
-
-    async function loadCsvFromUrl() {
-      const url = document.getElementById('csvUrl').value.trim();
-      if (!url) {
-        alert('URL을 입력해주세요.');
-        return;
-      }
-      alert('GitHub Raw URL 데이터 연동이 성공적으로 완료되었습니다.');
-      switchMainTab('board');
-    }
-  </script>
+  <!-- JavaScript SSOT Modular Architecture Entry Point -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
