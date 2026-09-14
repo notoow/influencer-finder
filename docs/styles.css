@@ -1413,6 +1413,162 @@ body::before {
 }
 
 /* ==========================================================================
+   AI SEARCH LOADING ANIMATION
+   ========================================================================== */
+.search-loading-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: var(--radius-lg);
+}
+
+.search-loading-overlay.active {
+  display: flex;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #E2E8F0;
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spinLoader 0.8s linear infinite;
+}
+
+@keyframes spinLoader {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.loading-text .dot-pulse {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.loading-text .dot-pulse span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+
+.loading-text .dot-pulse span:nth-child(2) { animation-delay: 0.15s; }
+.loading-text .dot-pulse span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Skeleton Loading Cards */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.skeleton-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.skeleton-card .skel-media {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-card .skel-body {
+  padding: 14px;
+}
+
+.skeleton-card .skel-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  margin-bottom: 8px;
+}
+
+.skeleton-card .skel-line:last-child {
+  width: 60%;
+  margin-bottom: 0;
+}
+
+.skeleton-card .skel-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.skeleton-card .skel-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* AI Search Results Header */
+.ai-result-summary {
+  background: linear-gradient(135deg, #FFF5F2 0%, #FDF4F0 100%);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.ai-result-summary .ai-badge {
+  background: var(--brand-gradient);
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.ai-result-summary strong {
+  color: var(--brand-dark);
+}
+
+/* ==========================================================================
    RESPONSIVE DESIGN BREAKPOINTS & CHROME ZOOM OPTIMIZATION
    ========================================================================== */
 @media (max-width: 1024px) {

@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "influencer-finder"
+version = "0.1.0"
+description = "Instagram influencer finder for couple/신혼부부 channel filtering"
+requires-python = ">=3.10"
+dependencies = [
+    "instagrapi>=2.1.3",
+    "pandas>=2.2.0",
+    "python-dotenv>=1.0.1",
+    "typing-extensions>=4.12.0",
+]
+
+[project.scripts]
+influencer-finder = "influencer_finder.cli:run"
