@@ -67,6 +67,27 @@ export function renderResults() {
 
   if (!container) return;
 
+  // Show "run a search first" state before any search has been executed
+  if (!store.hasSearched && list.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 80px 20px; color: var(--text-muted);">
+        <div style="max-width: 480px; margin: 0 auto;">
+          <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--brand-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; opacity: 0.85;">
+            <i data-lucide="search" style="width: 28px; height: 28px; color: #fff;"></i>
+          </div>
+          <h3 style="color: var(--text-primary); margin: 0 0 10px; font-size: 20px; font-weight: 800;">AI 프롬프트로 인플루언서를 발굴해 보세요</h3>
+          <p style="font-size: 14px; margin: 0 0 24px; line-height: 1.7;">상단의 <strong>AI 인플루언서 발굴</strong> 탭에서 자연어 프롬프트를 입력하면<br/>실제 Instagram 크롤링 결과가 이 데이터 보드에 표시됩니다.</p>
+          <button onclick="switchMainTab('search'); setTimeout(focusPrompt, 200);" 
+                  style="background: var(--brand-gradient); color: #fff; border: none; padding: 12px 28px; border-radius: 24px; font-size: 14px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i> 지금 검색 시작하기
+          </button>
+        </div>
+      </div>
+    `;
+    refreshLucideIcons();
+    return;
+  }
+
   if (!list.length) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
@@ -90,15 +111,17 @@ export function renderResults() {
       const safeBio = escapeHTML(item.bio);
       const safeCover = escapeHTML(item.cover);
       const safeAvatar = escapeHTML(item.avatar);
-      const safeUrl = escapeHTML(item.profileUrl);
+      // Always link to real Instagram profile
+      const instagramUrl = `https://www.instagram.com/${encodeURIComponent(item.handle)}/`;
+      const safeUrl = escapeHTML(instagramUrl);
 
       return `
-        <article class="notoow-card" data-id="${escapeHTML(item.id)}">
+        <article class="notoow-card" data-id="${escapeHTML(item.id)}" data-profile-url="${safeUrl}">
           <div class="card-media-wrapper">
             <img class="card-media-img" src="${safeCover}" alt="${safeName}" />
             <div class="media-top-badge">
-              <span>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</span>
-              ${item.is_live ? '<span style="background: var(--brand-gradient); color: #FFF; margin-left: 4px; font-weight: 800; font-size: 10px; padding: 2px 6px; border-radius: 10px;">LIVE REELS</span>' : ''}
+              <span>${item.country === 'KR' ? '🇰🇷 Korea' : item.country === 'US' ? '🇺🇸 US' : item.country === 'JP' ? '🇯🇵 Japan' : '🌍 ' + (item.country || 'Global')}</span>
+              ${item.is_live ? '<span style="background: var(--brand-gradient); color: #FFF; margin-left: 4px; font-weight: 800; font-size: 10px; padding: 2px 6px; border-radius: 10px;">LIVE</span>' : ''}
             </div>
             <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                     data-bookmark-id="${escapeHTML(item.id)}" title="북마크 토글">
@@ -118,7 +141,13 @@ export function renderResults() {
             <p class="card-bio-text">${safeBio}</p>
             <div class="card-metrics-row">
               <span class="metric-pill">Score: <strong>${Number(item.score)}</strong></span>
-              <span class="metric-pill" style="color: var(--brand-dark);">상세보기 <i data-lucide="arrow-right" style="width: 12px; height: 12px;"></i></span>
+              <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" 
+                 onclick="event.stopPropagation()"
+                 class="metric-pill" 
+                 style="color: var(--brand-dark); display: flex; align-items: center; gap: 4px; text-decoration: none;">
+                <img src="../assets/instagram.png" alt="Instagram" style="width: 13px; height: 13px; object-fit: contain;" />
+                Instagram 피드 <i data-lucide="external-link" style="width: 11px; height: 11px;"></i>
+              </a>
             </div>
           </div>
         </article>
@@ -133,14 +162,16 @@ export function renderResults() {
       const safeBio = escapeHTML(item.bio);
       const safeAvatar = escapeHTML(item.avatar);
       const tags = Array.isArray(item.tags) ? item.tags : [];
+      const instagramUrl = `https://www.instagram.com/${encodeURIComponent(item.handle)}/`;
+      const safeUrl = escapeHTML(instagramUrl);
 
       return `
-        <article class="profile-card-full" data-id="${escapeHTML(item.id)}">
+        <article class="profile-card-full" data-id="${escapeHTML(item.id)}" data-profile-url="${safeUrl}">
           <div class="profile-header-row">
             <img class="profile-avatar-lg" src="${safeAvatar}" alt="${safeName}" />
             <div class="profile-title-area">
               <h4>${safeName}</h4>
-              <p>@${safeHandle}</p>
+              <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color: var(--brand-dark); font-size: 13px;">@${safeHandle}</a>
             </div>
             <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                     style="position: static; margin-left: auto;"
@@ -166,6 +197,11 @@ export function renderResults() {
               <strong style="color: var(--brand-dark);">${Number(item.score)}</strong>
             </div>
           </div>
+          <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"
+             style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; padding: 8px 16px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: #fff; border-radius: 20px; font-size: 12px; font-weight: 700; text-decoration: none;">
+            <img src="../assets/instagram.png" alt="Instagram" style="width: 14px; height: 14px; object-fit: contain; filter: brightness(10);" />
+            Instagram 피드 보기
+          </a>
         </article>
       `;
     }).join('');
@@ -183,7 +219,7 @@ export function renderResults() {
               <th>참여율</th>
               <th>태그</th>
               <th>AI 스코어</th>
-              <th>상세</th>
+              <th>Instagram</th>
             </tr>
           </thead>
           <tbody>
@@ -193,9 +229,11 @@ export function renderResults() {
               const safeHandle = escapeHTML(item.handle);
               const safeAvatar = escapeHTML(item.avatar);
               const tags = Array.isArray(item.tags) ? item.tags : [];
+              const instagramUrl = `https://www.instagram.com/${encodeURIComponent(item.handle)}/`;
+              const safeUrl = escapeHTML(instagramUrl);
 
               return `
-                <tr data-id="${escapeHTML(item.id)}" style="cursor: pointer;">
+                <tr data-id="${escapeHTML(item.id)}" data-profile-url="${safeUrl}" style="cursor: pointer;">
                   <td onclick="event.stopPropagation()">
                     <button class="media-bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                             style="position: static; width: 28px; height: 28px;"
@@ -212,12 +250,18 @@ export function renderResults() {
                       </div>
                     </div>
                   </td>
-                  <td>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</td>
+                  <td>${item.country === 'KR' ? '🇰🇷 Korea' : item.country === 'US' ? '🇺🇸 US' : item.country === 'JP' ? '🇯🇵 JP' : item.country || '-'}</td>
                   <td><strong>${new Intl.NumberFormat('ko-KR').format(item.followers)}</strong>명</td>
                   <td>${Number(item.engagement)}%</td>
                   <td>${tags.map(t => `#${escapeHTML(t)}`).join(' ')}</td>
                   <td><strong style="color: var(--brand-dark);">${Number(item.score)}</strong></td>
-                  <td><button class="action-btn-outline" style="font-size: 11px; padding: 4px 10px;">열기 <i data-lucide="arrow-right" style="width: 11px; height: 11px;"></i></button></td>
+                  <td onclick="event.stopPropagation()">
+                    <a href="${safeUrl}" target="_blank" rel="noopener noreferrer"
+                       style="display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: #fff; border-radius: 14px; font-size: 11px; font-weight: 700; padding: 4px 10px; text-decoration: none;">
+                      <img src="../assets/instagram.png" alt="IG" style="width: 11px; height: 11px; object-fit: contain; filter: brightness(10);" />
+                      피드
+                    </a>
+                  </td>
                 </tr>
               `;
             }).join('')}

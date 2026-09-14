@@ -4,7 +4,8 @@
  * Binds DOM events, initializes services, and orchestrates state and UI.
  */
 
-import { initSupabase, searchInfluencersFromSupabase, syncBookmarkToSupabase, upsertLiveInfluencers } from './services/supabaseService.js';
+// Supabase: bookmark sync only (search flow removed)
+import { syncBookmarkToSupabase } from './services/supabaseService.js';
 import { searchLiveInstagram } from './services/liveInstagramService.js';
 import { parseNaturalLanguageQuery } from './services/aiSearchService.js';
 import { store } from './store.js';
@@ -16,55 +17,18 @@ import { openReportModal, closeReportModal, copyReportShareLink } from './ui/rep
 import { initAgentDrawer } from './ui/agentDrawer.js';
 
 // Global Event Handlers & Initialization
-document.addEventListener('DOMContentLoaded', async () => {
-  // Initialize Supabase Client
-  initSupabase();
-
+document.addEventListener('DOMContentLoaded', () => {
   // Initialize MCP Agent Drawer
   initAgentDrawer();
 
   // Bind Global Event Listeners via Event Delegation
   bindGlobalEvents();
 
-  // Execute initial live DB fetch
-  await executeInitialFetch();
-});
-
-async function executeInitialFetch() {
-  const [remoteResults, liveResults] = await Promise.all([
-    searchInfluencersFromSupabase({
-      prompt: '',
-      country: 'ALL',
-      minF: 0,
-      maxF: 999999999,
-      sorter: 'score_desc'
-    }),
-    searchLiveInstagram('', 'ALL')
-  ]);
-
-  let combined = [];
-  if (Array.isArray(liveResults) && liveResults.length > 0) {
-    combined.push(...liveResults);
-  }
-  if (Array.isArray(remoteResults) && remoteResults.length > 0) {
-    const existingHandles = new Set(combined.map(r => r.handle.toLowerCase()));
-    remoteResults.forEach(r => {
-      if (!existingHandles.has(r.handle.toLowerCase())) {
-        combined.push(r);
-      }
-    });
-  }
-
-  if (combined.length > 0) {
-    console.log(`[App] Loaded ${combined.length} live Instagram creators & DB records on initial load.`);
-    store.setData(combined);
-  } else {
-    console.log('[App] Using local dataset on initial load.');
-  }
-
+  // Start with empty board — data only appears after a real search
   renderResults();
   refreshLucideIcons();
-}
+});
+
 
 function bindGlobalEvents() {
   // 1. Results Container Delegation (Card clicks & Bookmark button clicks)
@@ -83,8 +47,11 @@ function bindGlobalEvents() {
 
       const card = e.target.closest('[data-id]');
       if (card) {
-        const id = card.dataset.id;
-        openModal(id);
+        // Navigate directly to Instagram profile feed
+        const profileUrl = card.dataset.profileUrl;
+        if (profileUrl) {
+          window.open(profileUrl, '_blank', 'noopener,noreferrer');
+        }
       }
     });
   }
@@ -126,69 +93,29 @@ function bindGlobalEvents() {
 // App Controller Functions exposed to window for inline HTML triggers
 export async function executeSearch() {
   const promptRaw = (document.getElementById('promptInput')?.value || '').trim();
-  
+  if (!promptRaw) return;
+
   // AI Intent Parsing
   const intent = parseNaturalLanguageQuery(promptRaw);
 
   const countrySelect = document.getElementById('countrySelect');
-  const minFInput = document.getElementById('minFollowers');
-  const maxFInput = document.getElementById('maxFollowers');
-  const sorter = document.getElementById('sortSelect')?.value || 'score_desc';
+  const minFInput    = document.getElementById('minFollowers');
+  const maxFInput    = document.getElementById('maxFollowers');
 
-  // Apply parsed intents to UI sidebar controls automatically if not manually set
-  if (intent.country !== 'ALL' && countrySelect) {
-    countrySelect.value = intent.country;
-  }
-  if (intent.minFollowers > 0 && minFInput) {
-    minFInput.value = intent.minFollowers;
-  }
-  if (intent.maxFollowers < 999999999 && maxFInput) {
-    maxFInput.value = intent.maxFollowers;
-  }
+  // Apply parsed intents to UI controls
+  if (intent.country !== 'ALL' && countrySelect) countrySelect.value = intent.country;
+  if (intent.minFollowers > 0  && minFInput)    minFInput.value = intent.minFollowers;
+  if (intent.maxFollowers < 999999999 && maxFInput) maxFInput.value = intent.maxFollowers;
 
   const country = countrySelect?.value || 'ALL';
-  const minF = parseInt(minFInput?.value) || 0;
-  const maxF = parseInt(maxFInput?.value) || 999999999;
 
   switchMainTab('board');
   renderLoadingSkeleton();
 
-  // Try Supabase RPC search & Live Instagram search concurrently
-  const [remoteResults, liveResults] = await Promise.all([
-    searchInfluencersFromSupabase({ 
-      prompt: intent.query || promptRaw, 
-      country, 
-      minF, 
-      maxF, 
-      sorter 
-    }),
-    promptRaw ? searchLiveInstagram(promptRaw, country) : Promise.resolve([])
-  ]);
+  // ── Live Instagram crawling ONLY (Supabase removed from search) ──
+  const results = await searchLiveInstagram(promptRaw, country);
 
-  let combinedResults = [];
-  if (Array.isArray(liveResults) && liveResults.length > 0) {
-    combinedResults.push(...liveResults);
-    // Auto-cache newly discovered live Instagram profiles to Supabase DB
-    upsertLiveInfluencers(liveResults);
-  }
-
-  if (Array.isArray(remoteResults) && remoteResults.length > 0) {
-    // Avoid duplicate handles
-    const existingHandles = new Set(combinedResults.map(r => r.handle.toLowerCase()));
-    remoteResults.forEach(r => {
-      if (!existingHandles.has(r.handle.toLowerCase())) {
-        combinedResults.push(r);
-      }
-    });
-  }
-
-  if (combinedResults.length > 0) {
-    store.setData(combinedResults);
-  } else {
-    // Local filtering fallback
-    store.resetDataToMock();
-  }
-
+  store.setData(Array.isArray(results) && results.length > 0 ? results : []);
   renderResults();
 }
 
@@ -280,7 +207,7 @@ export function resetFilters() {
   if (includePrivate) includePrivate.checked = false;
 
   document.querySelectorAll('.recommend-chip-btn').forEach(b => b.classList.remove('active'));
-  store.resetDataToMock();
+  // Keep existing search results, just clear filter inputs
   renderResults();
 }
 

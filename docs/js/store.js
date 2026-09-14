@@ -2,9 +2,10 @@
  * Notoow Influencer Finder - Central State Store (SSOT)
  * 
  * Manages reactive application state: data list, bookmarks, view mode, filters.
+ *
+ * NOTE: Mock data is intentionally excluded from initial display.
+ * Results are shown only after a real search is performed.
  */
-
-import { MOCK_INFLUENCERS } from './data/mockData.js';
 
 // Generate or retrieve persistent Session ID for bookmarks
 function getOrCreateSessionId() {
@@ -18,18 +19,22 @@ function getOrCreateSessionId() {
 
 export const store = {
   sessionId: getOrCreateSessionId(),
-  currentData: [...MOCK_INFLUENCERS],
+  currentData: [], // Empty on load — populated only by real search results
+  hasSearched: false, // Tracks whether a search has been run
   bookmarkedIds: new Set(),
   currentViewMode: 'feed', // 'feed' | 'profile' | 'list'
   isBookmarkOnly: false,
   selectedPlatform: 'instagram',
 
   setData(data) {
-    this.currentData = Array.isArray(data) ? data : [...MOCK_INFLUENCERS];
+    this.currentData = Array.isArray(data) ? data : [];
+    this.hasSearched = true;
   },
 
   resetDataToMock() {
-    this.currentData = [...MOCK_INFLUENCERS];
+    // No longer resets to mock - clears results instead
+    this.currentData = [];
+    this.hasSearched = false;
   },
 
   toggleBookmark(id) {
