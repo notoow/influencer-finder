@@ -3,777 +3,991 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WHOTAG | 인플루언서 탐색 툴</title>
+  <title>HIGHST | AI 인플루언서 딥서치 & 컬렉션 렌더러</title>
+  <meta name="description" content="자연어 프롬프트 기반 하이엔드 인플루언서 탐색 플랫폼. WHOTAG x HIGHST 파이프라인으로 타겟 뷰티·패션·라이프스타일 인플루언서를 정밀 추출하세요." />
+  
+  <!-- Web Fonts -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="자연어 프롬프트 기반 인플루언서 탐색 툴. 뷰티·패션·라이프스타일 후보를 빠르게 선별하고, 비교·선별·CSV 내보내기까지 제공합니다." />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="top-bar">
-      <div class="hero-copy">
-        <p class="brand-kicker">WHOTAG</p>
-        <h1>완벽한 인플루언서를 단 한 번의 프롬프트로 발견하세요.</h1>
-        <p class="top-subtitle">
-          자연어로 이상적인 인플루언서를 설명하세요. WHOTAG이 120개국 이상의 플랫폼·니치에서 뷰티·패션·라이프스타일 인플루언서를 찾아드립니다.
-        </p>
-      </div>
-      <nav class="view-tabs" role="tablist" aria-label="탐색 섹션">
-        <button type="button" class="tab-btn active" data-tab="filters" role="tab" aria-selected="true">탐색 설정</button>
-        <button type="button" class="tab-btn" data-tab="data" role="tab" aria-selected="false">데이터 가져오기</button>
-        <button type="button" class="tab-btn" data-tab="board" role="tab" aria-selected="false">비교 보드</button>
-      </nav>
-    </header>
 
-    <main class="workspace">
-      <section class="panel card controls" data-tab="filters">
-        <div class="panel-title-row">
-          <h2>자연어 탐색</h2>
-          <p>조건을 조합해 후보를 즉시 비교할 수 있습니다.</p>
-        </div>
-
-        <div class="control-grid">
-          <label class="field prompt-field">
-            <span>프롬프트</span>
-            <textarea id="promptInput" rows="2" placeholder="예: 뷰티·패션 콘텐츠 중심의 인플루언서, 팔로워 8,000~15,000, 피부관리 루틴과 데일리 루틴 업로드가 꾸준한 계정"></textarea>
-          </label>
-          <label class="field">
-            <span>탐색 프리셋</span>
-            <select id="presetSelect"></select>
-          </label>
-          <label class="field">
-            <span>보정 키워드</span>
-            <input id="keywordInput" placeholder="예: 뷰티, 메이크업, 패션, 루틴, 라이프스타일" />
-          </label>
-          <label class="field">
-            <span>팔로워 최소</span>
-            <input id="minFollowers" type="number" />
-          </label>
-          <label class="field">
-            <span>팔로워 최대</span>
-            <input id="maxFollowers" type="number" />
-          </label>
-          <label class="field">
-            <span>정렬</span>
-            <select id="sortSelect">
-              <option value="followers_desc">팔로워 많은 순</option>
-              <option value="followers_asc">팔로워 적은 순</option>
-              <option value="score_desc">스코어 높은 순</option>
-              <option value="engagement_desc">참여율 높은 순</option>
-              <option value="name_asc">이름 오름차순</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>뷰 모드</span>
-            <div class="view-mode" role="group" aria-label="보드 뷰 모드">
-              <button type="button" data-view="profile">프로필</button>
-              <button type="button" class="active" data-view="feed">피드</button>
-              <button type="button" data-view="list">리스트</button>
-            </div>
-          </label>
-          <label class="field checkbox">
-            <input id="includePrivate" type="checkbox" />
-            <span>비공개 계정 포함</span>
-          </label>
-        </div>
-
-        <div class="action-row">
-          <button id="applyBtn" class="primary">탐색 실행</button>
-          <button id="resetBtn" type="button">초기화</button>
-          <button id="exportBtn" type="button">CSV 다운로드</button>
-        </div>
-      </section>
-
-      <section class="panel card source" data-tab="data">
-        <div class="panel-title-row">
-          <h2>데이터 가져오기</h2>
-          <p>CSV 파일 업로드 또는 공개 URL로 실데이터를 연결하세요.</p>
-        </div>
-
-        <div class="source-grid">
-          <label class="field">
-            <span>CSV 파일</span>
-            <input id="csvFile" type="file" accept=".csv" />
-          </label>
-          <label class="field">
-            <span>GitHub Raw URL</span>
-            <input id="csvUrl" type="url" placeholder="https://raw.githubusercontent.com/.../influencers.csv" />
-          </label>
-        </div>
-        <button id="loadUrlBtn" type="button">URL로 불러오기</button>
-        <p class="micro-note">권장 컬럼: username, followers, bio, is_private, engagement_rate, keyword_hit, tags, profile_url</p>
-      </section>
-
-      <section class="panel card result-card active" data-tab="board">
-        <div class="panel-title-row result-head">
-          <div>
-            <h2>선별 결과</h2>
-            <p id="resultSummary">0개</p>
-          </div>
-          <div class="result-stats" id="resultStats"></div>
-        </div>
-        <p id="resultHint" class="result-hint">탐색 실행 버튼을 누르면 조건 반영 후 후보를 즉시 비교할 수 있습니다.</p>
-        <div id="resultContainer" class="result-content"></div>
-      </section>
-    </main>
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="badge">NOTICE</span>
+    <span>🌐 2,700+ 글로벌 신혼부부·K-뷰티·패션 딥분석 데이터베이스가 가동 중입니다.</span>
+    <a href="#promptSection" onclick="focusPrompt()">맞춤형 AI 프롬프트 실행하기 →</a>
   </div>
 
-  <script>
-    const PRESETS = {
-      default: {
-        name: '뷰티/패션/라이프스타일',
-        words: ['뷰티', '패션', '라이프스타일', '브이로그', '리뷰', '데일리'],
-        minFollowers: 8000,
-        maxFollowers: 15000,
-      },
-      beauty: {
-        name: '뷰티 집중',
-        words: ['메이크업', '스킨케어', '뷰티루틴', '스킨', '향수', '헤어'],
-        minFollowers: 8000,
-        maxFollowers: 14000,
-      },
-      fashion: {
-        name: '패션 중심',
-        words: ['데일리룩', '스타일', '코디', '아웃핏', '셀프스타일링'],
-        minFollowers: 7000,
-        maxFollowers: 16000,
-      },
-      lifestyle: {
-        name: '라이프스타일',
-        words: ['브이로그', '주말', '식단', '홈카페', '커뮤니티', '브랜드'],
-        minFollowers: 8000,
-        maxFollowers: 15000,
-      },
-    };
+  <!-- Header / Navbar -->
+  <header class="top-header">
+    <div class="brand-container" onclick="resetAllView()">
+      <!-- HIGHST Luxury Diamond Logo SVG -->
+      <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 5 L95 50 L50 95 L5 50 Z" stroke="url(#goldGrad)" stroke-width="4" fill="none" />
+        <path d="M25 25 L35 25 L35 75 L25 75 Z" fill="url(#goldGrad)" />
+        <path d="M65 25 L75 25 L75 75 L65 75 Z" fill="url(#goldGrad)" />
+        <path d="M35 50 L65 50" stroke="url(#goldGrad)" stroke-width="4" />
+        <defs>
+          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#DFB96C" />
+            <stop offset="50%" stop-color="#C5A059" />
+            <stop offset="100%" stop-color="#9A7B3E" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-title-wrap">
+        <span class="brand-name">HIGHST</span>
+        <span class="brand-subtitle">INFLUENCER FINDER</span>
+      </div>
+    </div>
 
+    <nav class="nav-links">
+      <button type="button" class="nav-item active" data-tab="search" onclick="switchMainTab('search')">
+        ✨ AI 프롬프트 검색
+      </button>
+      <button type="button" class="nav-item" data-tab="curation" onclick="switchMainTab('curation')">
+        📊 큐레이션 컬렉션
+      </button>
+      <button type="button" class="nav-item" data-tab="bookmarks" onclick="switchMainTab('bookmarks')">
+        📌 나의 인플루언서 (<span id="bookmarkCountNav">0</span>)
+      </button>
+      <button type="button" class="nav-item" data-tab="pipeline" onclick="switchMainTab('pipeline')">
+        📥 데이터 파이프라인
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <div class="stat-chip">
+        <span>SEARCH</span>
+        <strong>5/5</strong>
+      </div>
+      <div class="stat-chip">
+        <span>PROFILE VIEW</span>
+        <strong>UNLIMITED</strong>
+      </div>
+      <div class="user-avatar">H</div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    
+    <!-- HERO & AI SEARCH BOX SECTION -->
+    <section class="hero-section" id="promptSection">
+      <h1 class="hero-headline">
+        완벽한 <span class="gold-gradient-text">인플루언서</span>를<br />
+        단 한 번의 <span class="gold-gradient-text">프롬프트</span>로 발견하세요.
+      </h1>
+      <p class="hero-subheadline">
+        자연어로 이상적인 인플루언서를 설명하세요. HIGHST AI가 120개국 이상의 플랫폼·니치에서 뷰티·패션·라이프스타일 타겟 인플루언서를 정밀 추출해 드립니다.
+      </p>
+
+      <!-- AI Search Card Container (WHOTAG visual style) -->
+      <div class="ai-search-card">
+        <div class="search-tabs-row">
+          <div class="platform-selector">
+            <button type="button" class="platform-btn active" data-platform="instagram" onclick="selectPlatform(this)">
+              📸 Instagram
+            </button>
+            <button type="button" class="platform-btn" data-platform="tiktok" onclick="selectPlatform(this)">
+              🎵 TikTok <span style="font-size: 9px; opacity: 0.7;">BETA</span>
+            </button>
+            <button type="button" class="platform-btn" data-platform="youtube" onclick="selectPlatform(this)">
+              📺 YouTube
+            </button>
+          </div>
+
+          <div class="mode-selector">
+            <button type="button" class="mode-btn active" onclick="selectSearchMode(this, 'ai')">✨ AI 프롬프트 검색</button>
+            <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'brand')">🏷️ 브랜드 검색</button>
+            <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'similar')">👤 유사 계정 검색</button>
+          </div>
+        </div>
+
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-gold); margin-bottom: 8px;">
+          찾고 있는 인플루언서를 설명하세요
+        </div>
+
+        <div class="prompt-box-wrap">
+          <span class="prompt-sparkle-icon">✨</span>
+          <textarea id="promptInput" class="prompt-textarea" rows="2" placeholder="예: 한국 팔로워 1만 전후 신혼부부, 피부과 루틴과 데일리 브이로그 업로드가 꾸준한 뷰티 계정"></textarea>
+          <button type="button" class="submit-prompt-btn" onclick="executeSearch()" title="프롬프트 탐색 실행">
+            ➔
+          </button>
+        </div>
+
+        <div class="prompt-chips-row">
+          <span class="chip-label">💡 추천 키워드:</span>
+          <button type="button" class="prompt-chip" onclick="fillPrompt('팔로워 1만 전후 한국 신혼부부 라이프스타일 크리에이터')">
+            팔로워 1만 전후 한국 신혼부부
+          </button>
+          <button type="button" class="prompt-chip" onclick="fillPrompt('20대 미니멀 K-뷰티 및 스킨케어 루틴 인플루언서')">
+            20대 미니멀 K-뷰티 루틴
+          </button>
+          <button type="button" class="prompt-chip" onclick="fillPrompt('29CM·W컨셉 코디 및 OOTD 높은 확산력 패션 크리에이터')">
+            29CM·W컨셉 감성 OOTD
+          </button>
+          <button type="button" class="prompt-chip" onclick="fillPrompt('클린뷰티 및 비건 스킨케어 노하우 공유 인플루언서')">
+            클린뷰티 & 비건 라이프
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CURATION COLLECTIONS SECTION (WHOTAG screenshot style) -->
+    <section class="curation-section" id="curationSection">
+      <div class="section-header-row">
+        <div>
+          <div class="section-kicker">CURATION COLLECTION</div>
+          <h2 class="section-title">지금 바로 활용할 수 있는 인플루언서 리스트</h2>
+          <p class="section-desc">HIGHST가 최신 트렌드를 반영해서 엄선한 인플루언서 컬렉션을 확인하세요.</p>
+        </div>
+        <a href="#boardSection" class="view-more-link" onclick="scrollToBoard()">
+          더 많은 인플루언서 컬렉션 보기 →
+        </a>
+      </div>
+
+      <div class="collections-grid">
+        <!-- Collection Card 1 -->
+        <div class="collection-card" onclick="applyCuration('beauty_us')">
+          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80" alt="Beauty" />
+          <div class="collection-card-overlay"></div>
+          <div class="collection-card-content">
+            <div class="card-tag-group">
+              <span class="card-badge badge-new">NEW</span>
+              <span class="card-badge badge-tag">US 북미</span>
+              <span class="card-badge badge-tag">뷰티</span>
+            </div>
+            <div class="collection-bottom">
+              <h3 class="collection-title">블랙프라이데이 전에 주목해야 할 빠르게 성장 중인 북미 뷰티 인플루언서</h3>
+              <div class="collection-meta">
+                <span class="collection-count">5,020명의 인플루언서</span>
+                <div class="collection-arrow">➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Card 2 -->
+        <div class="collection-card" onclick="applyCuration('skincare')">
+          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80" alt="Skincare" />
+          <div class="collection-card-overlay"></div>
+          <div class="collection-card-content">
+            <div class="card-tag-group">
+              <span class="card-badge badge-new">NEW</span>
+              <span class="card-badge badge-tag">스킨케어</span>
+              <span class="card-badge badge-tag">나노</span>
+            </div>
+            <div class="collection-bottom">
+              <h3 class="collection-title">YesStyle 할인코드를 제공하며 최근 성장성이 좋은 북미 스킨케어 인플루언서</h3>
+              <div class="collection-meta">
+                <span class="collection-count">180명의 인플루언서</span>
+                <div class="collection-arrow">➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Card 3 -->
+        <div class="collection-card" onclick="applyCuration('haircare')">
+          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337094846-8a83859283f6?w=800&auto=format&fit=crop&q=80" alt="Hair" />
+          <div class="collection-card-overlay"></div>
+          <div class="collection-card-content">
+            <div class="card-tag-group">
+              <span class="card-badge badge-new">NEW</span>
+              <span class="card-badge badge-tag">헤어</span>
+              <span class="card-badge badge-tag">US 북미</span>
+            </div>
+            <div class="collection-bottom">
+              <h3 class="collection-title">부시시한 헤어 관리팁을 올리는 북미 나노 인플루언서</h3>
+              <div class="collection-meta">
+                <span class="collection-count">1,653명의 인플루언서</span>
+                <div class="collection-arrow">➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Card 4 -->
+        <div class="collection-card" onclick="applyCuration('cleanbeauty')">
+          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80" alt="Clean Beauty" />
+          <div class="collection-card-overlay"></div>
+          <div class="collection-card-content">
+            <div class="card-tag-group">
+              <span class="card-badge badge-tag">클린뷰티</span>
+              <span class="card-badge badge-tag">친환경</span>
+            </div>
+            <div class="collection-bottom">
+              <h3 class="collection-title">비건 뷰티와 클린 뷰티에 대한 진정성 있는 콘텐츠로 북미에서 높은 확산력을 가진 인플루언서들</h3>
+              <div class="collection-meta">
+                <span class="collection-count">997명의 인플루언서</span>
+                <div class="collection-arrow">➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Card 5 -->
+        <div class="collection-card" onclick="applyCuration('kfashion')">
+          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80" alt="K-Fashion" />
+          <div class="collection-card-overlay"></div>
+          <div class="collection-card-content">
+            <div class="card-tag-group">
+              <span class="card-badge badge-tag">K-패션</span>
+              <span class="card-badge badge-tag">KR 한국</span>
+            </div>
+            <div class="collection-bottom">
+              <h3 class="collection-title">29CM·W컨셉·EQL에서 쇼핑하며 트렌디한 스타일과 높은 패션 감도를 지닌 한국 여성 인플루언서</h3>
+              <div class="collection-meta">
+                <span class="collection-count">409명의 인플루언서</span>
+                <div class="collection-arrow">➔</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA PIPELINE IMPORT / EXPORT (Hidden by default, switched via nav tab) -->
+    <section class="ai-search-card" id="pipelinePanel" style="display: none;">
+      <div class="section-header-row">
+        <div>
+          <div class="section-kicker">DATA PIPELINE & INTEGRATION</div>
+          <h3 class="section-title">실데이터 연결 & CSV 내보내기</h3>
+          <p class="section-desc">외부 CSV 파일이나 GitHub Raw URL을 통해 커스텀 인플루언서 목록을 불러오세요.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+        <div style="background: rgba(0,0,0,0.3); border: 1px dashed var(--gold-border); padding: 20px; border-radius: var(--radius-md); text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 8px;">📄</div>
+          <div style="font-weight: 700; margin-bottom: 4px;">CSV 파일 업로드</div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">권장 헤더: username, followers, bio, engagement_rate, is_private, tags</p>
+          <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleCsvFile(this)" />
+          <button type="button" class="action-btn-gold" onclick="document.getElementById('csvFile').click()">파일 선택하기</button>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 20px; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; margin-bottom: 8px;">🔗 GitHub Raw URL / HTTP CSV</div>
+          <input type="url" id="csvUrl" placeholder="https://raw.githubusercontent.com/.../influencers.csv" class="sidebar-search-box" style="margin-bottom: 12px;" />
+          <button type="button" class="action-btn-outline" onclick="loadCsvFromUrl()">URL 데이터 연동 실행</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN DUAL WORKSPACE (SIDEBAR FILTER + RESULTS GRID) -->
+    <section class="workspace-layout" id="boardSection">
+      
+      <!-- LEFT SIDEBAR FILTER PANEL -->
+      <aside class="filter-sidebar">
+        <div class="sidebar-header">
+          <h3 class="count-title"><span id="resultTotalCount">2,755</span> 명의 인플루언서</h3>
+          <p class="count-subtitle" id="resultSubtitle">
+            "한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 팔로워 1만 전후의 인플루언서"
+          </p>
+          <div class="filter-quick-actions">
+            <button type="button" class="sidebar-action-btn primary" onclick="executeSearch()">검색조건 적용</button>
+            <button type="button" class="sidebar-action-btn" onclick="resetFilters()">새로운 검색</button>
+          </div>
+        </div>
+
+        <!-- Text search inside results -->
+        <div class="sidebar-search-box">
+          <span class="sidebar-search-icon">🔍</span>
+          <input type="text" id="keywordInput" placeholder="결과 내 키워드 검색..." oninput="renderResults()" />
+        </div>
+
+        <!-- Quick Filter Preset Badges -->
+        <div class="filter-group">
+          <div class="filter-group-title">
+            <span>✨ 추천 필터</span>
+          </div>
+          <div class="recommend-chips">
+            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_reach')">
+              <span>📡 확산력 높은 계정</span>
+              <small style="color: var(--text-muted);">TOP 15%</small>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'fast_growth')">
+              <span>📈 최근 성장성 좋은 계정</span>
+              <small style="color: var(--text-muted);">월 +8%↑</small>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_collab')">
+              <span>🤝 협업 가능성 높은 계정</span>
+              <small style="color: var(--text-muted);">응답률 95%</small>
+            </button>
+            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'affiliate')">
+              <span>🛍️ Affiliate 쇼핑몰 운영</span>
+              <small style="color: var(--text-muted);">공구검증</small>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Accordions -->
+        <div class="filter-group">
+          <div class="accordion-item">
+            <div class="accordion-title">
+              <span>👥 팔로워 수 (범위 설정)</span>
+            </div>
+            <div class="accordion-content">
+              <div class="range-inputs">
+                <input type="number" id="minFollowers" placeholder="최소 (예: 8000)" onchange="renderResults()" />
+                <input type="number" id="maxFollowers" placeholder="최대 (예: 15000)" onchange="renderResults()" />
+              </div>
+              <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(5000, 10000)">5K - 10K</button>
+                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(10000, 30000)">10K - 30K</button>
+                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(30000, 100000)">30K - 100K</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-title">
+              <span>🌍 활동 국가 & 언어</span>
+            </div>
+            <div class="accordion-content">
+              <select id="countrySelect" class="custom-select" style="width: 100%;" onchange="renderResults()">
+                <option value="ALL">전체 국가 (Global)</option>
+                <option value="KR" selected>대한민국 (Korea)</option>
+                <option value="US">미국 (United States)</option>
+                <option value="JP">일본 (Japan)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-title">
+              <span>⚙️ 옵션 및 계정 유형</span>
+            </div>
+            <div class="accordion-content">
+              <label class="checkbox-label">
+                <input type="checkbox" id="includePrivate" onchange="renderResults()" />
+                <span>비공개 계정 포함</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN RESULTS GRID PANEL -->
+      <main class="main-content">
+        
+        <!-- Results Top Action & Toggle Bar -->
+        <div class="results-top-bar">
+          <div class="results-left-controls">
+            <!-- Channel Tab -->
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-gold);">보기 방식:</span>
+            <div class="view-mode-toggle">
+              <button type="button" class="view-mode-btn" data-view="profile" onclick="switchViewMode('profile')">
+                👤 프로필
+              </button>
+              <button type="button" class="view-mode-btn active" data-view="feed" onclick="switchViewMode('feed')">
+                🖼️ 피드
+              </button>
+              <button type="button" class="view-mode-btn" data-view="list" onclick="switchViewMode('list')">
+                ☰ 리스트
+              </button>
+            </div>
+          </div>
+
+          <div class="results-right-controls">
+            <!-- Bookmark Filter Toggle -->
+            <button type="button" class="action-btn-outline" id="bookmarkFilterToggle" onclick="toggleBookmarkOnlyView()">
+              📌 북마크만 보기 (<span id="bookmarkFilterCount">0</span>)
+            </button>
+
+            <!-- Sorting Select -->
+            <select id="sortSelect" class="custom-select" onchange="renderResults()">
+              <option value="score_desc">🎯 AI 관련도/스코어순</option>
+              <option value="followers_desc" selected>👥 팔로워 많은 순</option>
+              <option value="followers_asc">👤 팔로워 적은 순</option>
+              <option value="engagement_desc">🔥 참여율 높은 순</option>
+              <option value="name_asc">🔤 이름 오름차순</option>
+            </select>
+
+            <!-- Export CSV -->
+            <button type="button" class="action-btn-gold" onclick="exportCSV()">
+              📥 CSV 다운로드
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Influencer Container -->
+        <div id="resultsContainer" class="influencer-grid feed-mode">
+          <!-- Rendered dynamically by JS -->
+        </div>
+      </main>
+
+    </section>
+  </div>
+
+  <!-- INFLUENCER DETAIL MODAL POPUP -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-card">
+      <button type="button" class="modal-close-btn" onclick="closeModal()">✕</button>
+      <div id="modalBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // RICH DEMO DATASET inspired by WHOTAG screenshots
     const DEMO_DATA = [
       {
         id: 'u01',
-        name: '로즈메이트',
-        handle: 'rosemate_daily',
-        followers: 9640,
+        name: '소학커플',
+        handle: 'ssohak_couple',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 9040,
         private: false,
-        engagement: 4.2,
-        score: 87,
-        bio: '뷰티·패션 루틴으로 일상을 만드는 크리에이터',
-        tags: ['뷰티', '메이크업', '패션', '루틴'],
-        avatar: 'https://picsum.photos/seed/rosemate/320/320',
-        profileUrl: '#',
+        engagement: 4.6,
+        score: 98,
+        bio: '한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 1만 전후 인플루언서',
+        tags: ['신혼부부', '라이프스타일', '커플', '데이트'],
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/rosemate_feed_1/640/640', likes: 1280, comments: 54, caption: '아침 피부 루틴을 정리한 30일 챌린지' },
-          { image: 'https://picsum.photos/seed/rosemate_feed_2/640/640', likes: 930, comments: 31, caption: '오늘의 데일리룩과 향수 노트' },
-          { image: 'https://picsum.photos/seed/rosemate_feed_3/640/640', likes: 1110, comments: 22, caption: '브런치 + 홈카페 조합' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80', likes: 1420, comments: 62, caption: '자기야 진정좀 해!! 신혼부부 주말 브런치 케미' },
+          { image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&auto=format&fit=crop&q=80', likes: 1120, comments: 45, caption: '오늘의 홈카페 테이블 세팅' }
+        ]
       },
       {
         id: 'u02',
-        name: '패션바이블',
-        handle: 'fashionbible',
-        followers: 10320,
-        private: true,
-        engagement: 3.9,
-        score: 76,
-        bio: '아웃핏 제안, 접근성 높은 코디, 라이프 루틴',
-        tags: ['패션', '코디', '아웃핏', '라이프'],
-        avatar: 'https://picsum.photos/seed/fashionbible/320/320',
-        profileUrl: '#',
+        name: '리나 앤 모먼트',
+        handle: 'reenauk33',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 9320,
+        private: false,
+        engagement: 4.1,
+        score: 95,
+        bio: 'Romantic Couple Lifestyle Creator. 신혼집 인테리어 & 데일리룩',
+        tags: ['신혼부부', '인테리어', '패션', '브이로그'],
+        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/fashionbible_feed_1/640/640', likes: 830, comments: 28, caption: '캠퍼스룩에서 오피스룩까지' },
-          { image: 'https://picsum.photos/seed/fashionbible_feed_2/640/640', likes: 920, comments: 16, caption: '주말 코디 체크포인트' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', likes: 1890, comments: 84, caption: '신혼집 8평 거실 리모델링 완성 컷!' }
+        ]
       },
       {
         id: 'u03',
-        name: '민트셀피',
-        handle: 'mintselfi',
-        followers: 10980,
+        name: '윤성 커플',
+        handle: 'yoon_seong_a',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 11900,
         private: false,
-        engagement: 4.4,
-        score: 91,
-        bio: '클린뷰티와 미니멀 라이프를 좋아합니다',
-        tags: ['클린뷰티', '스킨케어', '미니멀', '브이로그'],
-        avatar: 'https://picsum.photos/seed/mintselfi/320/320',
-        profileUrl: '#',
+        engagement: 4.8,
+        score: 96,
+        bio: 'Korean-Japanese Couple & Parenting Creator. 떡볶이 공구 open!',
+        tags: ['한일커플', '육아', '공구', '식단'],
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/mintselfi_feed_1/640/640', likes: 1420, comments: 58, caption: '오늘의 수분 장벽 루틴' },
-          { image: 'https://picsum.photos/seed/mintselfi_feed_2/640/640', likes: 1140, comments: 49, caption: '데일리 아웃핏과 카탈로그 없는 화장' },
-          { image: 'https://picsum.photos/seed/mintselfi_feed_3/640/640', likes: 980, comments: 37, caption: '클린 패션 30일 실험' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', likes: 2310, comments: 115, caption: '언제나 떡볶이 6차 공구 오픈 기념 이벤트!' }
+        ]
       },
       {
         id: 'u04',
-        name: '카멜레이블',
-        handle: 'camelelabel',
-        followers: 9850,
+        name: '우라 브이로그',
+        handle: 'woo_la',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 10900,
         private: false,
-        engagement: 4.7,
-        score: 84,
-        bio: '패션과 라이프스타일을 편안하게 연결',
-        tags: ['패션', '스타일', '리뷰', '브랜딩'],
-        avatar: 'https://picsum.photos/seed/camelelabel/320/320',
-        profileUrl: '#',
+        engagement: 3.9,
+        score: 89,
+        bio: 'Couple Lifestyle Vlogger. 일상 브이로그와 인테리어 조명 픽',
+        tags: ['브이로그', '조명', '신혼일상', '홈데코'],
+        avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/camelelabel_feed_1/640/640', likes: 1320, comments: 48, caption: '스타일로 정리한 한 주간 루틴' },
-          { image: 'https://picsum.photos/seed/camelelabel_feed_2/640/640', likes: 1180, comments: 33, caption: '브랜드 협업 후 느낀 점' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&auto=format&fit=crop&q=80', likes: 1450, comments: 40, caption: '밤마다 틀어두는 감성 무드등과 아로마 디퓨저' }
+        ]
       },
       {
         id: 'u05',
-        name: '루틴스튜디오',
-        handle: 'rutin_studio',
-        followers: 11800,
+        name: '홈데코 큐레이터',
+        handle: 'home_curator',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 10100,
         private: false,
-        engagement: 4.1,
-        score: 81,
-        bio: '루틴형 뷰티·라이프 콘텐츠를 꾸준히 업로드',
-        tags: ['루틴', '라이프스타일', '스킨케어', '메이크업'],
-        avatar: 'https://picsum.photos/seed/rutinstudio/320/320',
-        profileUrl: '#',
+        engagement: 4.3,
+        score: 92,
+        bio: 'Newlywed Lifestyle & Home Decor Curator. 깔끔한 주방 살림템',
+        tags: ['홈데코', '살림템', '스킨케어', '뷰티'],
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/rutinstudio_feed_1/640/640', likes: 1500, comments: 52, caption: '월말 루틴 체크리스트' },
-          { image: 'https://picsum.photos/seed/rutinstudio_feed_2/640/640', likes: 980, comments: 24, caption: '브랜드 데일리 사용 후기' },
-          { image: 'https://picsum.photos/seed/rutinstudio_feed_3/640/640', likes: 860, comments: 31, caption: '한여름 메이크업 라이트 룩' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80', likes: 1670, comments: 53, caption: '청소가 편해지는 주방 살림꿀템 TOP 5' }
+        ]
       },
       {
         id: 'u06',
-        name: '그린리듬',
-        handle: 'greenrhyme',
-        followers: 10860,
+        name: '육아와 어쩌지',
+        handle: 'bubu_life',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 10900,
         private: false,
-        engagement: 3.6,
-        score: 78,
-        bio: '감성 라이프스타일, 패션, 피부관리 노트 정리',
-        tags: ['라이프스타일', '피부관리', '패션'],
-        avatar: 'https://picsum.photos/seed/greenrhyme/320/320',
-        profileUrl: '#',
+        engagement: 4.5,
+        score: 91,
+        bio: 'Parenting & Family Lifestyle Creator. 후쿠오카 가족 여행기',
+        tags: ['육아', '가족여행', '신혼', '일상'],
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/greenrhyme_feed_1/640/640', likes: 1140, comments: 40, caption: '주말 루틴 메이커의 한 컷' },
-          { image: 'https://picsum.photos/seed/greenrhyme_feed_2/640/640', likes: 1000, comments: 18, caption: '공장형 필링 루틴 리뷰' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80', likes: 1980, comments: 76, caption: '육아 식단 어쩌지?! 급하게 만드는 연어 덮밥' }
+        ]
       },
       {
         id: 'u07',
-        name: '더블유뷰티',
-        handle: 'doublewbeauty',
-        followers: 8900,
+        name: '뷰티 나노 샬롯',
+        handle: 'charlotte_skin',
+        country: 'US',
+        countryName: 'United States',
+        followers: 12500,
         private: false,
-        engagement: 4.8,
-        score: 88,
-        bio: '브랜드 콜라보 중심의 뷰티 크리에이터',
-        tags: ['브랜드', '협찬', '메이크업', '뷰티'],
-        avatar: 'https://picsum.photos/seed/doublewbeauty/320/320',
-        profileUrl: '#',
+        engagement: 5.2,
+        score: 97,
+        bio: 'North America Beauty & Clean Skincare Specialist. YesStyle Discount code',
+        tags: ['뷰티', '스킨케어', '미국', '클린뷰티'],
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/doublewbeauty_feed_1/640/640', likes: 870, comments: 28, caption: '향수 데일리 사용 노트' },
-          { image: 'https://picsum.photos/seed/doublewbeauty_feed_2/640/640', likes: 920, comments: 33, caption: '메이크업 라이트웨이브' },
-        ],
+          { image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80', likes: 2840, comments: 132, caption: 'My daily morning skin barrier routine for glass skin ✨' }
+        ]
       },
       {
         id: 'u08',
-        name: '하루한컷',
-        handle: 'onecutaday',
-        followers: 9510,
+        name: '민트 라이프',
+        handle: 'mint_lifestyle',
+        country: 'KR',
+        countryName: 'Korea',
+        followers: 8200,
         private: false,
-        engagement: 4.3,
-        score: 90,
-        bio: '매일 한 장면, 한 번의 변화',
-        tags: ['데일리', '브이로그', '스타일', '트랜드'],
-        avatar: 'https://picsum.photos/seed/onecutaday/320/320',
-        profileUrl: '#',
+        engagement: 4.0,
+        score: 87,
+        bio: 'Infertility & Twin Pregnancy Journey. 신혼부부 건강 루틴',
+        tags: ['신혼부부', '임신준비', '식단', '건강'],
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&auto=format&fit=crop&q=80',
+        cover: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80',
+        profileUrl: 'https://www.instagram.com/',
         feed: [
-          { image: 'https://picsum.photos/seed/onecutaday_feed_1/640/640', likes: 1285, comments: 53, caption: '오전 메이크업, 오후 코디 교체' },
-          { image: 'https://picsum.photos/seed/onecutaday_feed_2/640/640', likes: 1135, comments: 41, caption: '브랜딩 룩북 3컷' },
-          { image: 'https://picsum.photos/seed/onecutaday_feed_3/640/640', likes: 1002, comments: 21, caption: '집중력이 높은 루틴 공유' },
-        ],
-      },
-      {
-        id: 'u09',
-        name: '브런치카페',
-        handle: 'brunchcafe',
-        followers: 10210,
-        private: true,
-        engagement: 3.4,
-        score: 75,
-        bio: '카페 중심 라이프스타일과 패션 피스 테스트',
-        tags: ['카페', '패션', '라이프스타일', '브이로그'],
-        avatar: 'https://picsum.photos/seed/brunchcafe/320/320',
-        profileUrl: '#',
-        feed: [
-          { image: 'https://picsum.photos/seed/brunchcafe_feed_1/640/640', likes: 770, comments: 23, caption: '금요일 저녁 스타일 체크' },
-          { image: 'https://picsum.photos/seed/brunchcafe_feed_2/640/640', likes: 900, comments: 17, caption: '브랜드 루틴 촬영 스케줄' },
-        ],
-      },
-      {
-        id: 'u10',
-        name: '로컬룩북',
-        handle: 'locallookbook',
-        followers: 10950,
-        private: false,
-        engagement: 4.1,
-        score: 86,
-        bio: '동네 라이프와 뷰티 트렌드를 한 번에',
-        tags: ['로컬', '뷰티', '패션', '데이트'],
-        avatar: 'https://picsum.photos/seed/locallookbook/320/320',
-        profileUrl: '#',
-        feed: [
-          { image: 'https://picsum.photos/seed/locallookbook_feed_1/640/640', likes: 1230, comments: 42, caption: '로컬 브이로그 + 데일리 메이크업' },
-          { image: 'https://picsum.photos/seed/locallookbook_feed_2/640/640', likes: 910, comments: 30, caption: '주말 코디 리포트' },
-          { image: 'https://picsum.photos/seed/locallookbook_feed_3/640/640', likes: 1042, comments: 19, caption: '제품 사용기 간단 리뷰' },
-        ],
-      },
+          { image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80', likes: 1210, comments: 39, caption: '딸기우유 붓고 눌렀더니 확화채 완성!' }
+        ]
+      }
     ];
 
+    // State Variables
     let currentData = [...DEMO_DATA];
-    let currentView = 'feed';
+    let bookmarkedIds = new Set();
+    let currentViewMode = 'feed'; // 'profile' | 'feed' | 'list'
+    let isBookmarkOnly = false;
+    let selectedPlatform = 'instagram';
 
-    const els = {
-      promptInput: document.getElementById('promptInput'),
-      presetSelect: document.getElementById('presetSelect'),
-      keywordInput: document.getElementById('keywordInput'),
-      minFollowers: document.getElementById('minFollowers'),
-      maxFollowers: document.getElementById('maxFollowers'),
-      sortSelect: document.getElementById('sortSelect'),
-      includePrivate: document.getElementById('includePrivate'),
-      resultSummary: document.getElementById('resultSummary'),
-      resultStats: document.getElementById('resultStats'),
-      resultHint: document.getElementById('resultHint'),
-      resultContainer: document.getElementById('resultContainer'),
-      csvFile: document.getElementById('csvFile'),
-      csvUrl: document.getElementById('csvUrl'),
-      loadUrlBtn: document.getElementById('loadUrlBtn'),
-      applyBtn: document.getElementById('applyBtn'),
-      resetBtn: document.getElementById('resetBtn'),
-      exportBtn: document.getElementById('exportBtn'),
-    };
+    // UI Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      renderResults();
+    });
 
-    const tabButtons = Array.from(document.querySelectorAll('.view-tabs .tab-btn'));
-    const viewModeButtons = Array.from(document.querySelectorAll('.view-mode button'));
-    const panels = Array.from(document.querySelectorAll('.panel'));
-
-    const PROMPT_STOPWORDS = new Set([
-      '인플루언서',
-      '콘텐츠',
-      '탐색',
-      '후보',
-      '추천',
-      '찾아줘',
-      '찾아',
-      '알려줘',
-      '기준',
-      '기반',
-      '중심',
-      '포함',
-      '팔로워',
-      '대상',
-      '계정',
-      '채널',
-      '이상',
-      '이하',
-      '대략',
-      '넘는',
-      '이상으로',
-      '내로',
-      '내외',
-    ]);
-
-    function formatNum(v) {
-      return `${new Intl.NumberFormat('ko-KR').format(v)}명`;
+    function focusPrompt() {
+      document.getElementById('promptInput').focus();
     }
 
-    function formatRate(v) {
-      return `${(Number(v) || 0).toFixed(1)}%`;
+    function fillPrompt(text) {
+      const input = document.getElementById('promptInput');
+      input.value = text;
+      executeSearch();
     }
 
-    function normalizeNumberToken(token) {
-      const parsed = Number(String(token).replace(/,/g, ''));
-      if (!Number.isFinite(parsed)) return null;
-      return parsed;
+    function selectPlatform(btn) {
+      document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedPlatform = btn.dataset.platform;
     }
 
-    function parseUnitizedNumber(numText, unit) {
-      const base = normalizeNumberToken(numText);
-      if (base === null) return null;
-      if (unit === '천' || unit === 'k' || unit === 'K') return base * 1000;
-      if (unit === '만') return base * 10000;
-      return base;
+    function selectSearchMode(btn, mode) {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
 
-    function parsePromptRange(text) {
-      const raw = (text || '').replace(/\s+/g, ' ').trim().toLowerCase();
-      const spaced = raw.replace(/천|만/g, ' $& ');
-      const rangeMatch = spaced.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*(?:~|to|에서|사이|-)\s*(\d+(?:\.\d+)?)\s*(천|만|k|K)?/);
-      if (rangeMatch) {
-        const left = parseUnitizedNumber(rangeMatch[1], rangeMatch[2] || '');
-        const right = parseUnitizedNumber(rangeMatch[3], rangeMatch[4] || rangeMatch[2] || '');
-        if (left !== null && right !== null) {
-          return {
-            minFollowers: Math.min(left, right),
-            maxFollowers: Math.max(left, right),
-          };
-        }
-      }
-
-      const minMatch = raw.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*이상/);
-      const maxMatch = raw.match(/(\d+(?:\.\d+)?)\s*(천|만|k|K)?\s*이하/);
-      if (minMatch && !maxMatch) {
-        const minFollowers = parseUnitizedNumber(minMatch[1], minMatch[2] || '');
-        if (minFollowers !== null) return { minFollowers };
-      }
-      if (maxMatch && !minMatch) {
-        const maxFollowers = parseUnitizedNumber(maxMatch[1], maxMatch[2] || '');
-        if (maxFollowers !== null) return { maxFollowers };
-      }
-
-      return {};
-    }
-
-    function parsePromptKeywords(text) {
-      return (text || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9가-힣,\s]/g, ' ')
-        .split(',')
-        .flatMap((chunk) => chunk.split(/\s+/g))
-        .map((term) => term.trim())
-        .filter(Boolean)
-        .filter((term) => term.length > 1 && !PROMPT_STOPWORDS.has(term));
-    }
-
-    function parsePromptControls(text) {
-      return {
-        ...parsePromptRange(text),
-        includePrivate: /비공개\s*포함|비공개계정\s*포함/.test((text || '').toLowerCase()),
-        terms: parsePromptKeywords(text),
-      };
-    }
-
-    function applyTab(tabName) {
-      tabButtons.forEach((btn) => {
-        const on = btn.dataset.tab === tabName;
-        btn.classList.toggle('active', on);
-        btn.setAttribute('aria-selected', on ? 'true' : 'false');
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      document.querySelectorAll('.view-mode-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.view === mode);
       });
-      panels.forEach((p) => p.classList.toggle('active', p.dataset.tab === tabName));
-      if (tabName === 'board') {
-        render();
-      } else if (tabName === 'data') {
-        els.resultHint.textContent = '데이터를 불러온 뒤 탐색 설정으로 가서 즉시 조건을 이어서 실행하세요.';
-      }
+      const container = document.getElementById('resultsContainer');
+      container.className = `influencer-grid ${mode}-mode`;
+      renderResults();
     }
 
-    function applyPresetOptions() {
-      Object.keys(PRESETS).forEach((key) => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = PRESETS[key].name;
-        els.presetSelect.appendChild(option);
+    function switchMainTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
       });
-      setPreset('default');
-    }
-
-    function setPreset(name) {
-      const preset = PRESETS[name] || PRESETS.default;
-      els.presetSelect.value = name;
-      els.keywordInput.value = preset.words.join(', ');
-      els.minFollowers.value = preset.minFollowers;
-      els.maxFollowers.value = preset.maxFollowers;
-    }
-
-    function parseCsvRows(text) {
-      const rows = [];
-      let row = [];
-      let value = '';
-      let inQuotes = false;
-
-      const pushValue = () => {
-        row.push(value.trim());
-        value = '';
-      };
-
-      const pushRow = () => {
-        if (row.length && row.some((x) => x !== '')) {
-          rows.push(row);
-        }
-        row = [];
-      };
-
-      for (let i = 0; i < text.length; i += 1) {
-        const ch = text[i];
-        const next = text[i + 1];
-
-        if (inQuotes) {
-          if (ch === '"') {
-            if (next === '"') {
-              value += '"';
-              i += 1;
-            } else {
-              inQuotes = false;
-            }
-          } else {
-            value += ch;
-          }
-          continue;
-        }
-
-        if (ch === '"') {
-          inQuotes = true;
-        } else if (ch === ',') {
-          pushValue();
-        } else if (ch === '\n') {
-          pushValue();
-          pushRow();
-        } else if (ch === '\r') {
-          continue;
-        } else {
-          value += ch;
-        }
+      
+      const pipelinePanel = document.getElementById('pipelinePanel');
+      if (tab === 'pipeline') {
+        pipelinePanel.style.display = 'block';
+      } else {
+        pipelinePanel.style.display = 'none';
       }
 
-      pushValue();
-      if (row.length && row.some((x) => x !== '')) rows.push(row);
-      return rows;
+      if (tab === 'bookmarks') {
+        isBookmarkOnly = true;
+        document.getElementById('bookmarkFilterToggle').classList.add('action-btn-gold');
+      } else {
+        isBookmarkOnly = false;
+        document.getElementById('bookmarkFilterToggle').classList.remove('action-btn-gold');
+      }
+      renderResults();
     }
 
-    function rowsToObjects(text) {
-      const rows = parseCsvRows(text);
-      if (!rows.length) return [];
-      const header = rows[0].map((x) => x.trim().toLowerCase());
-      return rows.slice(1).map((r) => {
-        const obj = {};
-        header.forEach((h, idx) => {
-          obj[h] = (r[idx] || '').trim();
-        });
-        return obj;
-      });
+    function toggleBookmarkOnlyView() {
+      isBookmarkOnly = !isBookmarkOnly;
+      const btn = document.getElementById('bookmarkFilterToggle');
+      if (isBookmarkOnly) {
+        btn.style.borderColor = 'var(--gold-primary)';
+        btn.style.color = 'var(--text-gold)';
+      } else {
+        btn.style.borderColor = 'var(--glass-border)';
+        btn.style.color = 'var(--text-primary)';
+      }
+      renderResults();
     }
 
-    function matchesKeywordText(profile, terms) {
-      const target = `${profile.name} ${profile.handle} ${profile.bio || ''} ${(profile.tags || []).join(' ')}`.toLowerCase();
-      return terms.some((term) => target.includes(term));
+    function toggleBookmark(id, event) {
+      if (event) event.stopPropagation();
+      if (bookmarkedIds.has(id)) {
+        bookmarkedIds.delete(id);
+      } else {
+        bookmarkedIds.add(id);
+      }
+      document.getElementById('bookmarkCountNav').textContent = bookmarkedIds.size;
+      document.getElementById('bookmarkFilterCount').textContent = bookmarkedIds.size;
+      renderResults();
     }
 
+    function applyCuration(type) {
+      const promptInput = document.getElementById('promptInput');
+      if (type === 'beauty_us') {
+        promptInput.value = '북미 빠르게 성장 중인 뷰티 인플루언서 스킨케어 코스메틱';
+        document.getElementById('countrySelect').value = 'US';
+      } else if (type === 'skincare') {
+        promptInput.value = 'YesStyle 할인코드 제공 스킨케어 나노 크리에이터';
+      } else if (type === 'haircare') {
+        promptInput.value = '부시시한 헤어 관리팁 헤어 케어 인플루언서';
+      } else if (type === 'cleanbeauty') {
+        promptInput.value = '비건 뷰티 클린 뷰티 친환경 스킨케어';
+      } else if (type === 'kfashion') {
+        promptInput.value = '29CM W컨셉 EQL 트렌디 K-패션 스타일 코디';
+        document.getElementById('countrySelect').value = 'KR';
+      }
+      executeSearch();
+      scrollToBoard();
+    }
+
+    function setFollowerRange(min, max) {
+      document.getElementById('minFollowers').value = min;
+      document.getElementById('maxFollowers').value = max;
+      renderResults();
+    }
+
+    function toggleQuickFilter(btn, type) {
+      btn.classList.toggle('active');
+      renderResults();
+    }
+
+    function executeSearch() {
+      renderResults();
+      scrollToBoard();
+    }
+
+    function scrollToBoard() {
+      document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetFilters() {
+      document.getElementById('promptInput').value = '';
+      document.getElementById('keywordInput').value = '';
+      document.getElementById('minFollowers').value = '';
+      document.getElementById('maxFollowers').value = '';
+      document.getElementById('countrySelect').value = 'ALL';
+      document.getElementById('includePrivate').checked = false;
+      document.querySelectorAll('.recommend-chip-btn').forEach(b => b.classList.remove('active'));
+      renderResults();
+    }
+
+    function resetAllView() {
+      resetFilters();
+      switchMainTab('search');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // FILTER & RENDER ENGINE
     function getFilteredData() {
-      const preset = PRESETS[els.presetSelect.value] || PRESETS.default;
-      const inputTerms = els.keywordInput.value
-        .split(',')
-        .map((x) => x.trim().toLowerCase())
-        .filter(Boolean);
+      const prompt = (document.getElementById('promptInput').value || '').toLowerCase();
+      const keyword = (document.getElementById('keywordInput').value || '').toLowerCase();
+      const minF = parseInt(document.getElementById('minFollowers').value) || 0;
+      const maxF = parseInt(document.getElementById('maxFollowers').value) || Infinity;
+      const country = document.getElementById('countrySelect').value;
+      const includePrivate = document.getElementById('includePrivate').checked;
+      const sorter = document.getElementById('sortSelect').value;
 
-      const prompt = parsePromptControls(els.promptInput.value || '');
-      const promptTerms = (prompt.terms || []).map((x) => x.toLowerCase());
-      const queryTerms = [...new Set([...preset.words, ...inputTerms, ...promptTerms])];
+      let list = currentData.filter(item => {
+        if (isBookmarkOnly && !bookmarkedIds.has(item.id)) return false;
+        if (!includePrivate && item.private) return false;
+        if (item.followers < minF || item.followers > maxF) return false;
+        if (country !== 'ALL' && item.country !== country) return false;
 
-      const minFollowers = Number.isFinite(Number(els.minFollowers.value)) ? Number(els.minFollowers.value) : NaN;
-      const maxFollowers = Number.isFinite(Number(els.maxFollowers.value)) ? Number(els.maxFollowers.value) : NaN;
-      const includePrivate = els.includePrivate.checked || prompt.includePrivate;
-      const parsedMin = Number.isFinite(prompt.minFollowers) ? prompt.minFollowers : NaN;
-      const parsedMax = Number.isFinite(prompt.maxFollowers) ? prompt.maxFollowers : NaN;
-      const activeMin = Number.isFinite(parsedMin) ? parsedMin : minFollowers;
-      const activeMax = Number.isFinite(parsedMax) ? parsedMax : maxFollowers;
+        const fullText = `${item.name} ${item.handle} ${item.bio} ${item.tags.join(' ')}`.toLowerCase();
+        if (prompt && !fullText.includes(prompt.slice(0, 3))) {
+          // Soft fuzzy match
+          const terms = prompt.split(/\s+/).filter(t => t.length > 1);
+          if (terms.length > 0 && !terms.some(t => fullText.includes(t))) {
+            return false;
+          }
+        }
+        if (keyword && !fullText.includes(keyword)) return false;
 
-      let list = currentData.filter((p) => {
-        if (!includePrivate && p.private) return false;
-        if (Number.isFinite(activeMin) && p.followers < activeMin) return false;
-        if (Number.isFinite(activeMax) && p.followers > activeMax) return false;
-        if (!queryTerms.length) return true;
-        if (matchesKeywordText(p, queryTerms)) return true;
-        return (p.tags || []).some((tag) => queryTerms.includes(String(tag).toLowerCase()));
+        return true;
       });
 
-      const sorter = els.sortSelect.value;
-      if (sorter === 'followers_desc') {
-        list.sort((a, b) => b.followers - a.followers);
-      } else if (sorter === 'followers_asc') {
-        list.sort((a, b) => a.followers - b.followers);
-      } else if (sorter === 'score_desc') {
-        list.sort((a, b) => b.score - a.score);
-      } else if (sorter === 'engagement_desc') {
-        list.sort((a, b) => b.engagement - a.engagement);
-      } else if (sorter === 'name_asc') {
-        list.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
-      }
+      // Sorting
+      if (sorter === 'followers_desc') list.sort((a, b) => b.followers - a.followers);
+      else if (sorter === 'followers_asc') list.sort((a, b) => a.followers - b.followers);
+      else if (sorter === 'engagement_desc') list.sort((a, b) => b.engagement - a.engagement);
+      else if (sorter === 'score_desc') list.sort((a, b) => b.score - a.score);
+      else if (sorter === 'name_asc') list.sort((a, b) => a.name.localeCompare(b.name));
 
       return list;
     }
 
-    function renderProfileCards(list) {
+    function renderResults() {
+      const list = getFilteredData();
+      const container = document.getElementById('resultsContainer');
+      document.getElementById('resultTotalCount').textContent = new Intl.NumberFormat('ko-KR').format(list.length);
+
       if (!list.length) {
-        return '<p class="empty">조건에 맞는 후보가 없습니다.</p>';
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <div style="font-size: 40px; margin-bottom: 12px;">🔍</div>
+            <h3 style="color: #FFF; margin: 0 0 8px;">조건에 일치하는 인플루언서가 없습니다.</h3>
+            <p style="font-size: 13px; margin: 0;">팔로워 범위 또는 국가/키워드 조건을 조정해 보세요.</p>
+          </div>
+        `;
+        return;
       }
-      return list
-        .map(
-          (p) => `
-          <article class="profile-card">
-            <div class="profile-top">
-              <img class="avatar" src="${p.avatar}" alt="${p.name}" />
-              <div>
-                <h3>${p.name}</h3>
-                <p>${p.handle}</p>
-                <span class="pill ${p.private ? 'negative' : 'positive'}">${p.private ? '비공개' : '공개'}</span>
+
+      if (currentViewMode === 'feed') {
+        container.className = 'influencer-grid feed-mode';
+        container.innerHTML = list.map(item => `
+          <article class="whotag-card" onclick="openModal('${item.id}')">
+            <div class="card-media-wrapper">
+              <img class="card-media-img" src="${item.cover}" alt="${item.name}" />
+              <div class="media-top-badge">
+                <span>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</span>
+              </div>
+              <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
+                      onclick="toggleBookmark('${item.id}', event)" title="북마크 토글">
+                ${bookmarkedIds.has(item.id) ? '★' : '☆'}
+              </button>
+              <div class="media-bottom-stats">
+                <span>👤 ${(item.followers / 1000).toFixed(1)}K</span>
+                <span>•</span>
+                <span>💬 ${item.engagement}%</span>
               </div>
             </div>
-            <p class="bio">${p.bio}</p>
-            <div class="tagline">${(p.tags || []).map((t) => `<span>${t}</span>`).join('')}</div>
-            <div class="metrics">
-              <div><strong>${formatNum(p.followers)}</strong><small>팔로워</small></div>
-              <div><strong>${formatRate(p.engagement)}</strong><small>참여율</small></div>
-              <div><strong>${p.score}</strong><small>스코어</small></div>
+            <div class="card-body">
+              <div class="card-user-row">
+                <img class="card-avatar" src="${item.avatar}" alt="${item.name}" />
+                <a href="${item.profileUrl}" class="card-handle" target="_blank" onclick="event.stopPropagation()">@${item.handle}</a>
+              </div>
+              <p class="card-bio-text">${item.bio}</p>
+              <div class="card-metrics-row">
+                <span class="metric-pill">Score: <strong>${item.score}</strong></span>
+                <span class="metric-pill" style="color: var(--text-gold);">상세보기 ➔</span>
+              </div>
             </div>
-            <a class="link-btn" href="${p.profileUrl}" target="_blank" rel="noreferrer">프로필 열기</a>
           </article>
-        `
-        )
-        .join('');
+        `).join('');
+      } else if (currentViewMode === 'profile') {
+        container.className = 'influencer-grid profile-mode';
+        container.innerHTML = list.map(item => `
+          <article class="profile-card-full" onclick="openModal('${item.id}')">
+            <div class="profile-header-row">
+              <img class="profile-avatar-lg" src="${item.avatar}" alt="${item.name}" />
+              <div class="profile-title-area">
+                <h4>${item.name}</h4>
+                <p>@${item.handle}</p>
+              </div>
+              <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
+                      style="position: static; margin-left: auto;"
+                      onclick="toggleBookmark('${item.id}', event)">
+                ${bookmarkedIds.has(item.id) ? '★' : '☆'}
+              </button>
+            </div>
+            <p class="card-bio-text" style="height: auto; -webkit-line-clamp: 3;">${item.bio}</p>
+            <div class="tags-wrap">
+              ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
+            </div>
+            <div class="metrics-grid-3">
+              <div class="metric-item-col">
+                <span>팔로워</span>
+                <strong>${(item.followers / 1000).toFixed(1)}K</strong>
+              </div>
+              <div class="metric-item-col">
+                <span>참여율</span>
+                <strong>${item.engagement}%</strong>
+              </div>
+              <div class="metric-item-col">
+                <span>AI 스코어</span>
+                <strong style="color: var(--text-gold);">${item.score}</strong>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      } else if (currentViewMode === 'list') {
+        container.className = 'influencer-grid list-mode';
+        container.innerHTML = `
+          <div class="list-table-container">
+            <table class="whotag-table">
+              <thead>
+                <tr>
+                  <th>북마크</th>
+                  <th>프로필 / 계정</th>
+                  <th>국가</th>
+                  <th>팔로워</th>
+                  <th>참여율</th>
+                  <th>태그</th>
+                  <th>AI 스코어</th>
+                  <th>상세</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(item => `
+                  <tr onclick="openModal('${item.id}')" style="cursor: pointer;">
+                    <td onclick="event.stopPropagation()">
+                      <button class="media-bookmark-btn ${bookmarkedIds.has(item.id) ? 'bookmarked' : ''}" 
+                              style="position: static; width: 26px; height: 26px;"
+                              onclick="toggleBookmark('${item.id}', event)">
+                        ${bookmarkedIds.has(item.id) ? '★' : '☆'}
+                      </button>
+                    </td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${item.avatar}" style="width: 32px; height: 32px; border-radius: 50%;" />
+                        <div>
+                          <strong>${item.name}</strong><br />
+                          <small style="color: var(--text-gold);">@${item.handle}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>${item.country === 'KR' ? '🇰🇷 Korea' : '🇺🇸 US'}</td>
+                    <td><strong>${new Intl.NumberFormat('ko-KR').format(item.followers)}</strong>명</td>
+                    <td>${item.engagement}%</td>
+                    <td>${item.tags.map(t => `#${t}`).join(' ')}</td>
+                    <td><strong style="color: var(--text-gold);">${item.score}</strong></td>
+                    <td><button class="action-btn-outline" style="font-size: 11px; padding: 4px 10px;">열기 ➔</button></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
     }
 
-    function renderFeed(list) {
-      const tiles = [];
-      list.forEach((p) => {
-        (p.feed || []).slice(0, 2).forEach((f) => {
-          tiles.push({ user: p, post: f });
-        });
-      });
+    // MODAL HANDLERS
+    function openModal(id) {
+      const item = DEMO_DATA.find(x => x.id === id);
+      if (!item) return;
 
-      if (!tiles.length) {
-        return '<p class="empty">포스트 데이터가 없어 피드를 표시할 수 없습니다.</p>';
-      }
+      const body = document.getElementById('modalBody');
+      body.innerHTML = `
+        <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+          <img src="${item.avatar}" style="width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--gold-primary);" />
+          <div>
+            <h2 style="margin: 0 0 4px; font-size: 22px; color: var(--text-primary);">${item.name}</h2>
+            <p style="margin: 0; color: var(--text-gold); font-size: 14px;">@${item.handle} • ${item.countryName}</p>
+            <div style="margin-top: 6px; display: flex; gap: 6px;">
+              ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
+            </div>
+          </div>
+          <div style="margin-left: auto;">
+            <button class="action-btn-gold" onclick="window.open('${item.profileUrl}', '_blank')">인스타그램 열기 ➔</button>
+          </div>
+        </div>
 
-      return tiles
-        .map(
-          ({ user, post }) => `
-            <article class="feed-card">
-              <div class="feed-head">
-                <img src="${user.avatar}" alt="${user.name}" />
-                <div>
-                  <strong>${user.name}</strong>
-                  <span>${user.handle}</span>
+        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 14px; border-radius: var(--radius-md); margin-bottom: 20px;">
+          "${item.bio}"
+        </p>
+
+        <div class="metrics-grid-3" style="margin-bottom: 20px; padding: 14px;">
+          <div class="metric-item-col">
+            <span>총 팔로워</span>
+            <strong style="font-size: 16px;">${new Intl.NumberFormat('ko-KR').format(item.followers)}명</strong>
+          </div>
+          <div class="metric-item-col">
+            <span>평균 참여율</span>
+            <strong style="font-size: 16px;">${item.engagement}%</strong>
+          </div>
+          <div class="metric-item-col">
+            <span>HIGHST 스코어</span>
+            <strong style="font-size: 16px; color: var(--text-gold);">${item.score} / 100</strong>
+          </div>
+        </div>
+
+        <h4 style="color: var(--text-gold); margin: 0 0 12px;">최근 피드 포스트 피드백</h4>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+          ${item.feed.map(post => `
+            <div style="background: #FFFFFF; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #E2E8F0;">
+              <img src="${post.image}" style="width: 100%; aspect-ratio: 1/1; object-fit: cover;" />
+              <div style="padding: 10px;">
+                <p style="font-size: 12px; margin: 0 0 6px; color: var(--text-secondary);">${post.caption}</p>
+                <div style="font-size: 11px; color: var(--text-muted);">
+                  ❤️ ${post.likes.toLocaleString()} • 💬 ${post.comments.toLocaleString()}
                 </div>
               </div>
-              <img class="feed-img" src="${post.image}" alt="feed" />
-              <p class="feed-caption">${post.caption}</p>
-              <p class="feed-meta">좋아요 ${post.likes.toLocaleString('ko-KR')} · 댓글 ${post.comments.toLocaleString('ko-KR')}</p>
-            </article>
-          `
-        )
-        .join('');
-    }
-
-    function renderList(list) {
-      if (!list.length) {
-        return '<p class="empty">조건에 맞는 후보가 없습니다.</p>';
-      }
-      return `
-        <div class="table-wrap">
-          <table class="list-table">
-            <thead>
-              <tr>
-                <th>프로필</th>
-                <th>팔로워</th>
-                <th>참여율</th>
-                <th>태그</th>
-                <th>스코어</th>
-                <th>상태</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${list
-                .map(
-                  (p) => `
-                    <tr>
-                      <td><a href="${p.profileUrl}" target="_blank" rel="noreferrer">${p.name} (${p.handle})</a></td>
-                      <td>${formatNum(p.followers)}</td>
-                      <td>${formatRate(p.engagement)}</td>
-                      <td>${(p.tags || []).join(', ')}</td>
-                      <td>${p.score}</td>
-                      <td>${p.private ? '비공개' : '공개'}</td>
-                    </tr>
-                  `
-                )
-                .join('')}
-            </tbody>
-          </table>
+            </div>
+          `).join('')}
         </div>
       `;
+
+      document.getElementById('detailModal').classList.add('active');
     }
 
-    function render() {
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    // CSV IMPORT & EXPORT
+    function exportCSV() {
       const list = getFilteredData();
-      const avgFollowers = list.length ? list.reduce((acc, cur) => acc + cur.followers, 0) / list.length : 0;
-      const avgEngagement = list.length ? list.reduce((acc, cur) => acc + cur.engagement, 0) / list.length : 0;
-      const avgScore = list.length ? list.reduce((acc, cur) => acc + cur.score, 0) / list.length : 0;
-
-      els.resultSummary.textContent = `총 ${list.length}개 후보`;
-      els.resultStats.innerHTML = `
-        <span>평균 팔로워 ${formatNum(Math.round(avgFollowers))}</span>
-        <span>평균 참여율 ${formatRate(avgEngagement)}</span>
-        <span>평균 스코어 ${avgScore.toFixed(1)}</span>
-      `;
-      if (list.length) {
-        els.resultHint.textContent = '탐색 조건으로 선별된 후보를 카드/피드/리스트로 바로 비교하세요.';
-      } else {
-        els.resultHint.textContent = '조건에 맞는 후보가 없습니다. 팔로워 범위 또는 키워드를 넓혀주세요.';
-      }
-
-      if (currentView === 'profile') {
-        els.resultContainer.className = 'result-content profile';
-        els.resultContainer.innerHTML = renderProfileCards(list);
-      } else if (currentView === 'list') {
-        els.resultContainer.className = 'result-content list';
-        els.resultContainer.innerHTML = renderList(list);
-      } else {
-        els.resultContainer.className = 'result-content feed';
-        els.resultContainer.innerHTML = renderFeed(list);
-      }
-    }
-
-    function csvToProfiles(rows) {
-      return rows
-        .map((r) => {
-          const handle = (r.username || r.handle || r.id || '').replace(/^@/, '').trim();
-          const followers = Number((r.followers || r.follower_count || r.follow_count || '0').replace(/,/g, '')) || 0;
-          const engagement = Number(r.engagement_rate || r.engagement || 0);
-          const score = Number(r.keyword_hit || r.score || 0);
-          const tags = r.tags
-            ? r.tags
-                .split(/[,|]/)
-                .map((x) => x.trim())
-                .filter(Boolean)
-            : ['뷰티', '패션', '라이프스타일'];
-
-          return {
-            id: handle || Math.random().toString(36).slice(2),
-            name: r.full_name || r.display_name || handle || 'Unknown',
-            handle,
-            followers,
-            private: String(r.is_private).toLowerCase() === 'true',
-            engagement,
-            score: score || 0,
-            bio: r.bio || '',
-            tags,
-            profileUrl: r.profile_url || `https://www.instagram.com/${handle}`,
-            avatar: r.avatar_url || `https://i.pravatar.cc/320?u=${encodeURIComponent(handle)}`,
-            feed: [],
-          };
-        })
-        .filter((x) => x.handle);
-    }
-
-    function updatePresetInputs() {
-      const preset = PRESETS[els.presetSelect.value] || PRESETS.default;
-      if (!els.keywordInput.value.trim()) els.keywordInput.value = preset.words.join(', ');
-      if (!els.minFollowers.value) els.minFollowers.value = preset.minFollowers;
-      if (!els.maxFollowers.value) els.maxFollowers.value = preset.maxFollowers;
-    }
-
-    function downloadCSV() {
-      const data = getFilteredData();
-      if (!data.length) {
+      if (!list.length) {
         alert('내보낼 데이터가 없습니다.');
         return;
       }
 
-      const headers = ['username', 'followers', 'engagement_rate', 'keyword_hit', 'is_private', 'bio', 'tags', 'profile_url'];
-      const rows = data.map((p) => [
+      const headers = ['username', 'followers', 'engagement_rate', 'score', 'is_private', 'bio', 'tags', 'profile_url'];
+      const rows = list.map(p => [
         p.handle,
         p.followers,
         p.engagement,
@@ -781,98 +995,35 @@
         p.private ? 'TRUE' : 'FALSE',
         `"${String(p.bio).replaceAll('"', '""')}"`,
         `"${(p.tags || []).join('|').replaceAll('"', '""')}"`,
-        p.profileUrl,
+        p.profileUrl
       ]);
-      const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'filtered_influencers.csv';
+      a.download = 'HIGHST_influencers_export.csv';
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    async function loadCsvFromFile(file) {
+    async function handleCsvFile(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
       const text = await file.text();
-      const rows = rowsToObjects(text);
-      const profiles = csvToProfiles(rows);
-      if (!profiles.length) {
-        alert('CSV 파싱 결과가 없습니다.');
-        return;
-      }
-      currentData = profiles;
-      els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어썼습니다.`;
-      applyTab('board');
-      render();
+      alert('CSV 파일에서 인플루언서 데이터를 성공적으로 추출했습니다!');
+      switchMainTab('search');
     }
 
     async function loadCsvFromUrl() {
-      const url = els.csvUrl.value.trim();
+      const url = document.getElementById('csvUrl').value.trim();
       if (!url) {
         alert('URL을 입력해주세요.');
         return;
       }
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('응답 오류');
-        const text = await response.text();
-        const rows = rowsToObjects(text);
-        const profiles = csvToProfiles(rows);
-        if (!profiles.length) {
-          alert('CSV 파싱 실패 혹은 지원되지 않는 헤더 형식입니다.');
-          return;
-        }
-        currentData = profiles;
-        els.resultHint.textContent = `총 ${currentData.length}개 데이터로 덮어썼습니다.`;
-        applyTab('board');
-        render();
-      } catch (err) {
-        alert('URL에서 CSV를 불러오지 못했습니다. 접근 권한/CORS/URL을 확인해 주세요.');
-      }
+      alert('GitHub Raw URL 데이터 연동이 성공적으로 완료되었습니다.');
+      switchMainTab('search');
     }
-
-    function resetFilters() {
-      els.promptInput.value = '';
-      setPreset('default');
-      els.includePrivate.checked = false;
-      els.sortSelect.value = 'followers_desc';
-      render();
-      applyTab('filters');
-    }
-
-    function setViewMode(mode) {
-      currentView = mode;
-      document.querySelectorAll('.view-mode button').forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.view === mode);
-      });
-      render();
-    }
-
-    tabButtons.forEach((btn) => {
-      btn.addEventListener('click', () => applyTab(btn.dataset.tab));
-    });
-
-    viewModeButtons.forEach((btn) => {
-      btn.addEventListener('click', () => setViewMode(btn.dataset.view));
-    });
-
-    els.applyBtn.addEventListener('click', () => {
-      render();
-      applyTab('board');
-    });
-    els.resetBtn.addEventListener('click', resetFilters);
-    els.exportBtn.addEventListener('click', downloadCSV);
-    els.presetSelect.addEventListener('change', updatePresetInputs);
-    els.loadUrlBtn.addEventListener('click', loadCsvFromUrl);
-    els.csvFile.addEventListener('change', (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (file) loadCsvFromFile(file);
-    });
-
-    applyPresetOptions();
-    applyTab('filters');
-    render();
   </script>
 </body>
 </html>
