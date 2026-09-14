@@ -127,7 +127,7 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid #E2E8F0;
@@ -249,17 +249,34 @@ body::before {
 }
 
 /* ==========================================================================
-   HERO & SEARCH BOX SECTION
+   PAGE VIEWS CONTROL
+   ========================================================================== */
+.page-view {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.page-view.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   HERO & SEARCH BOX SECTION (HOME VIEW)
    ========================================================================== */
 .hero-section {
-  padding: 48px 0 24px;
+  padding: 40px 0 20px;
   text-align: center;
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
 }
 
 .hero-headline {
-  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  font-size: clamp(2.1rem, 3.8vw, 3.4rem);
   font-weight: 900;
   line-height: 1.25;
   letter-spacing: -0.02em;
@@ -277,7 +294,7 @@ body::before {
   font-size: 15px;
   color: var(--text-secondary);
   line-height: 1.6;
-  max-width: 680px;
+  max-width: 700px;
   margin: 0 auto 32px;
 }
 
@@ -460,7 +477,7 @@ body::before {
    CURATION COLLECTIONS GRID
    ========================================================================== */
 .curation-section {
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .section-header-row {
@@ -501,6 +518,7 @@ body::before {
   align-items: center;
   gap: 4px;
   transition: gap 0.2s ease;
+  cursor: pointer;
 }
 
 .view-more-link:hover {
@@ -640,13 +658,14 @@ body::before {
 }
 
 /* ==========================================================================
-   MAIN WORKSPACE DUAL LAYOUT (FILTER SIDEBAR + RESULTS GRID)
+   MAIN WORKSPACE DUAL LAYOUT (RESULTS BOARD VIEW)
    ========================================================================== */
 .workspace-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 24px;
   align-items: start;
+  padding-top: 20px;
 }
 
 /* SIDEBAR FILTER PANEL */
@@ -698,10 +717,11 @@ body::before {
   border: 1px solid #E2E8F0;
   color: var(--text-secondary);
   font-size: 11px;
-  padding: 6px;
+  padding: 7px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
+  font-weight: 600;
 }
 
 .sidebar-action-btn:hover {
@@ -714,6 +734,7 @@ body::before {
   color: #FFF;
   font-weight: 700;
   border: none;
+  box-shadow: 0 2px 8px rgba(197, 160, 89, 0.2);
 }
 
 .sidebar-search-box {
@@ -866,6 +887,16 @@ body::before {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.platform-badge-pill {
+  background: #FFFBF0;
+  border: 1px solid var(--gold-border);
+  color: var(--gold-dark);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
 }
 
 .view-mode-toggle {

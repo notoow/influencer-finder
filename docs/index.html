@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HIGHST | AI 인플루언서 딥서치 & 컬렉션 렌더러</title>
+  <title>HIGHST | AI 인플루언서 딥서치 & 분석 플랫폼</title>
   <meta name="description" content="자연어 프롬프트 기반 하이엔드 인플루언서 탐색 플랫폼. WHOTAG x HIGHST 파이프라인으로 타겟 뷰티·패션·라이프스타일 인플루언서를 정밀 추출하세요." />
   
   <!-- Web Fonts -->
@@ -21,12 +21,12 @@
   <div class="announcement-bar">
     <span class="badge">NOTICE</span>
     <span>🌐 2,700+ 글로벌 신혼부부·K-뷰티·패션 딥분석 데이터베이스가 가동 중입니다.</span>
-    <a href="#promptSection" onclick="focusPrompt()">맞춤형 AI 프롬프트 실행하기 →</a>
+    <a href="#" onclick="switchMainTab('search'); focusPrompt();">맞춤형 AI 프롬프트 실행하기 →</a>
   </div>
 
-  <!-- Header / Navbar -->
+  <!-- Header / Navbar (WHOTAG layout) -->
   <header class="top-header">
-    <div class="brand-container" onclick="resetAllView()">
+    <div class="brand-container" onclick="switchMainTab('search')">
       <!-- HIGHST Luxury Diamond Logo SVG -->
       <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M50 5 L95 50 L50 95 L5 50 Z" stroke="url(#goldGrad)" stroke-width="4" fill="none" />
@@ -47,18 +47,19 @@
       </div>
     </div>
 
+    <!-- Header Navigation Tabs -->
     <nav class="nav-links">
       <button type="button" class="nav-item active" data-tab="search" onclick="switchMainTab('search')">
-        ✨ AI 프롬프트 검색
+        인플루언서 검색
       </button>
-      <button type="button" class="nav-item" data-tab="curation" onclick="switchMainTab('curation')">
-        📊 큐레이션 컬렉션
+      <button type="button" class="nav-item" data-tab="board" onclick="switchMainTab('board')">
+        인플루언서 보드
       </button>
       <button type="button" class="nav-item" data-tab="bookmarks" onclick="switchMainTab('bookmarks')">
-        📌 나의 인플루언서 (<span id="bookmarkCountNav">0</span>)
+        나의 인플루언서 (<span id="bookmarkCountNav">0</span>)
       </button>
       <button type="button" class="nav-item" data-tab="pipeline" onclick="switchMainTab('pipeline')">
-        📥 데이터 파이프라인
+        데이터 파이프라인
       </button>
     </nav>
 
@@ -69,361 +70,376 @@
       </div>
       <div class="stat-chip">
         <span>PROFILE VIEW</span>
-        <strong>UNLIMITED</strong>
+        <strong>0/5</strong>
       </div>
       <div class="user-avatar">H</div>
     </div>
   </header>
 
   <div class="app-shell">
-    
-    <!-- HERO & AI SEARCH BOX SECTION -->
-    <section class="hero-section" id="promptSection">
-      <h1 class="hero-headline">
-        완벽한 <span class="gold-gradient-text">인플루언서</span>를<br />
-        단 한 번의 <span class="gold-gradient-text">프롬프트</span>로 발견하세요.
-      </h1>
-      <p class="hero-subheadline">
-        자연어로 이상적인 인플루언서를 설명하세요. HIGHST AI가 120개국 이상의 플랫폼·니치에서 뷰티·패션·라이프스타일 타겟 인플루언서를 정밀 추출해 드립니다.
-      </p>
 
-      <!-- AI Search Card Container (WHOTAG visual style) -->
-      <div class="ai-search-card">
-        <div class="search-tabs-row">
-          <div class="platform-selector">
-            <button type="button" class="platform-btn active" data-platform="instagram" onclick="selectPlatform(this)">
-              📸 Instagram
-            </button>
-            <button type="button" class="platform-btn" data-platform="tiktok" onclick="selectPlatform(this)">
-              🎵 TikTok <span style="font-size: 9px; opacity: 0.7;">BETA</span>
-            </button>
-            <button type="button" class="platform-btn" data-platform="youtube" onclick="selectPlatform(this)">
-              📺 YouTube
-            </button>
-          </div>
-
-          <div class="mode-selector">
-            <button type="button" class="mode-btn active" onclick="selectSearchMode(this, 'ai')">✨ AI 프롬프트 검색</button>
-            <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'brand')">🏷️ 브랜드 검색</button>
-            <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'similar')">👤 유사 계정 검색</button>
-          </div>
-        </div>
-
-        <div style="font-size: 12px; font-weight: 700; color: var(--text-gold); margin-bottom: 8px;">
-          찾고 있는 인플루언서를 설명하세요
-        </div>
-
-        <div class="prompt-box-wrap">
-          <span class="prompt-sparkle-icon">✨</span>
-          <textarea id="promptInput" class="prompt-textarea" rows="2" placeholder="예: 한국 팔로워 1만 전후 신혼부부, 피부과 루틴과 데일리 브이로그 업로드가 꾸준한 뷰티 계정"></textarea>
-          <button type="button" class="submit-prompt-btn" onclick="executeSearch()" title="프롬프트 탐색 실행">
-            ➔
-          </button>
-        </div>
-
-        <div class="prompt-chips-row">
-          <span class="chip-label">💡 추천 키워드:</span>
-          <button type="button" class="prompt-chip" onclick="fillPrompt('팔로워 1만 전후 한국 신혼부부 라이프스타일 크리에이터')">
-            팔로워 1만 전후 한국 신혼부부
-          </button>
-          <button type="button" class="prompt-chip" onclick="fillPrompt('20대 미니멀 K-뷰티 및 스킨케어 루틴 인플루언서')">
-            20대 미니멀 K-뷰티 루틴
-          </button>
-          <button type="button" class="prompt-chip" onclick="fillPrompt('29CM·W컨셉 코디 및 OOTD 높은 확산력 패션 크리에이터')">
-            29CM·W컨셉 감성 OOTD
-          </button>
-          <button type="button" class="prompt-chip" onclick="fillPrompt('클린뷰티 및 비건 스킨케어 노하우 공유 인플루언서')">
-            클린뷰티 & 비건 라이프
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CURATION COLLECTIONS SECTION (WHOTAG screenshot style) -->
-    <section class="curation-section" id="curationSection">
-      <div class="section-header-row">
-        <div>
-          <div class="section-kicker">CURATION COLLECTION</div>
-          <h2 class="section-title">지금 바로 활용할 수 있는 인플루언서 리스트</h2>
-          <p class="section-desc">HIGHST가 최신 트렌드를 반영해서 엄선한 인플루언서 컬렉션을 확인하세요.</p>
-        </div>
-        <a href="#boardSection" class="view-more-link" onclick="scrollToBoard()">
-          더 많은 인플루언서 컬렉션 보기 →
-        </a>
-      </div>
-
-      <div class="collections-grid">
-        <!-- Collection Card 1 -->
-        <div class="collection-card" onclick="applyCuration('beauty_us')">
-          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80" alt="Beauty" />
-          <div class="collection-card-overlay"></div>
-          <div class="collection-card-content">
-            <div class="card-tag-group">
-              <span class="card-badge badge-new">NEW</span>
-              <span class="card-badge badge-tag">US 북미</span>
-              <span class="card-badge badge-tag">뷰티</span>
-            </div>
-            <div class="collection-bottom">
-              <h3 class="collection-title">블랙프라이데이 전에 주목해야 할 빠르게 성장 중인 북미 뷰티 인플루언서</h3>
-              <div class="collection-meta">
-                <span class="collection-count">5,020명의 인플루언서</span>
-                <div class="collection-arrow">➔</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Collection Card 2 -->
-        <div class="collection-card" onclick="applyCuration('skincare')">
-          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80" alt="Skincare" />
-          <div class="collection-card-overlay"></div>
-          <div class="collection-card-content">
-            <div class="card-tag-group">
-              <span class="card-badge badge-new">NEW</span>
-              <span class="card-badge badge-tag">스킨케어</span>
-              <span class="card-badge badge-tag">나노</span>
-            </div>
-            <div class="collection-bottom">
-              <h3 class="collection-title">YesStyle 할인코드를 제공하며 최근 성장성이 좋은 북미 스킨케어 인플루언서</h3>
-              <div class="collection-meta">
-                <span class="collection-count">180명의 인플루언서</span>
-                <div class="collection-arrow">➔</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Collection Card 3 -->
-        <div class="collection-card" onclick="applyCuration('haircare')">
-          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337094846-8a83859283f6?w=800&auto=format&fit=crop&q=80" alt="Hair" />
-          <div class="collection-card-overlay"></div>
-          <div class="collection-card-content">
-            <div class="card-tag-group">
-              <span class="card-badge badge-new">NEW</span>
-              <span class="card-badge badge-tag">헤어</span>
-              <span class="card-badge badge-tag">US 북미</span>
-            </div>
-            <div class="collection-bottom">
-              <h3 class="collection-title">부시시한 헤어 관리팁을 올리는 북미 나노 인플루언서</h3>
-              <div class="collection-meta">
-                <span class="collection-count">1,653명의 인플루언서</span>
-                <div class="collection-arrow">➔</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Collection Card 4 -->
-        <div class="collection-card" onclick="applyCuration('cleanbeauty')">
-          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80" alt="Clean Beauty" />
-          <div class="collection-card-overlay"></div>
-          <div class="collection-card-content">
-            <div class="card-tag-group">
-              <span class="card-badge badge-tag">클린뷰티</span>
-              <span class="card-badge badge-tag">친환경</span>
-            </div>
-            <div class="collection-bottom">
-              <h3 class="collection-title">비건 뷰티와 클린 뷰티에 대한 진정성 있는 콘텐츠로 북미에서 높은 확산력을 가진 인플루언서들</h3>
-              <div class="collection-meta">
-                <span class="collection-count">997명의 인플루언서</span>
-                <div class="collection-arrow">➔</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Collection Card 5 -->
-        <div class="collection-card" onclick="applyCuration('kfashion')">
-          <img class="collection-card-bg" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80" alt="K-Fashion" />
-          <div class="collection-card-overlay"></div>
-          <div class="collection-card-content">
-            <div class="card-tag-group">
-              <span class="card-badge badge-tag">K-패션</span>
-              <span class="card-badge badge-tag">KR 한국</span>
-            </div>
-            <div class="collection-bottom">
-              <h3 class="collection-title">29CM·W컨셉·EQL에서 쇼핑하며 트렌디한 스타일과 높은 패션 감도를 지닌 한국 여성 인플루언서</h3>
-              <div class="collection-meta">
-                <span class="collection-count">409명의 인플루언서</span>
-                <div class="collection-arrow">➔</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DATA PIPELINE IMPORT / EXPORT (Hidden by default, switched via nav tab) -->
-    <section class="ai-search-card" id="pipelinePanel" style="display: none;">
-      <div class="section-header-row">
-        <div>
-          <div class="section-kicker">DATA PIPELINE & INTEGRATION</div>
-          <h3 class="section-title">실데이터 연결 & CSV 내보내기</h3>
-          <p class="section-desc">외부 CSV 파일이나 GitHub Raw URL을 통해 커스텀 인플루언서 목록을 불러오세요.</p>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
-        <div style="background: rgba(0,0,0,0.3); border: 1px dashed var(--gold-border); padding: 20px; border-radius: var(--radius-md); text-align: center;">
-          <div style="font-size: 24px; margin-bottom: 8px;">📄</div>
-          <div style="font-weight: 700; margin-bottom: 4px;">CSV 파일 업로드</div>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">권장 헤더: username, followers, bio, engagement_rate, is_private, tags</p>
-          <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleCsvFile(this)" />
-          <button type="button" class="action-btn-gold" onclick="document.getElementById('csvFile').click()">파일 선택하기</button>
-        </div>
-
-        <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 20px; border-radius: var(--radius-md);">
-          <div style="font-weight: 700; margin-bottom: 8px;">🔗 GitHub Raw URL / HTTP CSV</div>
-          <input type="url" id="csvUrl" placeholder="https://raw.githubusercontent.com/.../influencers.csv" class="sidebar-search-box" style="margin-bottom: 12px;" />
-          <button type="button" class="action-btn-outline" onclick="loadCsvFromUrl()">URL 데이터 연동 실행</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- MAIN DUAL WORKSPACE (SIDEBAR FILTER + RESULTS GRID) -->
-    <section class="workspace-layout" id="boardSection">
+    <!-- ==========================================================================
+         PAGE VIEW 1: HOME / AI PROMPT SEARCH PAGE
+         ========================================================================== -->
+    <div id="pageViewSearch" class="page-view active">
       
-      <!-- LEFT SIDEBAR FILTER PANEL -->
-      <aside class="filter-sidebar">
-        <div class="sidebar-header">
-          <h3 class="count-title"><span id="resultTotalCount">2,755</span> 명의 인플루언서</h3>
-          <p class="count-subtitle" id="resultSubtitle">
-            "한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 팔로워 1만 전후의 인플루언서"
-          </p>
-          <div class="filter-quick-actions">
-            <button type="button" class="sidebar-action-btn primary" onclick="executeSearch()">검색조건 적용</button>
-            <button type="button" class="sidebar-action-btn" onclick="resetFilters()">새로운 검색</button>
-          </div>
-        </div>
+      <!-- HERO & AI SEARCH BOX SECTION -->
+      <section class="hero-section" id="promptSection">
+        <h1 class="hero-headline">
+          완벽한 <span class="gold-gradient-text">인플루언서</span>를<br />
+          단 한 번의 <span class="gold-gradient-text">프롬프트</span>로 발견하세요.
+        </h1>
+        <p class="hero-subheadline">
+          자연어로 이상적인 인플루언서를 설명하세요. HIGHST AI가 120개국 이상의 플랫폼·니치에서 뷰티·패션·라이프스타일 타겟 인플루언서를 정밀 추출해 드립니다.
+        </p>
 
-        <!-- Text search inside results -->
-        <div class="sidebar-search-box">
-          <span class="sidebar-search-icon">🔍</span>
-          <input type="text" id="keywordInput" placeholder="결과 내 키워드 검색..." oninput="renderResults()" />
-        </div>
-
-        <!-- Quick Filter Preset Badges -->
-        <div class="filter-group">
-          <div class="filter-group-title">
-            <span>✨ 추천 필터</span>
-          </div>
-          <div class="recommend-chips">
-            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_reach')">
-              <span>📡 확산력 높은 계정</span>
-              <small style="color: var(--text-muted);">TOP 15%</small>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'fast_growth')">
-              <span>📈 최근 성장성 좋은 계정</span>
-              <small style="color: var(--text-muted);">월 +8%↑</small>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_collab')">
-              <span>🤝 협업 가능성 높은 계정</span>
-              <small style="color: var(--text-muted);">응답률 95%</small>
-            </button>
-            <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'affiliate')">
-              <span>🛍️ Affiliate 쇼핑몰 운영</span>
-              <small style="color: var(--text-muted);">공구검증</small>
-            </button>
-          </div>
-        </div>
-
-        <!-- Filter Accordions -->
-        <div class="filter-group">
-          <div class="accordion-item">
-            <div class="accordion-title">
-              <span>👥 팔로워 수 (범위 설정)</span>
+        <!-- AI Search Card Container (WHOTAG visual style) -->
+        <div class="ai-search-card">
+          <div class="search-tabs-row">
+            <div class="platform-selector">
+              <button type="button" class="platform-btn active" data-platform="instagram" onclick="selectPlatform(this)">
+                📸 Instagram
+              </button>
+              <button type="button" class="platform-btn" data-platform="tiktok" onclick="selectPlatform(this)">
+                🎵 TikTok <span style="font-size: 9px; opacity: 0.7;">BETA</span>
+              </button>
+              <button type="button" class="platform-btn" data-platform="youtube" onclick="selectPlatform(this)">
+                📺 YouTube
+              </button>
             </div>
-            <div class="accordion-content">
-              <div class="range-inputs">
-                <input type="number" id="minFollowers" placeholder="최소 (예: 8000)" onchange="renderResults()" />
-                <input type="number" id="maxFollowers" placeholder="최대 (예: 15000)" onchange="renderResults()" />
+
+            <div class="mode-selector">
+              <button type="button" class="mode-btn active" onclick="selectSearchMode(this, 'ai')">✨ AI 프롬프트 검색</button>
+              <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'brand')">🏷️ 브랜드 검색</button>
+              <button type="button" class="mode-btn" onclick="selectSearchMode(this, 'similar')">👤 유사 계정 검색</button>
+            </div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: 700; color: var(--gold-dark); margin-bottom: 8px;">
+            찾고 있는 인플루언서를 설명하세요
+          </div>
+
+          <div class="prompt-box-wrap">
+            <span class="prompt-sparkle-icon">✨</span>
+            <textarea id="promptInput" class="prompt-textarea" rows="2" placeholder="예: 팔로워 1만 전후 한국 신혼부부, 피부과 루틴과 데일리 브이로그 업로드가 꾸준한 뷰티 계정"></textarea>
+            <button type="button" class="submit-prompt-btn" onclick="executeSearchFromHome()" title="프롬프트 탐색 실행">
+              ➔
+            </button>
+          </div>
+
+          <div class="prompt-chips-row">
+            <span class="chip-label">💡 추천 키워드:</span>
+            <button type="button" class="prompt-chip" onclick="fillPrompt('팔로워 1만 전후 한국 신혼부부 라이프스타일 크리에이터')">
+              팔로워 1만 전후 한국 신혼부부
+            </button>
+            <button type="button" class="prompt-chip" onclick="fillPrompt('20대 미니멀 K-뷰티 및 스킨케어 루틴 인플루언서')">
+              20대 미니멀 K-뷰티 루틴
+            </button>
+            <button type="button" class="prompt-chip" onclick="fillPrompt('29CM·W컨셉 코디 및 OOTD 높은 확산력 패션 크리에이터')">
+              29CM·W컨셉 감성 OOTD
+            </button>
+            <button type="button" class="prompt-chip" onclick="fillPrompt('클린뷰티 및 비건 스킨케어 노하우 공유 인플루언서')">
+              클린뷰티 & 비건 라이프
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CURATION COLLECTIONS SECTION (WHOTAG screenshot style) -->
+      <section class="curation-section">
+        <div class="section-header-row">
+          <div>
+            <div class="section-kicker">CURATION COLLECTION</div>
+            <h2 class="section-title">지금 바로 활용할 수 있는 인플루언서 리스트</h2>
+            <p class="section-desc">HIGHST가 최신 트렌드를 반영해서 엄선한 인플루언서 컬렉션을 확인하세요.</p>
+          </div>
+          <a class="view-more-link" onclick="switchMainTab('board')">
+            더 많은 인플루언서 컬렉션 보기 →
+          </a>
+        </div>
+
+        <div class="collections-grid">
+          <!-- Collection Card 1 -->
+          <div class="collection-card" onclick="applyCuration('beauty_us')">
+            <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80" alt="Beauty" />
+            <div class="collection-card-overlay"></div>
+            <div class="collection-card-content">
+              <div class="card-tag-group">
+                <span class="card-badge badge-new">NEW</span>
+                <span class="card-badge badge-tag">US 북미</span>
+                <span class="card-badge badge-tag">뷰티</span>
               </div>
-              <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
-                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(5000, 10000)">5K - 10K</button>
-                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(10000, 30000)">10K - 30K</button>
-                <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(30000, 100000)">30K - 100K</button>
+              <div class="collection-bottom">
+                <h3 class="collection-title">블랙프라이데이 전에 주목해야 할 빠르게 성장 중인 북미 뷰티 인플루언서</h3>
+                <div class="collection-meta">
+                  <span class="collection-count">5,020명의 인플루언서</span>
+                  <div class="collection-arrow">➔</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="accordion-item">
-            <div class="accordion-title">
-              <span>🌍 활동 국가 & 언어</span>
-            </div>
-            <div class="accordion-content">
-              <select id="countrySelect" class="custom-select" style="width: 100%;" onchange="renderResults()">
-                <option value="ALL">전체 국가 (Global)</option>
-                <option value="KR" selected>대한민국 (Korea)</option>
-                <option value="US">미국 (United States)</option>
-                <option value="JP">일본 (Japan)</option>
-              </select>
+          <!-- Collection Card 2 -->
+          <div class="collection-card" onclick="applyCuration('skincare')">
+            <img class="collection-card-bg" src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&auto=format&fit=crop&q=80" alt="Skincare" />
+            <div class="collection-card-overlay"></div>
+            <div class="collection-card-content">
+              <div class="card-tag-group">
+                <span class="card-badge badge-new">NEW</span>
+                <span class="card-badge badge-tag">스킨케어</span>
+                <span class="card-badge badge-tag">나노</span>
+              </div>
+              <div class="collection-bottom">
+                <h3 class="collection-title">YesStyle 할인코드를 제공하며 최근 성장성이 좋은 북미 스킨케어 인플루언서</h3>
+                <div class="collection-meta">
+                  <span class="collection-count">180명의 인플루언서</span>
+                  <div class="collection-arrow">➔</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="accordion-item">
-            <div class="accordion-title">
-              <span>⚙️ 옵션 및 계정 유형</span>
+          <!-- Collection Card 3 -->
+          <div class="collection-card" onclick="applyCuration('haircare')">
+            <img class="collection-card-bg" src="https://images.unsplash.com/photo-1522337094846-8a83859283f6?w=800&auto=format&fit=crop&q=80" alt="Hair" />
+            <div class="collection-card-overlay"></div>
+            <div class="collection-card-content">
+              <div class="card-tag-group">
+                <span class="card-badge badge-new">NEW</span>
+                <span class="card-badge badge-tag">헤어</span>
+                <span class="card-badge badge-tag">US 북미</span>
+              </div>
+              <div class="collection-bottom">
+                <h3 class="collection-title">부시시한 헤어 관리팁을 올리는 북미 나노 인플루언서</h3>
+                <div class="collection-meta">
+                  <span class="collection-count">1,653명의 인플루언서</span>
+                  <div class="collection-arrow">➔</div>
+                </div>
+              </div>
             </div>
-            <div class="accordion-content">
-              <label class="checkbox-label">
-                <input type="checkbox" id="includePrivate" onchange="renderResults()" />
-                <span>비공개 계정 포함</span>
-              </label>
+          </div>
+
+          <!-- Collection Card 4 -->
+          <div class="collection-card" onclick="applyCuration('cleanbeauty')">
+            <img class="collection-card-bg" src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&auto=format&fit=crop&q=80" alt="Clean Beauty" />
+            <div class="collection-card-overlay"></div>
+            <div class="collection-card-content">
+              <div class="card-tag-group">
+                <span class="card-badge badge-tag">클린뷰티</span>
+                <span class="card-badge badge-tag">친환경</span>
+              </div>
+              <div class="collection-bottom">
+                <h3 class="collection-title">비건 뷰티와 클린 뷰티에 대한 진정성 있는 콘텐츠로 북미에서 높은 확산력을 가진 인플루언서들</h3>
+                <div class="collection-meta">
+                  <span class="collection-count">997명의 인플루언서</span>
+                  <div class="collection-arrow">➔</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Collection Card 5 -->
+          <div class="collection-card" onclick="applyCuration('kfashion')">
+            <img class="collection-card-bg" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80" alt="K-Fashion" />
+            <div class="collection-card-overlay"></div>
+            <div class="collection-card-content">
+              <div class="card-tag-group">
+                <span class="card-badge badge-tag">K-패션</span>
+                <span class="card-badge badge-tag">KR 한국</span>
+              </div>
+              <div class="collection-bottom">
+                <h3 class="collection-title">29CM·W컨셉·EQL에서 쇼핑하며 트렌디한 스타일과 높은 패션 감도를 지닌 한국 여성 인플루언서</h3>
+                <div class="collection-meta">
+                  <span class="collection-count">409명의 인플루언서</span>
+                  <div class="collection-arrow">➔</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </aside>
+      </section>
+    </div>
 
-      <!-- MAIN RESULTS GRID PANEL -->
-      <main class="main-content">
+    <!-- ==========================================================================
+         PAGE VIEW 2: SEARCH RESULTS BOARD PAGE (WHOTAG EXACT LAYOUT)
+         ========================================================================== -->
+    <div id="pageViewBoard" class="page-view">
+      <section class="workspace-layout">
         
-        <!-- Results Top Action & Toggle Bar -->
-        <div class="results-top-bar">
-          <div class="results-left-controls">
-            <!-- Channel Tab -->
-            <span style="font-size: 12px; font-weight: 700; color: var(--text-gold);">보기 방식:</span>
-            <div class="view-mode-toggle">
-              <button type="button" class="view-mode-btn" data-view="profile" onclick="switchViewMode('profile')">
-                👤 프로필
+        <!-- LEFT SIDEBAR FILTER PANEL -->
+        <aside class="filter-sidebar">
+          <div class="sidebar-header">
+            <h3 class="count-title"><span id="resultTotalCount">2,755</span> 명의 인플루언서</h3>
+            <p class="count-subtitle" id="resultSubtitle">
+              "한국 신혼부부 중 라이프스타일 콘텐츠를 다루는 팔로워 1만 전후의 인플루언서"
+            </p>
+            <div class="filter-quick-actions">
+              <button type="button" class="sidebar-action-btn primary" onclick="editSearchPrompt()">🔧 검색조건 수정</button>
+              <button type="button" class="sidebar-action-btn" onclick="resetFilters()">🔄 조건 초기화</button>
+            </div>
+          </div>
+
+          <!-- Text search inside results -->
+          <div class="sidebar-search-box">
+            <span class="sidebar-search-icon">🔍</span>
+            <input type="text" id="keywordInput" placeholder="결과 내 키워드 검색..." oninput="renderResults()" />
+          </div>
+
+          <!-- Quick Filter Preset Badges -->
+          <div class="filter-group">
+            <div class="filter-group-title">
+              <span>✨ 추천 필터</span>
+            </div>
+            <div class="recommend-chips">
+              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_reach')">
+                <span>📡 확산력 높은 계정</span>
+                <small style="color: var(--text-muted);">TOP 15%</small>
               </button>
-              <button type="button" class="view-mode-btn active" data-view="feed" onclick="switchViewMode('feed')">
-                🖼️ 피드
+              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'fast_growth')">
+                <span>📈 최근 성장성 좋은 계정</span>
+                <small style="color: var(--text-muted);">월 +8%↑</small>
               </button>
-              <button type="button" class="view-mode-btn" data-view="list" onclick="switchViewMode('list')">
-                ☰ 리스트
+              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'high_collab')">
+                <span>🤝 협업 가능성 높은 계정</span>
+                <small style="color: var(--text-muted);">응답률 95%</small>
+              </button>
+              <button type="button" class="recommend-chip-btn" onclick="toggleQuickFilter(this, 'affiliate')">
+                <span>🛍️ Affiliate 쇼핑몰 운영</span>
+                <small style="color: var(--text-muted);">공구검증</small>
               </button>
             </div>
           </div>
 
-          <div class="results-right-controls">
-            <!-- Bookmark Filter Toggle -->
-            <button type="button" class="action-btn-outline" id="bookmarkFilterToggle" onclick="toggleBookmarkOnlyView()">
-              📌 북마크만 보기 (<span id="bookmarkFilterCount">0</span>)
-            </button>
+          <!-- Filter Accordions -->
+          <div class="filter-group">
+            <div class="accordion-item">
+              <div class="accordion-title">
+                <span>👥 팔로워 수 (범위 설정)</span>
+              </div>
+              <div class="accordion-content">
+                <div class="range-inputs">
+                  <input type="number" id="minFollowers" placeholder="최소 (예: 8000)" onchange="renderResults()" />
+                  <input type="number" id="maxFollowers" placeholder="최대 (예: 15000)" onchange="renderResults()" />
+                </div>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px;">
+                  <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(5000, 10000)">5K - 10K</button>
+                  <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(10000, 30000)">10K - 30K</button>
+                  <button type="button" class="prompt-chip" style="font-size: 10px; padding: 2px 6px;" onclick="setFollowerRange(30000, 100000)">30K - 100K</button>
+                </div>
+              </div>
+            </div>
 
-            <!-- Sorting Select -->
-            <select id="sortSelect" class="custom-select" onchange="renderResults()">
-              <option value="score_desc">🎯 AI 관련도/스코어순</option>
-              <option value="followers_desc" selected>👥 팔로워 많은 순</option>
-              <option value="followers_asc">👤 팔로워 적은 순</option>
-              <option value="engagement_desc">🔥 참여율 높은 순</option>
-              <option value="name_asc">🔤 이름 오름차순</option>
-            </select>
+            <div class="accordion-item">
+              <div class="accordion-title">
+                <span>🌍 활동 국가 & 언어</span>
+              </div>
+              <div class="accordion-content">
+                <select id="countrySelect" class="custom-select" style="width: 100%;" onchange="renderResults()">
+                  <option value="ALL">전체 국가 (Global)</option>
+                  <option value="KR" selected>대한민국 (Korea)</option>
+                  <option value="US">미국 (United States)</option>
+                  <option value="JP">일본 (Japan)</option>
+                </select>
+              </div>
+            </div>
 
-            <!-- Export CSV -->
-            <button type="button" class="action-btn-gold" onclick="exportCSV()">
-              📥 CSV 다운로드
-            </button>
+            <div class="accordion-item">
+              <div class="accordion-title">
+                <span>⚙️ 계정 옵션</span>
+              </div>
+              <div class="accordion-content">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="includePrivate" onchange="renderResults()" />
+                  <span>비공개 계정 포함</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- MAIN RESULTS GRID PANEL -->
+        <main class="main-content">
+          
+          <!-- Results Top Action & Toggle Bar -->
+          <div class="results-top-bar">
+            <div class="results-left-controls">
+              <span class="platform-badge-pill">📸 Instagram</span>
+              <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-left: 4px;">보기 방식:</span>
+              <div class="view-mode-toggle">
+                <button type="button" class="view-mode-btn" data-view="profile" onclick="switchViewMode('profile')">
+                  👤 프로필
+                </button>
+                <button type="button" class="view-mode-btn active" data-view="feed" onclick="switchViewMode('feed')">
+                  🖼️ 피드
+                </button>
+                <button type="button" class="view-mode-btn" data-view="list" onclick="switchViewMode('list')">
+                  ☰ 리스트
+                </button>
+              </div>
+            </div>
+
+            <div class="results-right-controls">
+              <!-- Bookmark Filter Toggle -->
+              <button type="button" class="action-btn-outline" id="bookmarkFilterToggle" onclick="toggleBookmarkOnlyView()">
+                📌 북마크만 보기 (<span id="bookmarkFilterCount">0</span>)
+              </button>
+
+              <!-- Sorting Select -->
+              <select id="sortSelect" class="custom-select" onchange="renderResults()">
+                <option value="score_desc">🎯 AI 관련도/스코어순</option>
+                <option value="followers_desc" selected>👥 팔로워 많은 순</option>
+                <option value="followers_asc">👤 팔로워 적은 순</option>
+                <option value="engagement_desc">🔥 참여율 높은 순</option>
+                <option value="name_asc">🔤 이름 오름차순</option>
+              </select>
+
+              <!-- Export CSV -->
+              <button type="button" class="action-btn-gold" onclick="exportCSV()">
+                📥 CSV 다운로드
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Influencer Container -->
+          <div id="resultsContainer" class="influencer-grid feed-mode">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </main>
+
+      </section>
+    </div>
+
+    <!-- ==========================================================================
+         PAGE VIEW 3: DATA PIPELINE IMPORT / EXPORT PAGE
+         ========================================================================== -->
+    <div id="pageViewPipeline" class="page-view">
+      <section class="ai-search-card" style="margin-top: 30px;">
+        <div class="section-header-row">
+          <div>
+            <div class="section-kicker">DATA PIPELINE & INTEGRATION</div>
+            <h3 class="section-title">실데이터 연결 & CSV 내보내기</h3>
+            <p class="section-desc">외부 CSV 파일이나 GitHub Raw URL을 통해 커스텀 인플루언서 목록을 불러오세요.</p>
           </div>
         </div>
 
-        <!-- Dynamic Influencer Container -->
-        <div id="resultsContainer" class="influencer-grid feed-mode">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </main>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+          <div style="background: #F8FAFC; border: 1px dashed var(--gold-border); padding: 24px; border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 28px; margin-bottom: 8px;">📄</div>
+            <div style="font-weight: 700; margin-bottom: 4px;">CSV 파일 업로드</div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">권장 헤더: username, followers, bio, engagement_rate, is_private, tags</p>
+            <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleCsvFile(this)" />
+            <button type="button" class="action-btn-gold" onclick="document.getElementById('csvFile').click()">파일 선택하기</button>
+          </div>
 
-    </section>
+          <div style="background: #F8FAFC; border: 1px solid #E2E8F0; padding: 24px; border-radius: var(--radius-md);">
+            <div style="font-weight: 700; margin-bottom: 8px;">🔗 GitHub Raw URL / HTTP CSV</div>
+            <input type="url" id="csvUrl" placeholder="https://raw.githubusercontent.com/.../influencers.csv" class="sidebar-search-box" style="margin-bottom: 12px;" />
+            <button type="button" class="action-btn-outline" onclick="loadCsvFromUrl()">URL 데이터 연동 실행</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
   </div>
 
   <!-- INFLUENCER DETAIL MODAL POPUP -->
@@ -614,7 +630,6 @@
     function fillPrompt(text) {
       const input = document.getElementById('promptInput');
       input.value = text;
-      executeSearch();
     }
 
     function selectPlatform(btn) {
@@ -643,21 +658,39 @@
         btn.classList.toggle('active', btn.dataset.tab === tab);
       });
       
-      const pipelinePanel = document.getElementById('pipelinePanel');
-      if (tab === 'pipeline') {
-        pipelinePanel.style.display = 'block';
-      } else {
-        pipelinePanel.style.display = 'none';
-      }
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.remove('active');
+      });
 
-      if (tab === 'bookmarks') {
+      if (tab === 'search') {
+        document.getElementById('pageViewSearch').classList.add('active');
+      } else if (tab === 'board') {
+        document.getElementById('pageViewBoard').classList.add('active');
+        isBookmarkOnly = false;
+        renderResults();
+      } else if (tab === 'bookmarks') {
+        document.getElementById('pageViewBoard').classList.add('active');
         isBookmarkOnly = true;
         document.getElementById('bookmarkFilterToggle').classList.add('action-btn-gold');
-      } else {
-        isBookmarkOnly = false;
-        document.getElementById('bookmarkFilterToggle').classList.remove('action-btn-gold');
+        renderResults();
+      } else if (tab === 'pipeline') {
+        document.getElementById('pageViewPipeline').classList.add('active');
       }
-      renderResults();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function executeSearchFromHome() {
+      const promptVal = document.getElementById('promptInput').value.trim();
+      if (promptVal) {
+        document.getElementById('resultSubtitle').textContent = `"${promptVal}"`;
+      }
+      switchMainTab('board');
+    }
+
+    function editSearchPrompt() {
+      switchMainTab('search');
+      focusPrompt();
     }
 
     function toggleBookmarkOnlyView() {
@@ -665,9 +698,9 @@
       const btn = document.getElementById('bookmarkFilterToggle');
       if (isBookmarkOnly) {
         btn.style.borderColor = 'var(--gold-primary)';
-        btn.style.color = 'var(--text-gold)';
+        btn.style.color = 'var(--gold-dark)';
       } else {
-        btn.style.borderColor = 'var(--glass-border)';
+        btn.style.borderColor = '#CBD5E1';
         btn.style.color = 'var(--text-primary)';
       }
       renderResults();
@@ -700,8 +733,7 @@
         promptInput.value = '29CM W컨셉 EQL 트렌디 K-패션 스타일 코디';
         document.getElementById('countrySelect').value = 'KR';
       }
-      executeSearch();
-      scrollToBoard();
+      executeSearchFromHome();
     }
 
     function setFollowerRange(min, max) {
@@ -715,15 +747,6 @@
       renderResults();
     }
 
-    function executeSearch() {
-      renderResults();
-      scrollToBoard();
-    }
-
-    function scrollToBoard() {
-      document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth' });
-    }
-
     function resetFilters() {
       document.getElementById('promptInput').value = '';
       document.getElementById('keywordInput').value = '';
@@ -733,12 +756,6 @@
       document.getElementById('includePrivate').checked = false;
       document.querySelectorAll('.recommend-chip-btn').forEach(b => b.classList.remove('active'));
       renderResults();
-    }
-
-    function resetAllView() {
-      resetFilters();
-      switchMainTab('search');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // FILTER & RENDER ENGINE
@@ -759,7 +776,6 @@
 
         const fullText = `${item.name} ${item.handle} ${item.bio} ${item.tags.join(' ')}`.toLowerCase();
         if (prompt && !fullText.includes(prompt.slice(0, 3))) {
-          // Soft fuzzy match
           const terms = prompt.split(/\s+/).filter(t => t.length > 1);
           if (terms.length > 0 && !terms.some(t => fullText.includes(t))) {
             return false;
@@ -789,7 +805,7 @@
         container.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
             <div style="font-size: 40px; margin-bottom: 12px;">🔍</div>
-            <h3 style="color: #FFF; margin: 0 0 8px;">조건에 일치하는 인플루언서가 없습니다.</h3>
+            <h3 style="color: var(--text-primary); margin: 0 0 8px;">조건에 일치하는 인플루언서가 없습니다.</h3>
             <p style="font-size: 13px; margin: 0;">팔로워 범위 또는 국가/키워드 조건을 조정해 보세요.</p>
           </div>
         `;
@@ -823,7 +839,7 @@
               <p class="card-bio-text">${item.bio}</p>
               <div class="card-metrics-row">
                 <span class="metric-pill">Score: <strong>${item.score}</strong></span>
-                <span class="metric-pill" style="color: var(--text-gold);">상세보기 ➔</span>
+                <span class="metric-pill" style="color: var(--gold-dark);">상세보기 ➔</span>
               </div>
             </div>
           </article>
@@ -859,7 +875,7 @@
               </div>
               <div class="metric-item-col">
                 <span>AI 스코어</span>
-                <strong style="color: var(--text-gold);">${item.score}</strong>
+                <strong style="color: var(--gold-dark);">${item.score}</strong>
               </div>
             </div>
           </article>
@@ -896,7 +912,7 @@
                         <img src="${item.avatar}" style="width: 32px; height: 32px; border-radius: 50%;" />
                         <div>
                           <strong>${item.name}</strong><br />
-                          <small style="color: var(--text-gold);">@${item.handle}</small>
+                          <small style="color: var(--gold-dark);">@${item.handle}</small>
                         </div>
                       </div>
                     </td>
@@ -904,7 +920,7 @@
                     <td><strong>${new Intl.NumberFormat('ko-KR').format(item.followers)}</strong>명</td>
                     <td>${item.engagement}%</td>
                     <td>${item.tags.map(t => `#${t}`).join(' ')}</td>
-                    <td><strong style="color: var(--text-gold);">${item.score}</strong></td>
+                    <td><strong style="color: var(--gold-dark);">${item.score}</strong></td>
                     <td><button class="action-btn-outline" style="font-size: 11px; padding: 4px 10px;">열기 ➔</button></td>
                   </tr>
                 `).join('')}
@@ -926,7 +942,7 @@
           <img src="${item.avatar}" style="width: 72px; height: 72px; border-radius: 50%; border: 2px solid var(--gold-primary);" />
           <div>
             <h2 style="margin: 0 0 4px; font-size: 22px; color: var(--text-primary);">${item.name}</h2>
-            <p style="margin: 0; color: var(--text-gold); font-size: 14px;">@${item.handle} • ${item.countryName}</p>
+            <p style="margin: 0; color: var(--gold-dark); font-size: 14px;">@${item.handle} • ${item.countryName}</p>
             <div style="margin-top: 6px; display: flex; gap: 6px;">
               ${item.tags.map(t => `<span class="mini-tag">#${t}</span>`).join('')}
             </div>
@@ -951,11 +967,11 @@
           </div>
           <div class="metric-item-col">
             <span>HIGHST 스코어</span>
-            <strong style="font-size: 16px; color: var(--text-gold);">${item.score} / 100</strong>
+            <strong style="font-size: 16px; color: var(--gold-dark);">${item.score} / 100</strong>
           </div>
         </div>
 
-        <h4 style="color: var(--text-gold); margin: 0 0 12px;">최근 피드 포스트 피드백</h4>
+        <h4 style="color: var(--gold-dark); margin: 0 0 12px;">최근 피드 포스트 피드백</h4>
         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
           ${item.feed.map(post => `
             <div style="background: #FFFFFF; border-radius: var(--radius-md); overflow: hidden; border: 1px solid #E2E8F0;">
@@ -1010,9 +1026,8 @@
     async function handleCsvFile(input) {
       const file = input.files && input.files[0];
       if (!file) return;
-      const text = await file.text();
       alert('CSV 파일에서 인플루언서 데이터를 성공적으로 추출했습니다!');
-      switchMainTab('search');
+      switchMainTab('board');
     }
 
     async function loadCsvFromUrl() {
@@ -1022,7 +1037,7 @@
         return;
       }
       alert('GitHub Raw URL 데이터 연동이 성공적으로 완료되었습니다.');
-      switchMainTab('search');
+      switchMainTab('board');
     }
   </script>
 </body>
