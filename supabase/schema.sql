@@ -179,7 +179,7 @@ BEGIN
     f.cover,
     f.profile_url,
     COALESCE((
-      SELECT array_agg(t.tag ORDER BY t.created_at)
+      SELECT array_agg(t.tag::TEXT ORDER BY t.created_at)
       FROM influencer_tags t
       WHERE t.influencer_id = f.id
     ), ARRAY[]::TEXT[]) AS tags,
