@@ -11,17 +11,36 @@ import { renderResults, renderLoadingSkeleton, refreshLucideIcons } from './ui/r
 import { openModal, closeModal } from './ui/modal.js';
 
 // Global Event Handlers & Initialization
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Supabase
+document.addEventListener('DOMContentLoaded', async () => {
+  // Initialize Supabase Client
   initSupabase();
-
-  // Initial Render
-  renderResults();
-  refreshLucideIcons();
 
   // Bind Global Event Listeners via Event Delegation
   bindGlobalEvents();
+
+  // Execute initial live DB fetch
+  await executeInitialFetch();
 });
+
+async function executeInitialFetch() {
+  const remoteResults = await searchInfluencersFromSupabase({
+    prompt: '',
+    country: 'ALL',
+    minF: 0,
+    maxF: 999999999,
+    sorter: 'score_desc'
+  });
+
+  if (remoteResults && remoteResults.length > 0) {
+    console.log('[App] Loaded live data from Supabase DB on initial page load.');
+    store.setData(remoteResults);
+  } else {
+    console.log('[App] Using local dataset on initial load.');
+  }
+
+  renderResults();
+  refreshLucideIcons();
+}
 
 function bindGlobalEvents() {
   // 1. Results Container Delegation (Card clicks & Bookmark button clicks)

@@ -1,7 +1,7 @@
 /**
- * Notoow Influencer Finder - Supabase Service Layer (SSOT)
+ * Notoow Influencer Finder - Supabase Service Layer (SSOT & Resilient)
  * 
- * Handles database API connections, Full-Text Search RPC calls, and Bookmark sync.
+ * Handles database API connections, Full-Text Search RPC calls, direct table queries, and Bookmark sync.
  */
 
 import { CONFIG } from '../config.js';
@@ -30,6 +30,7 @@ export async function searchInfluencersFromSupabase({ prompt = '', country = 'AL
   if (!supabaseClient) return null;
 
   try {
+    // 1. Primary: Try PostgreSQL Full-Text Search RPC
     const { data, error } = await supabaseClient.rpc('search_influencers', {
       search_query: prompt,
       country_filter: country,
@@ -39,14 +40,42 @@ export async function searchInfluencersFromSupabase({ prompt = '', country = 'AL
       result_limit: CONFIG.RESULT_LIMIT
     });
 
-    if (error) {
-      console.warn('[SupabaseService] RPC search error:', error);
-      return null;
+    if (!error && Array.isArray(data)) {
+      console.log(`[SupabaseService] Fetched ${data.length} influencers from Supabase RPC.`);
+      return data;
     }
 
-    return data;
+    if (error) {
+      console.warn('[SupabaseService] RPC search returned error, trying direct table fallback:', error);
+    }
+
+    // 2. Fallback: Query 'influencers' table directly if RPC fails
+    let query = supabaseClient.from('influencers').select('*, influencer_tags(tag), influencer_media(image, likes, comments, caption)');
+    
+    if (country !== 'ALL') {
+      query = query.eq('country', country);
+    }
+    if (minF > 0) {
+      query = query.gte('followers', minF);
+    }
+    if (maxF < 999999999) {
+      query = query.lte('followers', maxF);
+    }
+
+    const { data: tableData, error: tableError } = await query.limit(CONFIG.RESULT_LIMIT);
+
+    if (!tableError && Array.isArray(tableData)) {
+      console.log(`[SupabaseService] Direct table fallback fetched ${tableData.length} items.`);
+      return tableData.map(item => ({
+        ...item,
+        tags: Array.isArray(item.influencer_tags) ? item.influencer_tags.map(t => t.tag) : [],
+        feed: Array.isArray(item.influencer_media) ? item.influencer_media : []
+      }));
+    }
+
+    return null;
   } catch (err) {
-    console.error('[SupabaseService] RPC search exception:', err);
+    console.error('[SupabaseService] Search exception:', err);
     return null;
   }
 }
