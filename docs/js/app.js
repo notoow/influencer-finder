@@ -5,6 +5,7 @@
  */
 
 import { initSupabase, searchInfluencersFromSupabase, syncBookmarkToSupabase } from './services/supabaseService.js';
+import { parseNaturalLanguageQuery } from './services/aiSearchService.js';
 import { store } from './store.js';
 import { renderResults, renderLoadingSkeleton, refreshLucideIcons } from './ui/render.js';
 import { openModal, closeModal } from './ui/modal.js';
@@ -81,17 +82,42 @@ function bindGlobalEvents() {
 
 // App Controller Functions exposed to window for inline HTML triggers
 export async function executeSearch() {
-  const prompt = (document.getElementById('promptInput')?.value || '').trim();
-  const country = document.getElementById('countrySelect')?.value || 'ALL';
-  const minF = parseInt(document.getElementById('minFollowers')?.value) || 0;
-  const maxF = parseInt(document.getElementById('maxFollowers')?.value) || 999999999;
+  const promptRaw = (document.getElementById('promptInput')?.value || '').trim();
+  
+  // AI Intent Parsing
+  const intent = parseNaturalLanguageQuery(promptRaw);
+
+  const countrySelect = document.getElementById('countrySelect');
+  const minFInput = document.getElementById('minFollowers');
+  const maxFInput = document.getElementById('maxFollowers');
   const sorter = document.getElementById('sortSelect')?.value || 'score_desc';
+
+  // Apply parsed intents to UI sidebar controls automatically if not manually set
+  if (intent.country !== 'ALL' && countrySelect) {
+    countrySelect.value = intent.country;
+  }
+  if (intent.minFollowers > 0 && minFInput) {
+    minFInput.value = intent.minFollowers;
+  }
+  if (intent.maxFollowers < 999999999 && maxFInput) {
+    maxFInput.value = intent.maxFollowers;
+  }
+
+  const country = countrySelect?.value || 'ALL';
+  const minF = parseInt(minFInput?.value) || 0;
+  const maxF = parseInt(maxFInput?.value) || 999999999;
 
   switchMainTab('board');
   renderLoadingSkeleton();
 
   // Try Supabase RPC search
-  const remoteResults = await searchInfluencersFromSupabase({ prompt, country, minF, maxF, sorter });
+  const remoteResults = await searchInfluencersFromSupabase({ 
+    prompt: intent.query || promptRaw, 
+    country, 
+    minF, 
+    maxF, 
+    sorter 
+  });
 
   if (remoteResults) {
     store.setData(remoteResults);
