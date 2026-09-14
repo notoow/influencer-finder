@@ -31,17 +31,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function executeInitialFetch() {
-  const remoteResults = await searchInfluencersFromSupabase({
-    prompt: '',
-    country: 'ALL',
-    minF: 0,
-    maxF: 999999999,
-    sorter: 'score_desc'
-  });
+  const [remoteResults, liveResults] = await Promise.all([
+    searchInfluencersFromSupabase({
+      prompt: '',
+      country: 'ALL',
+      minF: 0,
+      maxF: 999999999,
+      sorter: 'score_desc'
+    }),
+    searchLiveInstagram('', 'ALL')
+  ]);
 
-  if (remoteResults && remoteResults.length > 0) {
-    console.log('[App] Loaded live data from Supabase DB on initial page load.');
-    store.setData(remoteResults);
+  let combined = [];
+  if (Array.isArray(liveResults) && liveResults.length > 0) {
+    combined.push(...liveResults);
+  }
+  if (Array.isArray(remoteResults) && remoteResults.length > 0) {
+    const existingHandles = new Set(combined.map(r => r.handle.toLowerCase()));
+    remoteResults.forEach(r => {
+      if (!existingHandles.has(r.handle.toLowerCase())) {
+        combined.push(r);
+      }
+    });
+  }
+
+  if (combined.length > 0) {
+    console.log(`[App] Loaded ${combined.length} live Instagram creators & DB records on initial load.`);
+    store.setData(combined);
   } else {
     console.log('[App] Using local dataset on initial load.');
   }
