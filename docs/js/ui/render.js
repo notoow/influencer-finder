@@ -93,7 +93,7 @@ export function renderResults() {
       const safeUrl = escapeHTML(item.profileUrl);
 
       return `
-        <article class="whotag-card" data-id="${escapeHTML(item.id)}">
+        <article class="notoow-card" data-id="${escapeHTML(item.id)}">
           <div class="card-media-wrapper">
             <img class="card-media-img" src="${safeCover}" alt="${safeName}" />
             <div class="media-top-badge">
@@ -173,7 +173,7 @@ export function renderResults() {
     container.className = 'influencer-grid list-mode';
     container.innerHTML = `
       <div class="list-table-container">
-        <table class="whotag-table">
+        <table class="notoow-table">
           <thead>
             <tr>
               <th>북마크</th>

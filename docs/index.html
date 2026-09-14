@@ -55,10 +55,16 @@
     <!-- Header Navigation Tabs -->
     <nav class="nav-links">
       <button type="button" class="nav-item active" data-tab="search" onclick="switchMainTab('search')">
-        <i data-lucide="search" style="width: 15px; height: 15px;"></i> 인플루언서 검색
+        <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i> AI 인플루언서 발굴
+      </button>
+      <button type="button" class="nav-item" data-tab="segment" onclick="switchMainTab('segment')">
+        <i data-lucide="pie-chart" style="width: 15px; height: 15px;"></i> 소비자 세그먼트 분석
+      </button>
+      <button type="button" class="nav-item" data-tab="global" onclick="switchMainTab('global')">
+        <i data-lucide="globe" style="width: 15px; height: 15px;"></i> 글로벌 시장 리서치
       </button>
       <button type="button" class="nav-item" data-tab="board" onclick="switchMainTab('board')">
-        <i data-lucide="sliders-horizontal" style="width: 15px; height: 15px;"></i> 인플루언서 보드
+        <i data-lucide="sliders-horizontal" style="width: 15px; height: 15px;"></i> 데이터 보드
       </button>
       <button type="button" class="nav-item" data-tab="bookmarks" onclick="switchMainTab('bookmarks')">
         <i data-lucide="bookmark" style="width: 15px; height: 15px;"></i> 나의 인플루언서 (<span id="bookmarkCountNav">0</span>)
@@ -136,18 +142,18 @@
           </div>
 
           <div class="prompt-chips-row">
-            <span class="chip-label"><i data-lucide="sparkles" style="width: 13px; height: 13px;"></i> 추천 키워드:</span>
-            <button type="button" class="prompt-chip" onclick="fillPrompt('팔로워 1만 전후 한국 신혼부부 라이프스타일 크리에이터')">
-              팔로워 1만 전후 한국 신혼부부
+            <span class="chip-label"><i data-lucide="zap" style="width: 13px; height: 13px;"></i> NOTOOW AI PROMPTS:</span>
+            <button type="button" class="prompt-chip" onclick="fillPrompt('북미 스킨케어 코스메틱 전문 인플루언서 크리에이터')">
+              🔍 북미 스킨케어 크리에이터
             </button>
-            <button type="button" class="prompt-chip" onclick="fillPrompt('20대 미니멀 K-뷰티 및 스킨케어 루틴 인플루언서')">
-              20대 미니멀 K-뷰티 루틴
+            <button type="button" class="prompt-chip" onclick="fillPrompt('일본 로컬 브이로그 및 도쿄 패션 타겟 인플루언서')">
+              💄 일본 패션·브이로그 타겟
             </button>
-            <button type="button" class="prompt-chip" onclick="fillPrompt('29CM·W컨셉 코디 및 OOTD 높은 확산력 패션 크리에이터')">
-              29CM·W컨셉 감성 OOTD
+            <button type="button" class="prompt-chip" onclick="fillPrompt('주간 트렌디 라이프스타일 크리에이터 모니터링 대시보드')">
+              📅 주간 트렌드 대시보드
             </button>
-            <button type="button" class="prompt-chip" onclick="fillPrompt('클린뷰티 및 비건 스킨케어 노하우 공유 인플루언서')">
-              클린뷰티 & 비건 라이프
+            <button type="button" class="prompt-chip" onclick="fillPrompt('라이프스타일 브랜드 타겟 오디언스 세그먼트 분석 리포트')">
+              📊 오디언스 세그먼트 리포트
             </button>
           </div>
         </div>
@@ -421,6 +427,16 @@
       </section>
     </div>
 
+    <!-- PAGE VIEW 3: CONSUMER SEGMENT ANALYSIS -->
+    <div id="pageViewSegment" class="page-view">
+      <div id="segmentViewContainer" style="padding: 10px 0;"></div>
+    </div>
+
+    <!-- PAGE VIEW 4: GLOBAL MARKET RESEARCH -->
+    <div id="pageViewGlobal" class="page-view">
+      <div id="globalViewContainer" style="padding: 10px 0;"></div>
+    </div>
+
   </div>
 
   <!-- INFLUENCER DETAIL MODAL POPUP -->
@@ -432,6 +448,50 @@
       <div id="modalBody">
         <!-- Rendered dynamically -->
       </div>
+    </div>
+  </div>
+
+  <!-- 1-CLICK AI EXECUTIVE REPORT MODAL -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal-card" style="max-width: 680px;">
+      <button type="button" class="modal-close-btn" onclick="closeReportModal()">
+        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+      </button>
+      <div id="reportModalBody"></div>
+    </div>
+  </div>
+
+  <!-- FLOATING MCP AGENT BUTTON & SLIDE-OVER DRAWER -->
+  <button type="button" id="mcpAgentToggleBtn" class="mcp-agent-float-btn" title="NOTOOW AI 에이전트 열기">
+    <i data-lucide="bot" style="width: 18px; height: 18px;"></i>
+    <span>NOTOOW AI AGENT</span>
+  </button>
+
+  <div id="mcpAgentDrawer" class="mcp-drawer">
+    <div class="mcp-drawer-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <i data-lucide="bot" style="width: 18px; height: 18px; color: var(--brand-primary);"></i>
+        <strong style="font-size: 14px;">NOTOOW AI 에이전트 ENGINE</strong>
+      </div>
+      <button type="button" id="mcpAgentCloseBtn" class="modal-close-btn" style="position: static; width: 28px; height: 28px;">
+        <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+      </button>
+    </div>
+    <div id="mcpChatMessages" class="mcp-chat-body">
+      <div class="mcp-msg agent">
+        <div class="msg-bubble">
+          <span class="mcp-badge">NOTOOW AI ENGINE</span>
+          <p style="margin: 4px 0 0;">
+            안녕하세요! Notoow Multimodal AI 에이전트입니다. Claude / ChatGPT / Cursor 등과 연동 가능한 뷰티·패션·라이프스타일 딥분석 데이터 엔진입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="mcp-input-row">
+      <input type="text" id="mcpInput" placeholder="AI 에이전트에게 지시하기 (예: 일본 진출 뷰티 분석해줘)" />
+      <button type="button" id="mcpSendBtn" class="action-btn-brand" style="padding: 8px 14px;">
+        <i data-lucide="send" style="width: 14px; height: 14px;"></i>
+      </button>
     </div>
   </div>
 

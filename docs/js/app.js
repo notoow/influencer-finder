@@ -10,11 +10,18 @@ import { parseNaturalLanguageQuery } from './services/aiSearchService.js';
 import { store } from './store.js';
 import { renderResults, renderLoadingSkeleton, refreshLucideIcons } from './ui/render.js';
 import { openModal, closeModal } from './ui/modal.js';
+import { renderSegmentView } from './ui/segmentView.js';
+import { renderGlobalView } from './ui/globalView.js';
+import { openReportModal, closeReportModal, copyReportShareLink } from './ui/reportModal.js';
+import { initAgentDrawer } from './ui/agentDrawer.js';
 
 // Global Event Handlers & Initialization
 document.addEventListener('DOMContentLoaded', async () => {
   // Initialize Supabase Client
   initSupabase();
+
+  // Initialize MCP Agent Drawer
+  initAgentDrawer();
 
   // Bind Global Event Listeners via Event Delegation
   bindGlobalEvents();
@@ -184,6 +191,12 @@ export function switchMainTab(tab) {
 
   if (tab === 'search') {
     document.getElementById('pageViewSearch')?.classList.add('active');
+  } else if (tab === 'segment') {
+    document.getElementById('pageViewSegment')?.classList.add('active');
+    renderSegmentView();
+  } else if (tab === 'global') {
+    document.getElementById('pageViewGlobal')?.classList.add('active');
+    renderGlobalView();
   } else if (tab === 'board') {
     document.getElementById('pageViewBoard')?.classList.add('active');
     store.setBookmarkOnly(false);
@@ -327,5 +340,8 @@ window.focusPrompt = focusPrompt;
 window.fillPrompt = fillPrompt;
 window.selectPlatform = selectPlatform;
 window.exportCSV = exportCSV;
+window.openReportModal = openReportModal;
+window.closeReportModal = closeReportModal;
+window.copyReportShareLink = copyReportShareLink;
 window.openModal = openModal;
 window.closeModal = closeModal;
